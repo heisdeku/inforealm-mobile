@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Image, StatusBar } from 'react-native';
 import Colors from '../colors/colors';
 
-const SplashScreen = () => {
+const SplashScreen = ({navigation}) => {
+    useEffect(() => {
+        setTimeout(() => {
+            navigation.navigate('Onboarding')
+        }, 2000);
+    }, [])
     return (
         <View style={styles.container}>
             <Image 
