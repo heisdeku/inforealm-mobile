@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableOpacity } from 'react-native';
 import Colors from '../colors/colors';
-import { Feather, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather, MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
 
 const DocumentaryItem = ({item}) => {
@@ -12,9 +12,13 @@ const DocumentaryItem = ({item}) => {
                 <ImageBackground 
                 source={require('../../assets/images/demo-documentary.png')}
                 style={styles.Image}
-                />
+                >
+                    <TouchableOpacity style={{flexDirection: 'row'}}>
+                        <View style={{backgroundColor: '#fff', height: 23, width: 23, justifyContent: 'center', alignItems: 'center', borderRadius: 11.5}}><Ionicons name='md-play-circle' size={24} color='#000' /></View>
+                    </TouchableOpacity>
+                </ImageBackground>
             </View>
-            <Text style={styles.title}>How these economic super powers...</Text>
+            <TouchableOpacity><Text style={styles.title}>How these economic super powers...</Text></TouchableOpacity>
             <Text style={styles.caption}>The African continent has 15% of the world’s...</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 5}}>
                 <View>
@@ -89,7 +93,9 @@ const styles = StyleSheet.create({
     Image: {
         height: 92,
         resizeMode: 'contain',
-        borderRadius: 4
+        borderRadius: 4,
+        paddingTop: 60,
+        paddingLeft: 15
     },
     title: {
         fontSize: 18,
