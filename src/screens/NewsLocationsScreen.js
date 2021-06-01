@@ -24,7 +24,7 @@ const NewsLocationsScreen = ({navigation}) => {
             }
             >
                 <View style={styles.container}>
-                    <TouchableOpacity onPress={() => navigation.navigate('NewsLocation')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('SelectedLocation')}>
                         <View style={styles.location}>
                             <Text style={styles.locationText}>Location</Text>
                         </View>

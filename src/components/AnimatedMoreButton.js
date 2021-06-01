@@ -91,7 +91,7 @@ const AnimatedMoreButton = ({focused}) => {
             </TouchableOpacity>
             <TouchableHighlight onPress={handlePress}>
                 <View>
-                    <FontAwesome name='bars' size={20} color={focused ? Colors.secondary : '#B3B3B3'}/>
+                    <FontAwesome name='bars' size={26} color={focused ? Colors.secondary : '#B3B3B3'}/>
                 </View>
             </TouchableHighlight>
         </View>

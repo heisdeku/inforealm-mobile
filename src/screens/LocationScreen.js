@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, RefreshControl, ScrollView, Image, Dimensions } from 'react-native';
 import Colors from '../colors/colors';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
+import LocationNewsItem from '../components/LocationNewsItem';
 
 const LocationScreen = () => {
     const [refreshing, setRefreshing] = useState(false);
@@ -37,6 +38,12 @@ const LocationScreen = () => {
                             <View style={styles.mainNewsSummaryItem}><MaterialIcons size={14} color={Colors.text1} name='library-books' /><Text style={styles.newsSummaryText}> 3 min read</Text></View>
                         </View>
                     </View>
+                    <LocationNewsItem />
+                    <LocationNewsItem />
+                    <LocationNewsItem />
+                    <LocationNewsItem />
+                    <LocationNewsItem />
+                    <LocationNewsItem />
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -85,5 +92,8 @@ const styles = StyleSheet.create({
     newsSummaryText: {
         fontSize: 12,
         color: '#8E8D8D'
+    },
+    mainNews: {
+        marginBottom: 20
     }
 });
