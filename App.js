@@ -27,7 +27,16 @@ import AllNewsScreen from './src/screens/AllNewsScreen';
 import DynamicNewsScreem from './src/screens/DynamicNewsScreen';
 import NewsLocationsScreen from './src/screens/NewsLocationsScreen';
 import LocationScreen from './src/screens/LocationScreen';
-// import BottomTab from './src/components/BottomTab';
+import BottomTab from './src/components/BottomTab';
+import BookmarksScreen from './src/screens/BookmarksScreen';
+import DownloadsScreen from './src/screens/DownloadsScreen';
+import SelectedLocationScreen from './src/screens/SelectedLocationScreen';
+import BookmarkedReaderScreen from './src/screens/BookmarkedReaderScreen';
+import BookmarkedDocumentariesScreen from './src/screens/BookmarkedDocumentariesScreen';
+import BookmarkedGlanceScreen from './src/screens/BookmarkedGlanceScreen';
+import LatestGlanceScreen from './src/screens/RandomGlanceScreen';
+import MostPopularGlanceScreen from './src/screens/MostPopularGlanceScreen';
+import RandomGlanceScreen from './src/screens/RandomGlanceScreen';
 
 const getFonts = () => Font.loadAsync({// fetch custom fonts
   'DMBold': require('./assets/fonts/DMSans-Bold.ttf'),
@@ -106,7 +115,9 @@ const DocumentariesStack = createStackNavigator({
       title: '',
       headerTitle: () => (<Image source={require('./assets/images/inforealm-blue.png')} style={{height: 24, marginLeft: 'auto', marginRight: 'auto'}} />),
       headerTitleStyle: {
-        alignSelf: 'center'
+        alignSelf: 'center',
+        fontFamily: 'DMBold',
+        fontSize: 16,
       },
       headerLeft: () => (<TouchableOpacity style={{marginLeft: 10}}><Image source={require('./assets/images/header-profile.png')} style={{height: 27, width: 27, resizeMode: 'contain'}} /></TouchableOpacity>)
     })
@@ -127,12 +138,20 @@ const LocationStack = createStackNavigator({
       header: () => null
     }
   },
+  SelectedLocation: {
+    screen: SelectedLocationScreen,
+    navigationOptions: {
+      header: () => null
+    }
+  },
   NewsLocation: {
     screen: LocationScreen,
     navigationOptions: ({navigation}) => ({
       headerLeft: () => (<TouchableOpacity onPress={() =>  navigation.goBack()} style={{marginLeft: 10}}><AntDesign name='arrowleft' color='black' size={30} /></TouchableOpacity>),
       headerTitleStyle: {
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'DMBold',
+        fontSize: 16
       },
       title: 'Location Text',
       headerRight: () => <View></View>
@@ -144,7 +163,15 @@ const NewsStack = createStackNavigator({
   MainNews: {
     screen: createMaterialTopTabNavigator({
       All: {
-        screen: AllNewsScreen,
+        screen: createStackNavigator({
+          MainAll: {
+            screen: AllNewsScreen,
+            navigationOptions: {
+              title: 'All News',
+              header: () => null
+            }
+          }
+        }),
         navigationOptions: {
           title: 'All News'
         }
@@ -169,14 +196,10 @@ const NewsStack = createStackNavigator({
         style: {
           backgroundColor: '#fff'
         },
-        showIcon: true,
         upperCaseLabel: false,
         labelStyle: {
           fontSize: 16,
           fontFamily: 'DMRegular'
-        },
-        tabStyle: {
-          width: 150
         }
       },
       navigationOptions: ({navigation}) => ({
@@ -190,11 +213,148 @@ const NewsStack = createStackNavigator({
       })
     }),
     navigationOptions: ({navigation}) => {
-      if(navigation.state.index === 1 && navigation.state.routes[1].index == 1){
+      if(navigation.state.index === 1 && navigation.state.routes[1].index == 2){
         return {
           header: () => null
         }
       }
+    }
+  }
+});
+
+const downloadsStack = createStackNavigator({
+  bookmarks: {
+    screen: DownloadsScreen,
+    navigationOptions: ({navigation}) => ({
+      title: 'Download',
+      headerLeft: () => (<TouchableOpacity onPress={() =>  navigation.navigate('Reader')} style={{marginLeft: 10}}><AntDesign name='arrowleft' color='black' size={30} /></TouchableOpacity>),
+      headerRight: () => <View></View>,
+      headerTitleStyle: {
+        textAlign: 'center',
+        fontFamily: 'DMBold',
+        fontSize: 16,
+      }
+    })
+  }
+});
+
+const bookmarkCategories = createMaterialTopTabNavigator({
+  BookmarkReader: {
+    screen: createStackNavigator({
+      MainBookmarkedReader: {
+        screen: BookmarkedReaderScreen,
+        navigationOptions: {
+          header: () => null
+        }
+      }
+    }),
+    navigationOptions: ({navigation}) => ({
+      title: 'Reader'
+    })
+  },
+  BookmarkDocumentaries: {
+    screen: createStackNavigator({
+      MainBookmarkedDocumentaries: {
+        screen: BookmarkedDocumentariesScreen,
+        navigationOptions: {
+          header: () => null
+        }
+      }
+    }),
+    navigationOptions: ({navigation}) => ({
+      title: 'Documentaries'
+    })
+  },
+  BookmarkGlance: {
+    screen: createStackNavigator({
+      MainBookmarkedGlance: {
+        screen: BookmarkedGlanceScreen,
+        navigationOptions: {
+          header: () => null
+        }
+      }
+    }),
+    navigationOptions: ({navigation}) => ({
+      title: 'The Glance',
+    })
+  },
+}, {
+  tabBarOptions: {
+    scrollEnabled: true,
+    inactiveTintColor: Colors.text2,
+    activeTintColor: Colors.text1,
+    indicatorStyle: {
+      backgroundColor: Colors.secondary,
+      height: 2
+    },
+    style: {
+      backgroundColor: '#fff'
+    },
+    upperCaseLabel: false,
+    labelStyle: {
+      fontSize: 16,
+      fontFamily: 'DMRegular'
+    },
+    tabStyle: {
+      width: 150
+    }
+  }
+})
+
+const bookmarksStack = createStackNavigator({
+  bookmarks: {
+    screen: bookmarkCategories,
+    navigationOptions: ({navigation}) => ({
+      title: 'Bookmark',
+      headerLeft: () => (<TouchableOpacity onPress={() =>  navigation.navigate('Reader')} style={{marginLeft: 10}}><AntDesign name='arrowleft' color='black' size={30} /></TouchableOpacity>),
+      headerRight: () => <View></View>,
+      headerTitleStyle: {
+        textAlign: 'center',
+        fontFamily: 'DMBold',
+        fontSize: 16,
+      }
+    })
+  }
+});
+
+const glanceStack = createMaterialTopTabNavigator({
+  LatestGlance: {
+    screen: LatestGlanceScreen,
+    navigationOptions: {
+      title: 'Latest'
+    }
+  },
+  MostPopularGlance: {
+    screen: MostPopularGlanceScreen,
+    navigationOptions: {
+      title: 'Most Popular'
+    }
+  },
+  RandomGlance: {
+    screen: RandomGlanceScreen,
+    navigationOptions: {
+      title: 'Random'
+    }
+  },
+}, {
+  tabBarOptions: {
+    scrollEnabled: true,
+    inactiveTintColor: Colors.text2,
+    activeTintColor: Colors.text1,
+    indicatorStyle: {
+      backgroundColor: Colors.secondary,
+      height: 2
+    },
+    style: {
+      backgroundColor: '#fff'
+    },
+    upperCaseLabel: false,
+    labelStyle: {
+      fontSize: 16,
+      fontFamily: 'DMRegular'
+    },
+    tabStyle: {
+      width: 150
     }
   }
 })
@@ -203,32 +363,56 @@ const bottomTab = createBottomTabNavigator({
   Reader: {
     screen: DummyScreen,
     navigationOptions: {
-      title: 'Reader',
-      tabBarIcon: ({focused}) => (<FontAwesome5 name='book-reader' color={focused ? Colors.secondary : '#B3B3B3'} size={20} />)
+      title: 'Reader'
     }
   },
   Documentaries: {
     screen: DocumentariesStack,
     navigationOptions: ({navigation}) => ({
       title: 'Documentaries',
-      tabBarIcon: ({focused}) => (<FontAwesome name='video-camera' color={focused ? Colors.secondary : '#B3B3B3'} size={20} />),
-      tabBarVisible: navigation.state.routes[navigation.state.index].routeName == 'DocCategory' ? false : true
+      tabBarVisible: navigation.state.routes[navigation.state.index].routeName == 'DocCategory' || navigation.state.routes[navigation.state.index].routeName.toLowerCase() == 'bookmarks' ? false : true
     })
   },
   News: {
     screen: NewsStack,
     navigationOptions: {
-      title: 'News',
-      tabBarIcon: ({focused}) => (<FontAwesome name='newspaper-o' color={focused ? Colors.secondary : '#B3B3B3'} size={20} />)
+      title: 'News'
     }
   },
-  More: {
-    screen: () => null,
-    navigationOptions: {
-      title: 'More',
-      // tabBarIcon: ({focused}) => (<AnimatedMoreButton focused={focused} />)
-      tabBarIcon: ({focused}) => (<FontAwesome name='bars' color={focused ? Colors.secondary : '#B3B3B3'} size={20} />)
-    }
+  Bookmarks: {
+    screen: bookmarksStack,
+    navigationOptions: ({navigation}) => ({
+      title: 'Bookmark',
+      tabBarVisible: navigation.state.routes[navigation.state.index].routeName.toLowerCase() == 'bookmarks' ? false : true
+    })
+  },
+  Downloads: {
+    screen: downloadsStack,
+    navigationOptions: ({navigation}) => ({
+      title: 'Download',
+      tabBarVisible: navigation.state.routes[navigation.state.index].routeName.toLowerCase() == 'downloads' || navigation.state.routes[navigation.state.index].routeName.toLowerCase() == 'bookmarks' ? false : true
+    })
+  },
+  Glance: {
+    screen: createStackNavigator({
+      MainGlance: {
+        screen: glanceStack,
+        navigationOptions: ({navigation}) => ({
+          title: 'The Glance',
+          headerTitleStyle: {
+            fontFamily: 'DMBold',
+            fontSize: 16,
+            textAlign: 'center'
+          },
+          headerLeft: () => (<TouchableOpacity onPress={() => navigation.navigate('Reader')} style={{marginLeft: 10}}><AntDesign name='arrowleft' color='black' size={30} /></TouchableOpacity>),
+          headerRight: () => <View></View>
+        })
+      }
+    }),
+    navigationOptions: ({navigation}) => ({
+      title: 'The Glance',
+      tabBarVisible: navigation.state.routes[navigation.state.index].routeName.toLowerCase() == 'downloads' || navigation.state.routes[navigation.state.index].routeName.toLowerCase() == 'bookmarks' || navigation.state.routes[navigation.state.index].routeName.toLowerCase() == 'glance' ? false : true
+    })
   }
 }, {
   tabBarOptions: {
@@ -247,7 +431,7 @@ const bottomTab = createBottomTabNavigator({
       padding: 5,
     }
   },
-  // tabBarComponent: (props) => (<BottomTab otherProps={props} />)
+  tabBarComponent: (props) => (<BottomTab {...props} />)
 })
 
 const onboardingStack = createStackNavigator({
