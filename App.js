@@ -5,20 +5,24 @@ import AppLoading from 'expo-app-loading';
 import { createAppContainer } from "react-navigation";
 import createAnimatedSwitchNavigator from 'react-navigation-animated-switch';
 import { Transition } from 'react-native-reanimated';
-import SplashScreen from './src/screens/SplashScreen';
-import OnboardingScreen from './src/screens/OnboardingScreen';
 import { StatusBar } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
+
+import { createBottomTabNavigator, createMaterialTopTabNavigator } from 'react-navigation-tabs';
+import { FontAwesome5, FontAwesome, AntDesign, Feather } from '@expo/vector-icons';
+//api
+import apiConnect from './src/api/apiConnect';
+//colors
+import Colors from './src/colors/colors';
+//screens
+import SplashScreen from './src/screens/SplashScreen';
+import OnboardingScreen from './src/screens/OnboardingScreen';
+import DummyScreen from './src/screens/DummyScreen';
 import PrivacyPolicyScreen from './src/screens/PrivacyPolicyScreen';
 import TermsOfServiceScreen from './src/screens/TermsOfServiceScreen';
-import { createBottomTabNavigator, createMaterialTopTabNavigator } from 'react-navigation-tabs';
-import DummyScreen from './src/screens/DummyScreen';
-import { FontAwesome5, FontAwesome, AntDesign, Feather } from '@expo/vector-icons';
-import Colors from './src/colors/colors';
 import AnimatedMoreButton from './src/components/AnimatedMoreButton';
 import DocumentariesScreen from './src/screens/DocumentariesScreen';
 import DocumentaryCategory from './src/screens/DocumentaryCategory';
-import apiConnect from './src/api/apiConnect';
 import AllNewsScreen from './src/screens/AllNewsScreen';
 import DynamicNewsScreem from './src/screens/DynamicNewsScreen';
 import NewsLocationsScreen from './src/screens/NewsLocationsScreen';
@@ -83,14 +87,14 @@ const fetchInterests = [{
 
 const interestArray = fetchInterests.map(interest => {
   const objKey = `${interest.interest}`;
-  const screenObject = {};  
+  const screenObject = {};
   const returnObject = {
     screen: props => <DynamicNewsScreem {...props} interest={interest.interest} interest_id={interest.interest_id} />,
     navigationOptions: {
       title: interest.interest
     }
   }
-  screenObjects[objKey] = returnObject 
+  screenObjects[objKey] = returnObject
   return returnObject
 })
 
@@ -237,7 +241,7 @@ const bottomTab = createBottomTabNavigator({
       fontFamily: 'DMRegular'
     },
     tabStyle: {
-      
+
     },
     style: {
       padding: 5,
@@ -297,7 +301,7 @@ const App = createAppContainer(SwicthNavigator);
 
 export default () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  
+
   if(fontsLoaded){
     return(
       <>
@@ -307,7 +311,7 @@ export default () => {
     )
   }else{
     return(
-      <AppLoading 
+      <AppLoading
       startAsync={getFonts}
       onFinish={() => setFontsLoaded(true)}
       onError={err => console.log(err)}
