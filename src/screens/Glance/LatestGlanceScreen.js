@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, ScrollView, RefreshControl } from 'react-native';
-import Colors from '../colors/colors';
-import DocumentaryItem from '../components/DocumentaryItem';
+import Colors from '../../colors/colors';
+import GlanceItem from '../../components/GlanceItem';
 
-const BookmarkedDocumentariesScreen = () => {
+const LatestGlanceScreen = () => {
     const [reloaded, setReloaded] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = () => {
@@ -14,9 +14,9 @@ const BookmarkedDocumentariesScreen = () => {
     }
     return (
         <SafeAreaView style={{flex: 1}}>
-            <ScrollView style={{flex: 1}}
+            <ScrollView style={{flex: 1, backgroundColor: '#E5E5E5',}}
                 refreshControl={
-                <RefreshControl 
+                <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 colors={[Colors.brand, Colors.secondary, Colors.caption]}
@@ -28,11 +28,13 @@ const BookmarkedDocumentariesScreen = () => {
                         <View style={styles.body}>
                             <View style={styles.category}>
                                 <View style={styles.categoryItems}>
-                                    <DocumentaryItem />
-                                    <DocumentaryItem />
-                                    <DocumentaryItem />
-                                    <DocumentaryItem />
-                                    <DocumentaryItem />
+                                    <GlanceItem />
+                                    <GlanceItem />
+                                    <GlanceItem />
+                                    <GlanceItem />
+                                    <GlanceItem />
+                                    <GlanceItem />
+                                    <GlanceItem />
                                 </View>
                             </View>
                         </View>
@@ -42,13 +44,13 @@ const BookmarkedDocumentariesScreen = () => {
     )
 }
 
-export default BookmarkedDocumentariesScreen;
+export default LatestGlanceScreen;
 
 const styles = StyleSheet.create({
     body: {
         backgroundColor: '#E5E5E5',
         flex: 1,
-        paddingVertical: 15
+        padding: 15,
     },
     category: {
         marginBottom: 30,
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
         fontFamily: 'DMBold',
         paddingHorizontal: 15
     },
-    categoryItems: {        
+    categoryItems: {
         flexDirection: 'row',
         flexWrap: 'wrap'
     },

@@ -13,7 +13,12 @@ const OnboardingScreen = ({navigation}) => {
                 <Image style={styles.pana} source={require('../../assets/images/pana.png')} />
                 <TouchableOpacity style={{width: '100%'}}>
                     <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
-                        <Text style={{...styles.buttonText, color: '#fff'}}><FontAwesome name="envelope" size={16} color='#fff' /> Continue with Email</Text>
+                        <Text
+                          style={{...styles.buttonText, color: '#fff'}}
+                        >
+                          <FontAwesome name="envelope" size={16} color='#fff' />
+                          Continue with Email
+                        </Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity style={{width: '100%'}}>
@@ -31,17 +36,27 @@ const OnboardingScreen = ({navigation}) => {
                         <Text style={{...styles.buttonText, color: '#000'}}><FontAwesome name="apple" size={16} color='#2B2D42' /> Continue with Apple</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={{width: '100%'}} onPress={() => navigation.reset([NavigationActions.navigate({ routeName: 'MainOne' })], 0)}>
-                    <View style={{...styles.onboardButton, borderColor: '#F7F7F7'}}>
-                        <Text style={{...styles.buttonText, color: '#000', fontFamily: 'DMBold'}}>Skip for now <FontAwesome name="chevron-right" size={12} color='#2B2D42' /></Text>
-                    </View>
+                <TouchableOpacity
+                  style={{width: '100%'}}
+                  onPress={() => navigation.reset([NavigationActions.navigate({ routeName: 'MainOne' })], 0)}
+                >
+                  <View
+                    style={{...styles.onboardButton, borderColor: '#F7F7F7'}}
+                  >
+                    <Text
+                      style={{...styles.buttonText, color: '#000', fontFamily: 'DMBold'}}
+                    >
+                      Skip for now
+                      <FontAwesome name="chevron-right" size={12} color='#2B2D42' />
+                    </Text>
+                  </View>
                 </TouchableOpacity>
                 <View style={styles.footer}>
                     <Text style={styles.footerText}>
-                        By signing up, you accept to our 
-                    </Text> 
-                    <TouchableOpacity onPress={() => navigation.navigate('Terms')}><Text style={{...styles.footerText, textDecorationLine: 'underline'}}>Terms of Sevices</Text></TouchableOpacity> 
-                    <Text style={styles.footerText}> & </Text> 
+                        By signing up, you accept to our
+                    </Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('Terms')}><Text style={{...styles.footerText, textDecorationLine: 'underline'}}>Terms of Sevices</Text></TouchableOpacity>
+                    <Text style={styles.footerText}> & </Text>
                     <TouchableOpacity onPress={() => navigation.navigate('Privacy')}><Text style={{...styles.footerText, textDecorationLine: 'underline'}}>Privacy Policy</Text></TouchableOpacity>
                 </View>
             </View>
@@ -66,7 +81,9 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontFamily: 'DMBold',
         textAlign: 'center',
-        marginTop: 11
+        marginTop: 11,
+        width: '80%',
+        textTransform: 'capitalize'
     },
     pana: {
         height: 159,

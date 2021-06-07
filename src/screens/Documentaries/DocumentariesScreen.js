@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
-import Colors from '../colors/colors';
-import DocumentaryItem from '../components/DocumentaryItem';
+import Colors from '../../colors/colors';
+import DocumentaryItem from '../../components/DocumentaryItem';
 import { Feather } from '@expo/vector-icons';
 
 const DocumentariesScreen = ({navigation}) => {
@@ -17,7 +17,7 @@ const DocumentariesScreen = ({navigation}) => {
         <SafeAreaView style={{flex: 1}}>
             <ScrollView style={{flex: 1}}
             refreshControl={
-                <RefreshControl 
+                <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 colors={[Colors.brand, Colors.secondary, Colors.caption]}
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
         fontFamily: 'DMBold',
         paddingHorizontal: 15
     },
-    categoryItems: {        
+    categoryItems: {
         flexDirection: 'row',
         flexWrap: 'wrap'
     },

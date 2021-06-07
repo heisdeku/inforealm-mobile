@@ -81,54 +81,56 @@ const BottomTab = (props) => {
     })
 
     return (
-        <Animated.View style={{height: componentHeight, backgroundColor: 'transparent'}}>
-            <View style={{flex: 1}}>
-                {/* <TouchableOpacity><Text>Some very long text so it seems that there's something here</Text></TouchableOpacity> */}
-                <Animated.View style={{opacity: closeBtnOpacity, position: 'absolute', bottom: audioBtnAnimation, right: 15}}>
-                    <TouchableOpacity onPress={() => {
-                        setMorePressed(false);
-                        navigation.navigate('Glance')
-                    }}>
-                        <View style={styles.actionBtn}>
-                            <Feather name='headphones' size={20} color='#fff' />
-                        </View>
-                    </TouchableOpacity>
-                </Animated.View>
-                <Animated.View style={{opacity: closeBtnOpacity, position: 'absolute', bottom: downloadBtnAnimationY, right: downloadBtnAnimationX}}>
-                    <TouchableOpacity onPress={() => {
-                        setMorePressed(false);
-                        navigation.navigate('Downloads')
-                    }}>
-                        <View style={styles.actionBtn}>
-                            <Feather name='download-cloud' size={20} color='#fff' />
-                        </View>
-                    </TouchableOpacity>
-                </Animated.View>
-                <Animated.View style={{opacity: closeBtnOpacity, position: 'absolute', bottom: bookmarkBtnAnimationY, right: bookmarkBtnAnimationX}}>
-                    <TouchableOpacity onPress={() => {
-                        setMorePressed(false);
-                        navigation.navigate('Bookmarks');
-                    }}>
-                        <View style={styles.actionBtn}>
-                            <Feather name='bookmark' size={20} color='#fff' />
-                        </View>
-                    </TouchableOpacity>
-                </Animated.View>
-                <Animated.View style={{opacity: closeBtnOpacity, position: 'absolute', bottom: closeBtnAnimation, right: 15}}>
-                    <TouchableOpacity onPress={() => handleClose()}>
-                        <View style={styles.closeBtn}>
-                            <FontAwesome name='close' size={20} color={Colors.secondary} />
-                        </View>
-                    </TouchableOpacity>
-                </Animated.View>
-            </View>
-            <View style={styles.tabBar}>
-                <TouchableOpacity onPress={() => navigation.navigate('Reader')}>
-                    <View style={styles.tab}>
-                        <FontAwesome5 name='book-reader'  color={navigation.state.index === 0 && !morePressed ? Colors.secondary : '#B3B3B3'} size={20} />
-                        <Text style={{...styles.tabLabel, color: navigation.state.index === 0 && !morePressed ? Colors.secondary : '#B3B3B3'}}>Reader</Text>
+        <Animated.View
+          style={{height: componentHeight, backgroundColor: 'transparent'}}
+        >
+          <View style={{flex: 1}}>
+            {/* <TouchableOpacity><Text>Some very long text so it seems that there's something here</Text></TouchableOpacity> */}
+            <Animated.View style={{opacity: closeBtnOpacity, position: 'absolute', bottom: audioBtnAnimation, right: 15}}>
+                <TouchableOpacity onPress={() => {
+                    setMorePressed(false);
+                    navigation.navigate('Glance')
+                }}>
+                    <View style={styles.actionBtn}>
+                        <Feather name='headphones' size={20} color='#fff' />
                     </View>
                 </TouchableOpacity>
+            </Animated.View>
+            <Animated.View style={{opacity: closeBtnOpacity, position: 'absolute', bottom: downloadBtnAnimationY, right: downloadBtnAnimationX}}>
+                <TouchableOpacity onPress={() => {
+                    setMorePressed(false);
+                    navigation.navigate('Downloads')
+                }}>
+                    <View style={styles.actionBtn}>
+                        <Feather name='download-cloud' size={20} color='#fff' />
+                    </View>
+                </TouchableOpacity>
+            </Animated.View>
+            <Animated.View style={{opacity: closeBtnOpacity, position: 'absolute', bottom: bookmarkBtnAnimationY, right: bookmarkBtnAnimationX}}>
+                <TouchableOpacity onPress={() => {
+                    setMorePressed(false);
+                    navigation.navigate('Bookmarks');
+                }}>
+                    <View style={styles.actionBtn}>
+                        <Feather name='bookmark' size={20} color='#fff' />
+                    </View>
+                </TouchableOpacity>
+            </Animated.View>
+            <Animated.View style={{opacity: closeBtnOpacity, position: 'absolute', bottom: closeBtnAnimation, right: 15}}>
+                <TouchableOpacity onPress={() => handleClose()}>
+                    <View style={styles.closeBtn}>
+                        <FontAwesome name='close' size={20} color={Colors.secondary} />
+                    </View>
+                </TouchableOpacity>
+            </Animated.View>
+            </View>
+            <View style={styles.tabBar}>
+              <TouchableOpacity onPress={() => navigation.navigate('Reader')}>
+                  <View style={styles.tab}>
+                      <FontAwesome5 name='book-reader'  color={navigation.state.index === 0 && !morePressed ? Colors.secondary : '#B3B3B3'} size={20} />
+                      <Text style={{...styles.tabLabel, color: navigation.state.index === 0 && !morePressed ? Colors.secondary : '#B3B3B3'}}>Reader</Text>
+                  </View>
+              </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('Documentaries')}>
                     <View style={styles.tab}>
                         <FontAwesome name='video-camera'  color={navigation.state.index === 1 && !morePressed ? Colors.secondary : '#B3B3B3'} size={20} />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, ScrollView, RefreshControl } from 'react-native';
-import Colors from '../colors/colors';
-import GlanceItem from '../components/GlanceItem';
+import Colors from '../../colors/colors';
+import GlanceItem from '../../components/GlanceItem';
 
 const RandomGlanceScreen = () => {
     const [reloaded, setReloaded] = useState(false);
@@ -16,7 +16,7 @@ const RandomGlanceScreen = () => {
         <SafeAreaView style={{flex: 1}}>
             <ScrollView style={{flex: 1, backgroundColor: '#E5E5E5',}}
                 refreshControl={
-                <RefreshControl 
+                <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 colors={[Colors.brand, Colors.secondary, Colors.caption]}
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         fontFamily: 'DMBold',
         paddingHorizontal: 15
     },
-    categoryItems: {        
+    categoryItems: {
         flexDirection: 'row',
         flexWrap: 'wrap'
     },

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, RefreshControl, ScrollView, TouchableOpacity } from 'react-native';
-import Colors from '../colors/colors';
+import Colors from '../../colors/colors';
 
 const NewsLocationsScreen = ({navigation}) => {
     const [refreshing, setRefreshing] = useState(false);
@@ -15,7 +15,7 @@ const NewsLocationsScreen = ({navigation}) => {
         <SafeAreaView style={{flex: 1}}>
             <ScrollView style={{flex: 1, backgroundColor: '#E5E5E5'}}
             refreshControl={
-                <RefreshControl 
+                <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 colors={[Colors.brand, Colors.secondary, Colors.caption]}

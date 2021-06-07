@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, RefreshControl } from 'react-native';
-import NewsItem from '../components/NewsItem';
-import Colors from '../colors/colors';
+import NewsItem from '../../components/NewsItem';
+import Colors from '../../colors/colors';
 
-const BookmarkedReaderScreen = () => {
+const DynamicNewsScreem = () => {
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = () => {
         setRefreshing(true);
@@ -16,7 +16,7 @@ const BookmarkedReaderScreen = () => {
         <SafeAreaView style={{flex: 1}}>
             <ScrollView style={{flex: 1, backgroundColor: '#E5E5E5'}}
             refreshControl={
-                <RefreshControl 
+                <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 colors={[Colors.brand, Colors.secondary, Colors.caption]}
@@ -36,7 +36,7 @@ const BookmarkedReaderScreen = () => {
     )
 }
 
-export default BookmarkedReaderScreen;
+export default DynamicNewsScreem;
 
 const styles = StyleSheet.create({
     container: {

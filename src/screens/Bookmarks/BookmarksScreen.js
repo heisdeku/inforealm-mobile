@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
-import Colors from '../colors/colors';
+import Colors from '../../colors/colors';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 
 const BookmarksScreen = ({navigation}) => {

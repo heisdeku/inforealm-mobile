@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, RefreshControl } from 'react-native';
-import Colors from '../colors/colors';
-import DocumentaryItem from '../components/DocumentaryItem';
+import Colors from '../../colors/colors';
+import DocumentaryItem from '../../components/DocumentaryItem';
 
 const DocumentaryCategory = ({navigation}) => {
     const [refreshing, setRefreshing] = useState(false);
@@ -16,7 +16,7 @@ const DocumentaryCategory = ({navigation}) => {
         <SafeAreaView style={{flex: 1}}>
             <ScrollView style={{flex: 1}}
             refreshControl={
-            <RefreshControl 
+            <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
             colors={[Colors.brand, Colors.secondary, Colors.caption]}
@@ -48,7 +48,7 @@ const DocumentaryCategory = ({navigation}) => {
                     </View>
                 </View>
             </ScrollView>
-        </SafeAreaView> 
+        </SafeAreaView>
     )
 }
 
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         fontFamily: 'DMBold',
         paddingHorizontal: 15
     },
-    categoryItems: {        
+    categoryItems: {
         flexDirection: 'row',
         flexWrap: 'wrap'
     },

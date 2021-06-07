@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, ScrollView, RefreshControl } from 'react-native';
-import Colors from '../colors/colors';
-import GlanceItem from '../components/GlanceItem';
+import Colors from '../../colors/colors';
+import GlanceItem from '../../components/GlanceItem';
 
-const BookmarkedGlanceScreen = () => {
+const MostPopularGlanceScreen = () => {
     const [reloaded, setReloaded] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = () => {
@@ -16,7 +16,7 @@ const BookmarkedGlanceScreen = () => {
         <SafeAreaView style={{flex: 1}}>
             <ScrollView style={{flex: 1, backgroundColor: '#E5E5E5',}}
                 refreshControl={
-                <RefreshControl 
+                <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 colors={[Colors.brand, Colors.secondary, Colors.caption]}
@@ -44,7 +44,7 @@ const BookmarkedGlanceScreen = () => {
     )
 }
 
-export default BookmarkedGlanceScreen;
+export default MostPopularGlanceScreen;
 
 const styles = StyleSheet.create({
     body: {
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         fontFamily: 'DMBold',
         paddingHorizontal: 15
     },
-    categoryItems: {        
+    categoryItems: {
         flexDirection: 'row',
         flexWrap: 'wrap'
     },

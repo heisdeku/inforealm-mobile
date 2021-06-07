@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, RefreshControl, ScrollView, Image, Dimensions } from 'react-native';
-import Colors from '../colors/colors';
+import Colors from '../../colors/colors';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
-import LocationNewsItem from '../components/LocationNewsItem';
+import LocationNewsItem from '../../components/LocationNewsItem';
 
 const LocationScreen = () => {
     const [refreshing, setRefreshing] = useState(false);
@@ -17,7 +17,7 @@ const LocationScreen = () => {
         <SafeAreaView style={{flex: 1}}>
             <ScrollView style={{flex: 1, backgroundColor: '#E5E5E5'}}
             refreshControl={
-                <RefreshControl 
+                <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 colors={[Colors.brand, Colors.secondary, Colors.caption]}
@@ -26,7 +26,7 @@ const LocationScreen = () => {
             }
             >
                 <View style={styles.container}>
-                    <Image source={require('../../assets/images/news-location-demo.png')} style={styles.image} />
+                    <Image source={require('../../../assets/images/news-location-demo.png')} style={styles.image} />
                     <View style={styles.crumbs}>
                         <Text style={styles.crumbText}>News </Text><Feather color={Colors.text2} size={14} name='chevron-right' /><Text style={styles.crumbText}> Location </Text><Feather color={Colors.text2} size={14} name='chevron-right' /><Text style={styles.crumbText}> Africa</Text>
                     </View>
