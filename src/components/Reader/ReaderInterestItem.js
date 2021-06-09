@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 
-export const InterestItem = ({ name, state }) => {
+export const ReaderInterestItem = ({ name, state }) => {
   const [selected, setSelected] = useState(state || false)
   const setInterest = (id) => {
     setSelected(!selected)
@@ -21,26 +21,26 @@ export const InterestItem = ({ name, state }) => {
 const styles = StyleSheet.create({
   interestContainer: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
     borderWidth: 1,
     borderColor: '#cdcccc',
     borderRadius: 8,
-    paddingVertical: 7,
-    paddingRight: 15,
-    paddingLeft: 17,
     textAlign: 'center',
-    minWidth: 55,
+    minWidth: 107,
     marginHorizontal: 6,
   },
   interestSelected: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
     borderWidth: 1,
     borderColor: '#cdcccc',
     borderRadius: 8,
-    paddingVertical: 7,
-    paddingRight: 15,
-    paddingLeft: 17,
     textAlign: 'center',
-    minWidth: 55,
+    minWidth: 107,
     marginHorizontal: 6,
     backgroundColor: '#050618',
   },
