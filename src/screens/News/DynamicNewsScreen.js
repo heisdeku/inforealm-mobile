@@ -3,7 +3,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View, RefreshControl } from
 import NewsItem from '../../components/NewsItem';
 import Colors from '../../colors/colors';
 
-const DynamicNewsScreem = () => {
+const DynamicNewsScreen = () => {
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = () => {
         setRefreshing(true);
@@ -36,7 +36,7 @@ const DynamicNewsScreem = () => {
     )
 }
 
-export default DynamicNewsScreem;
+export default DynamicNewsScreen;
 
 const styles = StyleSheet.create({
     container: {

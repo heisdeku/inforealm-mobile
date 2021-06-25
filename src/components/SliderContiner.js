@@ -15,7 +15,7 @@ const { width, height } = Dimensions.get('window')
 export default () => {
   const scrollRef = React.useRef(null)
   const onChangeIndex = ({ index, prevIndex }) => {
-    console.log({ index, prevIndex })
+    // console.log({ index, prevIndex })
   }
   return (
     <SwiperFlatList

@@ -2,9 +2,8 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import Colors from '../colors/colors';
-import { NavigationActions } from 'react-navigation';
 
-const OnboardingScreen = ({navigation}) => {
+const OnboardingScreen = ({navigation}) => {    
     return (
         <SafeAreaView style={{flex: 1}}>
             <View style={styles.container}>
@@ -16,8 +15,7 @@ const OnboardingScreen = ({navigation}) => {
                         <Text
                           style={{...styles.buttonText, color: '#fff'}}
                         >
-                          <FontAwesome name="envelope" size={16} color='#fff' />
-                          Continue with Email
+                          <FontAwesome name="envelope" size={16} color='#fff' /> Continue with Email
                         </Text>
                     </View>
                 </TouchableOpacity>
@@ -38,7 +36,16 @@ const OnboardingScreen = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{width: '100%'}}
-                  onPress={() => navigation.reset([NavigationActions.navigate({ routeName: 'MainOne' })], 0)}
+                  onPress={() => {
+                    //   navigation.reset([NavigationActions.navigate({ routeName: 'MainOne' })], 0)
+                    navigation.navigate('MainStack');
+                    navigation.reset({
+                        index: 0,
+                        routes: [{
+                            name: 'MainStack'
+                        }]
+                    })
+                    }}
                 >
                   <View
                     style={{...styles.onboardButton, borderColor: '#F7F7F7'}}

@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Dimensions, Animated, TouchableHighlight, TouchableOpacity } from 'react-native';
-import AnimatedMoreButton from './AnimatedMoreButton';
+import { StyleSheet, Text, View, Dimensions, Animated, TouchableOpacity } from 'react-native';
 import { FontAwesome5, FontAwesome, Feather } from '@expo/vector-icons';
 import Colors from '../colors/colors';
 
 const BottomTab = (props) => {
     const [morePressed, setMorePressed] = useState(false)
-    const { navigation } = props;
+    const { navigation, state } = props;
     // const [mode, setMode] = useState(0);
+    const connection = {
+        state: {
+            index: 5
+        }
+    }
 
     const mode = new Animated.Value(0);
 
@@ -16,7 +20,7 @@ const BottomTab = (props) => {
             Animated.timing(mode, {
                 toValue: mode._value === 0 ? 1 : 0,
                 useNativeDriver: false,
-                timing: 3000
+                timing: 2
             })
         ]).start();
     }
@@ -26,16 +30,17 @@ const BottomTab = (props) => {
             Animated.timing(mode, {
                 toValue: 0,
                 useNativeDriver: false,
-                timing: 3000
+                timing: 2
             })
         ]).start();
     }
+
     useEffect(() => {
         Animated.sequence([
             Animated.timing(mode, {
                 toValue: morePressed ? 1 : 0,
                 useNativeDriver: false,
-                timing: 3000
+                timing: 2
             })
         ]).start()
     }, [morePressed])
@@ -117,7 +122,7 @@ const BottomTab = (props) => {
                 </TouchableOpacity>
             </Animated.View>
             <Animated.View style={{opacity: closeBtnOpacity, position: 'absolute', bottom: closeBtnAnimation, right: 15}}>
-                <TouchableOpacity onPress={() => handleClose()}>
+                <TouchableOpacity onPressOut={() => setMorePressed(!morePressed)} onPress={() => handleClose()}>
                     <View style={styles.closeBtn}>
                         <FontAwesome name='close' size={20} color={Colors.secondary} />
                     </View>
@@ -127,20 +132,20 @@ const BottomTab = (props) => {
             <View style={styles.tabBar}>
               <TouchableOpacity onPress={() => navigation.navigate('Reader')}>
                   <View style={styles.tab}>
-                      <FontAwesome5 name='book-reader'  color={navigation.state.index === 0 && !morePressed ? Colors.secondary : '#B3B3B3'} size={20} />
-                      <Text style={{...styles.tabLabel, color: navigation.state.index === 0 && !morePressed ? Colors.secondary : '#B3B3B3'}}>Reader</Text>
+                      <FontAwesome5 name='book-reader'  color={state.index === 0 && !morePressed ? Colors.secondary : '#B3B3B3'} size={20} />
+                      <Text style={{...styles.tabLabel, color: state.index === 0 && !morePressed ? Colors.secondary : '#B3B3B3'}}>Reader</Text>
                   </View>
               </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('Documentaries')}>
                     <View style={styles.tab}>
-                        <FontAwesome name='video-camera'  color={navigation.state.index === 1 && !morePressed ? Colors.secondary : '#B3B3B3'} size={20} />
-                        <Text style={{...styles.tabLabel, color: navigation.state.index === 1 && !morePressed ? Colors.secondary : '#B3B3B3'}}>Documentaries</Text>
+                        <FontAwesome name='video-camera'  color={state.index === 1 && !morePressed ? Colors.secondary : '#B3B3B3'} size={20} />
+                        <Text style={{...styles.tabLabel, color: state.index === 1 && !morePressed ? Colors.secondary : '#B3B3B3'}}>Documentaries</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('News')}>
                     <View style={styles.tab}>
-                        <FontAwesome name='newspaper-o'  color={navigation.state.index === 2 && !morePressed ? Colors.secondary : '#B3B3B3'} size={20} />
-                        <Text style={{...styles.tabLabel, color: navigation.state.index === 2 && !morePressed ? Colors.secondary : '#B3B3B3'}}>News</Text>
+                        <FontAwesome name='newspaper-o'  color={state.index === 2 && !morePressed ? Colors.secondary : '#B3B3B3'} size={20} />
+                        <Text style={{...styles.tabLabel, color: state.index === 2 && !morePressed ? Colors.secondary : '#B3B3B3'}}>News</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPressOut={() => setMorePressed(!morePressed)} onPress={() => handlePress()}>

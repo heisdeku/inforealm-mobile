@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, Image, StatusBar } from 'react-native';
 import Colors from '../colors/colors';
 
 const SplashScreen = ({navigation}) => {
-    useEffect(() => {
-        setTimeout(() => {
-            navigation.navigate('Onboarding')
-        }, 2000);
-    }, [])
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         navigation.navigate('OnboardingStack')
+    //     }, 2000);
+    // }, [])
     return (
         <View style={styles.container}>
             <Image 
