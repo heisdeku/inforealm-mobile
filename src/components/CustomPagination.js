@@ -11,8 +11,8 @@ const styles = StyleSheet.create({
   },
   pagination: {
     borderRadius: 50,
-    width: 10,
-    height: 10,
+    width: 8,
+    height: 8,
   },
 })
 

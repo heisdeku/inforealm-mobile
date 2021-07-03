@@ -1,6 +1,6 @@
 import React from 'react'
 import { TouchableOpacity, Image, Text, View } from 'react-native'
-import { AntDesign, Feather } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 
 import ReaderScreen from '../screens/Reader/ReaderScreen'
 import DummyScreen from '../screens/Reader/DummyScreen'
@@ -9,20 +9,8 @@ import Colors from '../colors/colors'
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { useNavigationState } from '@react-navigation/native'
+import { ReaderNavigation } from '../components/Reader/ReaderNavigation'
 
-/*
-<View style={styles.heading}>
-    <Text style={styles.headingText}>Reader</Text>
-    <Text style={{fontFamily: 'DMRegular', fontSize: 13}}>Welcome sensei</Text>
-</View>
-*/
-/*
-<View>
-    <Text>Reader</Text>
-    <Text style={{fontFamily: 'DMRegular', fontSize: 13}}>Welcome sensei</Text>
-</View>
-
-*/
 
 const Reader = createStackNavigator();
 const MainNews = createMaterialTopTabNavigator();
@@ -76,29 +64,12 @@ export const ReaderStack = ({navigation}) => {
       name='MainNews'
       component={MainNewsStack}
       options={{
-        headerRight: () => (
-          <TouchableOpacity style={{ marginRight: 10 }}>
-            <Feather name='search' size={20} />
-          </TouchableOpacity>
-        ),
-        title: '',
-        headerTitle: () => (
-          <Image
-            source={require('../../assets/images/inforealm-blue.png')}
-            style={{ height: 24, marginLeft: 'auto', marginRight: 'auto' }}
-          />
-        ),
-        headerTitleStyle: {
-          alignSelf: 'center',
-        },
-        headerLeft: () => (
-          <TouchableOpacity style={{ marginLeft: 10 }}>
-            <Image
-              source={require('../../assets/images/header-profile.png')}
-              style={{ height: 27, width: 27, resizeMode: 'contain' }}
-            />
-          </TouchableOpacity>
-        ),
+        header: ({ scene, previous, navigation }) => {
+            const { options } = scene.descriptor;
+            return (
+                <ReaderNavigation visitProfile={() => navigation.navigate('Account')} visitSearch={() => navigation.navigate('Search')} style={options.headerStyle} />
+            )
+            }                                  
       }}
       />
     </Reader.Navigator>

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import { Feather, MaterialIcons } from '@expo/vector-icons'
 import Colors from '../colors/colors'
 
-const ReaderItem = () => {
+const ReaderItem = ({ navigation }) => {  
   return (
     <View style={styles.news}>
       <View style={styles.imageContainer}>
@@ -18,7 +18,7 @@ const ReaderItem = () => {
           <Feather name='chevron-right' size={14} color={Colors.text2} />
           <Text style={styles.crumbText}> Interest </Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Article', { screen: 'ArticleRead'})}>
           <Text style={styles.newsTitle}>
             How Qatar became the richest country in the world
           </Text>

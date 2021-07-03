@@ -10,7 +10,7 @@ import { SwiperFlatList } from 'react-native-swiper-flatlist'
 import ReaderSliderNewsItem from './ReaderSliderNewsItem'
 import { CustomPagination } from './CustomPagination'
 
-const { width, height } = Dimensions.get('window')
+const { width } = Dimensions.get('window')
 
 export default () => {
   const scrollRef = React.useRef(null)
@@ -19,8 +19,7 @@ export default () => {
   }
   return (
     <SwiperFlatList
-      autoplay
-      autoplayDelay={3}
+      autoplay      
       autoplayLoop
       showPagination
       PaginationComponent={CustomPagination}
@@ -31,6 +30,7 @@ export default () => {
       <ReaderSliderNewsItem />
       <ReaderSliderNewsItem />
       <ReaderSliderNewsItem />
+      <ReaderSliderNewsItem />
     </SwiperFlatList>
   )
 }
@@ -38,7 +38,7 @@ export default () => {
 const styles = StyleSheet.create({
   container: {
     height: 200,
-    borderRadius: 20,
+    borderRadius: 80,
     width: width,
   },
 })
