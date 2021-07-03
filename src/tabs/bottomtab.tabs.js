@@ -4,25 +4,21 @@ import { AntDesign } from '@expo/vector-icons';
 
 import BottomTab from '../components/BottomTab';
 
-import DummyScreen from '../screens/Reader/DummyScreen';
-import ReaderScreen from '../screens/Reader/ReaderScreen'
 import { DocumentariesStack } from '../stacks/documentaries.stacks'
 import { NewsStack } from '../stacks/news.stacks'
 import { bookmarksStack } from '../stacks/bookmarks.stacks'
 import { downloadsStack } from '../stacks/download.stacks'
 import { ReaderStack } from '../stacks/reader.stacks'
 import { GlanceStack } from './glance.tabs'
-import Colors from '../colors/colors';
-import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import NewTabTest from '../components/NewTabTest';
+//`import NewTabTest from '../components/NewTabTest';
 
 const Tabs = createBottomTabNavigator();
 
 const BottomTabStack = () => {
   return(
     <Tabs.Navigator
-    tabBar={props => <BottomTab {...props} />}
+      tabBar={props => <BottomTab {...props} />}
     >
       <Tabs.Screen 
       name='Reader'

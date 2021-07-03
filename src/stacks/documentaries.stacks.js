@@ -33,7 +33,7 @@ export const DocumentariesStack = () => {
           </TouchableOpacity>
         ),
         headerRight: () => (
-          <TouchableOpacity style={{marginRight: 10}}>
+          <TouchableOpacity onPress={() => navigation.navigate('Search')} style={{marginRight: 10}}>
             <Feather name='search' size={20} />
           </TouchableOpacity>
         ),
