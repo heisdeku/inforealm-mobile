@@ -19,35 +19,38 @@ export const ReaderInterestItem = ({ name, state }) => {
 }
 
 const styles = StyleSheet.create({
-  interestContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  interestContainer: {  
+    alignItems: 'center',          
     height: 50,
+    marginVertical: 10,
     borderWidth: 1,
     borderColor: '#cdcccc',
     borderRadius: 8,
     textAlign: 'center',
-    minWidth: 107,
+    paddingHorizontal: 28,
+    paddingVertical: 13,
+    minWidth: 108,
     marginHorizontal: 6,
   },
-  interestSelected: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  interestSelected: {    
     height: 50,
+    marginVertical: 10,    
     borderWidth: 1,
     borderColor: '#cdcccc',
-    borderRadius: 8,
-    textAlign: 'center',
-    minWidth: 107,
+    borderRadius: 8,    
+    alignItems: 'center',    
+    paddingVertical: 13,
+    paddingHorizontal: 28,
+    minWidth: 108,
     marginHorizontal: 6,
     backgroundColor: '#050618',
   },
   interestText: {
     color: '#343A40',
+    fontSize: 16
   },
   interestTextSelected: {
     color: '#f7f7f7',
+    fontSize: 16
   },
 })

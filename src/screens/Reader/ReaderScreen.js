@@ -64,12 +64,13 @@ const ReaderScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
               <View style={{ flex: 1 }}>
-                <ReaderItem />
-                <ReaderItem />
-                <ReaderItem />
-                <ReaderItem />
-                <ReaderItem />
-                <ReaderItem />
+                <ReaderItem navigation={navigation} />
+                <ReaderItem navigation={navigation} />
+                <ReaderItem navigation={navigation} />
+                <ReaderItem navigation={navigation} />
+                <ReaderItem navigation={navigation} />
+                <ReaderItem navigation={navigation} />
+                <ReaderItem navigation={navigation} />
               </View>
             </View>
           </View>
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#cdcccc',
     borderTopWidth: 0.5,
     borderBottomWidth: 0.5,
-    marginVertical: 40,
+    marginVertical: 20,
   },
   categoryHead: {
     fontSize: 20,

@@ -3,7 +3,6 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   View,
   RefreshControl,
 } from 'react-native'
@@ -13,7 +12,7 @@ import { InterestContainer } from '../../components/InterestContainer'
 import Colors from '../../colors/colors'
 import { ReaderTopContainer } from '../../components/ReadeTopContainer'
 
-const DummyScreen = () => {
+const DummyScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false)
   const onRefresh = () => {
     setRefreshing(true)
@@ -38,12 +37,12 @@ const DummyScreen = () => {
           {/*<InterestContainer />*/}
           <ReaderTopContainer />
           <View style={{ flex: 1 }}>
-            <ReaderItem />
+            <ReaderItem navigation={navigation} />
             <ReaderDocumentaryItem />
-            <ReaderItem />
-            <ReaderItem />
-            <ReaderDocumentaryItem />
-            <ReaderItem />
+            <ReaderItem navigation={navigation} />
+            <ReaderItem navigation={navigation} />
+            <ReaderDocumentaryItem navigation={navigation} />
+            <ReaderItem navigation={navigation} />
           </View>
         </View>
       </ScrollView>

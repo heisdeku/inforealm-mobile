@@ -8,50 +8,65 @@ import {
 } from 'react-native'
 import Colors from '../colors/colors'
 import {
-  Feather,
-  MaterialIcons,
-  MaterialCommunityIcons,
-  Ionicons,
+SimpleLineIcons,
+AntDesign   
 } from '@expo/vector-icons'
+
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { ReaderInterestItem } from './Reader/ReaderInterestItem'
 
 const interests = [
   {
-    interest: 'All',
+    interest: 'All News',
     interest_id: '0',
   },
   {
-    interest: 'News',
+    interest: 'Politics',
     interest_id: '1',
   },
   {
-    interest: 'Business',
+    interest: 'Video',
     interest_id: '2',
   },
   {
-    interest: 'Sport',
+    interest: "Eidtor's Pick",
     interest_id: '3',
   },
   {
-    interest: 'Health',
+    interest: 'History',
     interest_id: '4',
   },
   {
-    interest: 'Investigation',
+    interest: 'Science',
     interest_id: '5',
   },
   {
-    interest: 'Politics',
+    interest: 'Trending',
     interest_id: '6',
   },
   {
-    interest: 'Documentary',
+    interest: 'Health',
     interest_id: '7',
   },
   {
-    interest: 'Video',
-    interest_id: '8',
+    interest: 'Business',
+    interest_id: '9',
+  },
+  {
+    interest: 'Sport',
+    interest_id: '10',
+  },
+  {
+    interest: 'Exclusive',
+    interest_id: '11',
+  },
+  {
+    interest: 'Documentaries',
+    interest_id: '12',
+  },
+  {
+    interest: 'Investigation',
+    interest_id: '13',
   },
 ]
 
@@ -64,21 +79,22 @@ export const ReaderTopContainer = () => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginTop: 5,
+          marginTop: 17,  
+          borderBottomColor: '#cdcccc',
+          borderBottomWidth: 0.5,
+          paddingBottom: 21       
         }}
       >
         <View style={styles.editorContainer}>
           <Text style={styles.editorText}>Editor's Pick</Text>
         </View>
         <View>
-          <TouchableOpacity onPress={() => refRBSheet.current.open()}>
+          <TouchableOpacity style={{ 
+            paddingRight: 12
+          }} onPress={() => refRBSheet.current.open()}>
             <View style={styles.organize}>
               <Text style={styles.organizeText}>Organize Your Feeds</Text>
-              <MaterialCommunityIcons
-                name='key'
-                size={14}
-                color={Colors.secondary}
-              />
+              <SimpleLineIcons  style={styles.equalizer} name="equalizer" size={14} color={Colors.secondary} />              
             </View>
           </TouchableOpacity>
         </View>
@@ -90,35 +106,40 @@ export const ReaderTopContainer = () => {
         height={330}
         customStyles={{
           wrapper: {
-            backgroundColor: 'transparent',
+            backgroundColor: 'rgba(0, 0, 0, 0.2)',
           },
           draggableIcon: {
             backgroundColor: 'rgba(0, 0, 0, 0.2)',
             width: 134,
-            marginBottom: 25,
+            marginBottom: 5,
+            marginTop: 17,
           },
           container: {
-            height: Dimensions.get('window').height / 1.12,
+            height: Dimensions.get('window').height / 1.16,
             backgroundColor: '#F7F7F7',
             borderTopRightRadius: 24,
             borderTopLeftRadius: 24,
-            paddingHorizontal: 25,
+            paddingHorizontal: 4,
           },
         }}
       >
         <View style={styles.interestOverlayContainer}>
+        <TouchableOpacity style={styles.closeIcon} onPress={() => refRBSheet.current.close()}>          
+            <AntDesign name="close" size={24} color="black" />          
+          </TouchableOpacity>
           <View style={styles.interestOverlayHeading}>
             <Text
               style={{
                 textAlign: 'center',
                 fontFamily: 'DMSerif',
-                fontSize: 22,
+                fontSize: 28,
+                letterSpacing: 0.36
               }}
             >
               Select your interests
             </Text>
-            <Text>
-              Lorem Ipsum is simpy dummy text of the typesetting world
+            <Text style={styles.interestOverlayText}>
+              Select your interests to curate your news feed according to your favourites
             </Text>
           </View>
           <View style={styles.interestOverlayInterests}>
@@ -145,28 +166,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   editorContainer: {
-    width: '60%',
+    width: '60%',    
   },
   editorText: {
     fontSize: 22,
     fontWeight: '700',
-    fontFamily: 'DMBold',
+    fontFamily: 'DMBold', 
+    paddingLeft: 15,   
   },
   organize: {
-    flexDirection: 'row',
-  },
+    flexDirection: 'row',    
+    },
   organizeText: {
     fontSize: 14,
     color: Colors.secondary,
     fontFamily: 'DMRegular',
   },
+  equalizer: {
+    transform: [{ rotate: '90deg' }],
+    marginLeft: 16,        
+  },
   interestOverlayContainer: {
     flex: 1,
     alignItems: 'center',
+    position: 'relative'
+  },
+  interestOverlayHeading: {
+    marginTop: 37,
+    marginBottom: 1,
   },
   interestOverlayInterests: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'space-around'
+  },
+  interestOverlayText: {
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign:'center',
+    maxWidth: '80%',
+    marginTop: 8
   },
   doneBtn: {
     height: 50,
@@ -174,7 +213,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 180,
-    marginTop: 30,
+    marginTop: 15,
     borderRadius: 8,
   },
   doneBtnText: {
@@ -182,4 +221,9 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
+
+  closeIcon: {
+    position: 'absolute',
+    right: 9
+  }
 })

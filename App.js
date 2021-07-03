@@ -11,15 +11,15 @@ import { StatusBar } from 'react-native'
 import apiConnect from './src/api/apiConnect'
 //screens
 import SplashScreen from './src/screens/SplashScreen'
-import OnboardingScreen from './src/screens/OnboardingScreen'
-//stacks
 import OnboardingStack from './src/stacks/onboarding.stacks'
 //store
 import { store } from './src/redux/store/store'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import DummyScreen from './src/screens/Reader/DummyScreen';
 import BottomTabStack from './src/tabs/bottomtab.tabs';
+import { SearchStack } from './src/stacks/search.stacks';
+import { ArticleStack } from './src/stacks/article.stacks';
+import { AccountStack } from './src/stacks/account.stacks';
 
 const getFonts = () =>
   Font.loadAsync({
@@ -104,6 +104,9 @@ export default () => {
             name='MainStack' 
             component={BottomTabStack}
             />
+            <SwicthStack.Screen name="Search" component={SearchStack} />
+            <SwicthStack.Screen name="Article" component={ArticleStack} />
+            <SwicthStack.Screen name="Account" component={AccountStack} />
           </SwicthStack.Navigator>
         </NavigationContainer>
       </Provider>

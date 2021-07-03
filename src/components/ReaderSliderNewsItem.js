@@ -5,7 +5,7 @@ import {
   View,
   Dimensions,
   Text,
-  ImageBackground,
+  ImageBackground,  
 } from 'react-native'
 
 import { Feather, MaterialIcons } from '@expo/vector-icons'
@@ -15,10 +15,7 @@ const ReaderSliderNewsItem = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity>
-        <View
-          style={{
-            borderRadius: 8,
-          }}
+        <View          
         >
           <ImageBackground
             source={require('../../assets/images/american-flag.png')}
@@ -51,20 +48,19 @@ const ReaderSliderNewsItem = () => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  container: {    
     width,
     paddingHorizontal: 15,
     height: 200,
     color: '#F7F7F7',
+    borderRadius: 50
   },
   imageBackground: {
     flex: 1,
     width: width * 0.94,
-    resizeMode: 'contain',
-    height: 200,
-    borderRadius: 8,
-    backgroundColor: 'black',
+    resizeMode: 'cover',
+    height: 200,    
+    backgroundColor: 'linear-gradient(0deg, rgba(5, 6, 24, 0.87) 0%, rgba(5, 6, 24, 0) 59.98%)',
   },
   crumbs: {
     marginTop: 10,
