@@ -15,7 +15,7 @@ export const AccountNavigation = ({ goBackEvt, title, type }) => {
                 type === 'image' ? 
                 <Image
                     source={require('../../assets/images/inforealm-blue.png')}
-                    style={{ height: 24, marginLeft: 'auto', marginRight: 'auto', marginTop: 7 }}
+                    style={{ height: 24, marginLeft: 100, marginRight: 'auto', marginTop: 7 }}
                 />  : 
                 <Text style={styles.navigationHeader}>{title}</Text> 
             }                       
