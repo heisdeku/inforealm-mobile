@@ -8,17 +8,21 @@ const ArticleCommentsContainer = () => {
     return (        
     <View style={styles.container}> 
         <FlatList
+            style={{ marginBottom: 100,}}
             data={[
-            {key: 'Devin'},
-            {key: 'Dan'},
-            {key: 'Dominic'},
-            {key: 'Jackson'},
-            {key: 'James'},
-            {key: 'Joel'},
+            {key: 'Uduak'},
+            {key: 'Damola Moski'},
+            {key: 'Deku Feranmi'},
+            {key: 'Mure Funds'},
+            {key: 'Davido'},
+            {key: 'Joeboy'},
             {key: 'John'},
-            {key: 'Jillian'},
+            {key: 'Jude Bella'},
             {key: 'Jimmy'},
-            {key: 'Julie'},
+            {key: 'Seyi Olatunji'},
+            {key: 'Anola'},
+            {key: 'Dominic'},
+            {key: 'Rema'},
             ]}
             renderItem={({item}) => <ArticleCommentContainer name={item.key} />}
         />
@@ -31,8 +35,8 @@ export default ArticleCommentsContainer;
 
 const styles = StyleSheet.create({
     container: {        
-        padding: 18,
+        paddingHorizontal: 18,
         backgroundColor: '#F7F7F7',
-        position: 'relative', 
+        position: 'relative',         
     }
 });

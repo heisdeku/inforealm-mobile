@@ -18,6 +18,7 @@ export const CommentBox = () => {
 const styles = StyleSheet.create({
     container: {        
         position: 'absolute',
+        backgroundColor: 'red',
         width: Dimensions.get('window').width,
         height: 120,
         paddingTop: 21,

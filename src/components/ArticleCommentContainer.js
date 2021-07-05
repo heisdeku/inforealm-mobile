@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderBottomWidth: 0.5,
         borderBottomColor: '#cdcccc',
-        paddingBottom: 18,        
+        paddingBottom: 18,  
+        paddingTop: 15,      
     },
     commentatorContainer: {
         width: '16%',        
@@ -57,8 +58,8 @@ const styles = StyleSheet.create({
         marginLeft: 10,         
     },
     commentMainHeader: {
-        width: '75%',
-        marginTop: 10,
+        width: '50%',   
+        marginTop: 10,     
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
