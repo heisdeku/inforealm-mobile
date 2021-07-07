@@ -3,19 +3,53 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import Colors from '../colors/colors';
 
-const NewsItem = () => {
+const NewsItem = ({news}) => {
+    if(!news){
+        news = {
+            "author": "Test author",
+            "caption": "Dummy News Caption 3",
+            "categories": [
+               {
+                "category": "News",
+                "category_id": "3",
+              },
+            ],
+            "date": "May 05, 2021",
+            "id": "cc63aa2a9ab8f5ab1f25220dca666ac6",
+            "interests": [
+              {
+                "interest": "Video",
+                "interest_id": "8",
+              },
+              {
+                "interest": "News",
+                "interest_id": "1",
+              },
+            ],
+            "media": {
+              "audios": [],
+              "images": [],
+              "thumbnail": "http://aledoyhost.com/inforealm/thumbnails/main_thumbnail.png",
+              "videos": [],
+            },
+            "time": "11:51:37",
+            "time_to_read": "1",
+            "title": "Dummy News Title 3",
+            "user_id": null,
+          }
+    }
     return (
         <View style={styles.news}>
             <View style={styles.imageContainer}>
-                <Image source={require('../../assets/images/demo-news-image.png')} style={styles.image} />
+                <Image source={{uri: news.media.thumbnail}} style={styles.image} />
             </View>
             <View style={styles.newsDetails}>
-                <View style={styles.crumbs}><Text style={styles.crumbText}>News </Text><Feather name='chevron-right' size={14} color={Colors.text2} /><Text style={styles.crumbText}> Interest</Text></View>
-                <TouchableOpacity><Text style={styles.newsTitle}>How Qatar became the richest country in the world</Text></TouchableOpacity>
-                <Text style={styles.newsCaption}>Qatar, By far, the richest country in the world..</Text>
+                <View style={styles.crumbs}><Text style={styles.crumbText}>News </Text><Feather name='chevron-right' size={14} color={Colors.text2} /><Text style={styles.crumbText}> {news.interests.map(interest => interest.interest).join(', ')}</Text></View>
+                <TouchableOpacity><Text style={styles.newsTitle}>{news.title}</Text></TouchableOpacity>
+                <Text style={styles.newsCaption}>{news.caption}</Text>
                 <View style={styles.newsSummary}>
-                    <View style={styles.newsSummaryItem}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.newsSummaryText}> Oct 27, 2020</Text></View>
-                    <View style={styles.newsSummaryItem}><MaterialIcons size={14} color={Colors.text1} name='library-books' /><Text style={styles.newsSummaryText}> 3 min read</Text></View>
+                    <View style={styles.newsSummaryItem}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.newsSummaryText}> {news.date}</Text></View>
+                    <View style={styles.newsSummaryItem}><MaterialIcons size={14} color={Colors.text1} name='library-books' /><Text style={styles.newsSummaryText}> {news.time_to_read} min read</Text></View>
                 </View>
             </View>
         </View>
@@ -41,7 +75,7 @@ const styles = StyleSheet.create({
     image: {
         height: 160,
         width: 116,
-        resizeMode: 'contain'
+        resizeMode: 'cover'
     },
     crumbs: {
         flexDirection: 'row',

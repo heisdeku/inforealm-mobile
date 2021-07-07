@@ -1,61 +1,100 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, RefreshControl, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, RefreshControl, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Colors from '../../colors/colors';
+import apiConnect from '../../api/apiConnect';
 
 const NewsLocationsScreen = ({navigation}) => {
     const [refreshing, setRefreshing] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [locations, setLocations] = useState(null);
+    
+    const getNewsLocation = async () => {
+        setError('');
+        setIsLoading(true);
+        try {
+            const response = await apiConnect.get('/getNewsLocation');
+            if(response.data.status === 'success'){
+                setIsLoading(false);
+                setLocations(response.data.locations)
+            }else{
+                setIsLoading(false);
+                setError(response.data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            setError('Something went wrong');
+        }
+    } 
+
     const onRefresh = () => {
         setRefreshing(true);
-        setTimeout(() => {
-            setRefreshing(false);
-        }, 2000);
+        getNewsLocation();
+        setRefreshing(false);
     }
+
+    useEffect(() => {
+        getNewsLocation();
+    }, [])
 
     return (
         <SafeAreaView style={{flex: 1}}>
-            <ScrollView style={{flex: 1, backgroundColor: '#E5E5E5'}}
-            refreshControl={
-                <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                colors={[Colors.brand, Colors.secondary, Colors.caption]}
-                tintColor={Colors.brand}
-                />
+            {
+                isLoading ?
+                <View style={styles.loadingView}>
+                    <ActivityIndicator color={Colors.secondary} size='large' />
+                </View>
+                :
+                null
             }
-            >
-                <View style={styles.container}>
-                    <TouchableOpacity onPress={() => navigation.navigate('SelectedLocation')}>
-                        <View style={styles.location}>
-                            <Text style={styles.locationText}>Location</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <View style={styles.location}>
-                            <Text style={styles.locationText}>Location</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <View style={styles.location}>
-                            <Text style={styles.locationText}>Location</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <View style={styles.location}>
-                            <Text style={styles.locationText}>Location</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <View style={styles.location}>
-                            <Text style={styles.locationText}>Location</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <View style={styles.location}>
-                            <Text style={styles.locationText}>Location</Text>
+            {
+                !isLoading && error ?
+                <View style={styles.errorView}>
+                    <Text >{error}</Text>
+                    <TouchableOpacity style={{width: '100%'}} onPress={() => getTerms()}>
+                        <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
+                            <Text
+                            style={{...styles.buttonText, color: '#fff'}}
+                            >
+                            Try Again
+                            </Text>
                         </View>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
+                :
+                null
+            }
+            {
+                !isLoading && locations ?
+                <ScrollView style={{flex: 1, backgroundColor: '#E5E5E5'}}
+                refreshControl={
+                    <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    colors={[Colors.brand, Colors.secondary, Colors.caption]}
+                    tintColor={Colors.brand}
+                    />
+                }
+                >
+                    <View style={styles.container}>
+                        {
+                            locations.map((location, i) => {
+                                return(
+                                    <TouchableOpacity key={i} onPress={() => navigation.navigate('SelectedLocation', {
+                                        location_id: location.location_id
+                                    })}>
+                                        <View style={styles.location}>
+                                            <Text style={styles.locationText}>{location.location}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            })
+                        }
+                    </View>
+                </ScrollView>
+                :
+                null
+            }
         </SafeAreaView>
     )
 }
@@ -77,5 +116,29 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'DMBold',
         color: Colors.text2
-    }
+    },
+    loadingView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    errorView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 25
+    },
+    onboardButton: {
+        height: 50,
+        width: '100%',
+        borderRadius: 4,
+        borderWidth: 0.7,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 8
+    },
+    buttonText: {
+        fontSize: 14,
+        fontFamily: 'DMRegular'
+    },
 });
