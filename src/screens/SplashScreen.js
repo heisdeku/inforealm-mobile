@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Image, StatusBar } from 'react-native';
 import Colors from '../colors/colors';
+import { connect } from 'react-redux';
+import { getInterests } from '../redux/actions/interest.actions';
+import { getNewsCategories } from '../redux/actions/news-categories.actions';
 
-const SplashScreen = ({navigation}) => {
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         navigation.navigate('OnboardingStack')
-    //     }, 2000);
-    // }, [])
+const SplashScreen = ({getInterests, getNewsCategories }) => {
+    useEffect(() => {
+        getInterests();
+        getNewsCategories();
+    }, [])
     return (
         <View style={styles.container}>
             <Image 
@@ -32,4 +34,9 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SplashScreen;
+const mapDispatchToProps = dispatch => ({
+    getInterests: () => dispatch(getInterests()),
+    getNewsCategories: () => dispatch(getNewsCategories())
+})
+
+export default connect(null, mapDispatchToProps)(SplashScreen);

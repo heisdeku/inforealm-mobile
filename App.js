@@ -7,8 +7,6 @@ import AppLoading from 'expo-app-loading'
 // import createAnimatedSwitchNavigator from 'react-navigation-animated-switch'
 // import { Transition } from 'react-native-reanimated'
 import { StatusBar } from 'react-native'
-//api
-import apiConnect from './src/api/apiConnect'
 //screens
 import SplashScreen from './src/screens/SplashScreen'
 import OnboardingStack from './src/stacks/onboarding.stacks'
@@ -27,44 +25,7 @@ const getFonts = () =>
     DMBold: require('./assets/fonts/DMSans-Bold.ttf'),
     DMRegular: require('./assets/fonts/DMSans-Regular.ttf'),
     DMSerif: require('./assets/fonts/DMSerifDisplay-Regular.ttf'),
-  })
-
-const getInterests = async () => {
-  try {
-    const result = await apiConnect.get('/getNewsInterests')
-    if (result.data.status === 'success') {
-      const apiInterests = result.data.interests
-      return apiInterests
-    } else {
-      return []
-    }
-  } catch (error) {
-    console.log(error)
-  }
-} //test code for fetching interests to be used in navigation
-
-// const SwitchNavigator = createAnimatedSwitchNavigator(
-//   {
-//     Splash: {
-//       screen: SplashScreen,
-//     },
-//     Onboarding: onboardingStack,
-//   },
-//   {
-//     transition: (
-//       <Transition.Together>
-//         <Transition.Out
-//           type='slide-left'
-//           durationMs={500}
-//           interpolation='easeIn'
-//         />
-//         <Transition.In type='slide-right' durationMs={500} />
-//       </Transition.Together>
-//     ),
-//   }
-// )
-
-// const App = createAppContainer(SwitchNavigator)
+})
 
 const SwicthStack = createStackNavigator();
 
@@ -74,7 +35,7 @@ export default () => {
   useEffect(() => {
     setTimeout(() => {
       setSplash(false);
-    }, 2000);
+    }, 3000);
   }, [])
 
   if (fontsLoaded) {
