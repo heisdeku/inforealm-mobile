@@ -2,8 +2,10 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import Colors from '../colors/colors';
+import { useNavigation } from '@react-navigation/native';
 
 const NewsItem = ({news}) => {
+    const navigation = useNavigation();
     if(!news){
         news = {
             "author": "Test author",
@@ -45,7 +47,7 @@ const NewsItem = ({news}) => {
             </View>
             <View style={styles.newsDetails}>
                 <View style={styles.crumbs}><Text style={styles.crumbText}>News </Text><Feather name='chevron-right' size={14} color={Colors.text2} /><Text style={styles.crumbText}> {news.interests.map(interest => interest.interest).join(', ')}</Text></View>
-                <TouchableOpacity><Text style={styles.newsTitle}>{news.title}</Text></TouchableOpacity>
+                <TouchableOpacity  onPress={() => navigation.navigate('Article', { screen: 'ArticleRead', params: {news_id: news.id}})}><Text style={styles.newsTitle}>{news.title}</Text></TouchableOpacity>
                 <Text style={styles.newsCaption}>{news.caption}</Text>
                 <View style={styles.newsSummary}>
                     <View style={styles.newsSummaryItem}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.newsSummaryText}> {news.date}</Text></View>

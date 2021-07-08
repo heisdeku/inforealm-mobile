@@ -5,7 +5,7 @@ import DocumentaryItem from '../../components/DocumentaryItem';
 import { Feather } from '@expo/vector-icons';
 import apiConnect from '../../api/apiConnect';
 
-const DocumentariesScreen = ({navigation}) => {
+const DocumentariesScreen = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
