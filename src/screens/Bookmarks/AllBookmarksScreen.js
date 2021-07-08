@@ -4,9 +4,8 @@ import NewsItem from '../../components/NewsItem';
 import Colors from '../../colors/colors';
 import apiConnect from '../../api/apiConnect';
 
-const BookmarkedReaderScreen = ({navigation}) => {
+const AllBookmarksScreen = () => {
     const user_id = 'ebfcbd110f6758249df0e7f7d5f7b950';
-    const category_id = 1;
     const [refreshing, setRefreshing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -18,7 +17,6 @@ const BookmarkedReaderScreen = ({navigation}) => {
         try {
             const bodyForm = new FormData();
             bodyForm.append('user_id', user_id);
-            bodyForm.append('category_id', category_id);
             const response = await apiConnect.post('/getBookmarks', bodyForm);
             if(response.data.status === 'success'){
                 setIsLoading(false);
@@ -87,7 +85,7 @@ const BookmarkedReaderScreen = ({navigation}) => {
                             news.map((news,i) => {
                                 return <NewsItem news={news} key={i} />
                             })
-                        }                        
+                        }
                     </View>
             </ScrollView>
                 :
@@ -107,7 +105,7 @@ const BookmarkedReaderScreen = ({navigation}) => {
     )
 }
 
-export default BookmarkedReaderScreen;
+export default AllBookmarksScreen;
 
 const styles = StyleSheet.create({
     container: {

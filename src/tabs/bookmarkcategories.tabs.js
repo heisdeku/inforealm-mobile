@@ -7,11 +7,27 @@ import BookmarkedDocumentariesScreen from '../screens/Bookmarks/BookmarkedDocume
 import BookmarkedGlanceScreen from '../screens/Bookmarks/BookmarkedGlanceScreen';
 
 import Colors from '../colors/colors';
+import AllBookmarksScreen from '../screens/Bookmarks/AllBookmarksScreen';
 
 const BookmarkTabs = createMaterialTopTabNavigator();
 const BookmarkReader = createStackNavigator();
 const BookmarkDocumentaries = createStackNavigator();
 const BookmarkGlance = createStackNavigator();
+const AllBookmarks = createStackNavigator();
+
+const AllBookmarksStack = () => {
+  return(
+    <AllBookmarks.Navigator>
+      <AllBookmarks.Screen 
+      name='MainAllBookmarks'
+      component={AllBookmarksScreen}
+      options={{
+        headerShown: false
+      }}
+      />
+    </AllBookmarks.Navigator>
+  )
+}
 
 const BookmarkReaderStack = () => {
   return(
@@ -26,6 +42,7 @@ const BookmarkReaderStack = () => {
     </BookmarkReader.Navigator>
   )
 }
+
 const BookmarkDocumentariesStack = () => {
   return(
     <BookmarkDocumentaries.Navigator>
@@ -79,6 +96,14 @@ export const bookmarkCategories = () => {
       }
     }}
     >
+      <BookmarkTabs.Screen
+      name='AllBookmarks'
+      component={AllBookmarksStack}
+      options={{
+        headerShown: false,
+        title: 'All'
+      }}
+      />
       <BookmarkTabs.Screen
       name='BookmarkReader'
       component={BookmarkReaderStack}

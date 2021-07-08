@@ -8,7 +8,7 @@ const DynamicNewsScreen = ({interest_id}) => {
     const [refreshing, setRefreshing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const [news, setNews] = useState(null);
+    const [news, setNews] = useState([]);
     
     const getNewsByInterest = async () => {
         setError('');
@@ -68,7 +68,7 @@ const DynamicNewsScreen = ({interest_id}) => {
                 null
             }
             {
-                !isLoading && news ?
+                !isLoading && news.length ?
                 <ScrollView style={{flex: 1, backgroundColor: '#E5E5E5'}}
                 refreshControl={
                     <RefreshControl
@@ -89,6 +89,16 @@ const DynamicNewsScreen = ({interest_id}) => {
             </ScrollView>
                 :
                 null
+            }
+            {
+                !news.length && !isLoading ?
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={styles.emptyView}>
+                        <Text style={styles.emptyText}>Here’s a little empty</Text>
+                    </View>
+                </View>
+                :
+                null 
             }
         </SafeAreaView>
     )
@@ -124,4 +134,17 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily: 'DMRegular'
     },
+    emptyView: {
+        height: 200,
+        borderColor: Colors.caption,
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        width: '80%'
+    },
+    emptyText: {
+        fontSize: 20,
+        fontFamily: 'DMBold'
+    }
 });
