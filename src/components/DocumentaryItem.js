@@ -3,8 +3,10 @@ import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableOpacity }
 import Colors from '../colors/colors';
 import { Feather, MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
+import { useNavigation } from '@react-navigation/native';
 
-const DocumentaryItem = ({item}) => {
+const DocumentaryItem = ({news}) => {
+    navigation = useNavigation();
     const refRBSheet = useRef();
     return (
         <View style={styles.item}>
@@ -13,17 +15,22 @@ const DocumentaryItem = ({item}) => {
                 source={require('../../assets/images/demo-documentary.png')}
                 style={styles.Image}
                 >
-                    <TouchableOpacity style={{flexDirection: 'row'}}>
+                    {
+                        news.media.videos.length ?
+                        <TouchableOpacity style={{flexDirection: 'row'}}>
                         <View style={{backgroundColor: '#fff', height: 23, width: 23, justifyContent: 'center', alignItems: 'center', borderRadius: 11.5}}><Ionicons name='md-play-circle' size={24} color='#000' /></View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                        :
+                        null
+                    }
                 </ImageBackground>
             </View>
-            <TouchableOpacity><Text style={styles.title}>How these economic super powers...</Text></TouchableOpacity>
-            <Text style={styles.caption}>The African continent has 15% of the world’s...</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Article', { screen: 'ArticleRead', params: {news_id: news.id}})}><Text style={styles.title}>{news.title}</Text></TouchableOpacity>
+            <Text style={styles.caption}>{news.caption}</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 5}}>
                 <View>
-                    <View style={styles.date}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.dateText}> Oct 27, 2020</Text></View>
-                    <View style={styles.date}><MaterialIcons size={14} color={Colors.text1} name='library-books' /><Text style={styles.dateText}> 3 min read</Text></View>
+                    <View style={styles.date}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.dateText}> {news.date}</Text></View>
+                    <View style={styles.date}><MaterialIcons size={14} color={Colors.text1} name='library-books' /><Text style={styles.dateText}> {news.time_to_read} min read</Text></View>
                 </View>
                 <View>
                     <TouchableOpacity onPress={() => refRBSheet.current.open()}><MaterialCommunityIcons name='dots-vertical' size={28} color='#09121F' /></TouchableOpacity>

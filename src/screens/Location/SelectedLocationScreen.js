@@ -84,9 +84,10 @@ const SelectedLocationScreen = ({navigation, route}) => {
                         {
                             news.map((news,i) => {
                                 return (
-                                    <TouchableOpacity onPress={() => navigation.navigate('NewsLocation', {news_id: news.id})} key={i}>
-                                        <NewsItem news={news} />
-                                    </TouchableOpacity>
+                                    <NewsItem news={news} key={i} />
+                                    // <TouchableOpacity onPress={() => navigation.navigate('NewsLocation', {news_id: news.id})} key={i}>
+                                    //     <NewsItem news={news} />
+                                    // </TouchableOpacity>
                                 )
                             })
                         }

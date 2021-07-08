@@ -1,11 +1,40 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import Colors from '../colors/colors';
 import { Feather, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
+import { useNavigation } from '@react-navigation/native';
+import { Audio } from 'expo-av';
 
-const GlanceItem = () => {
+const GlanceItem = ({news}) => {
+    const [duration, setDuration] = useState(null);
+    console.log('glanceNews', news) 
+    console.log('glanceNewsAudio', news.media.audios[0]) 
+    const navigation = useNavigation();
     const refRBSheet = useRef();
+    const millisToMinutesAndSeconds = (millis) => {
+        var minutes = Math.floor(millis / 60000);
+        var seconds = ((millis % 60000) / 1000).toFixed(0);
+        return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+    }
+      
+    const getAudioLength = async () => {
+        const soundObject = new Audio.Sound();
+        try {
+            await soundObject.loadAsync({uri: news.media.audios[0]});
+            const audioStatus = await soundObject.getStatusAsync();
+            setDuration(millisToMinutesAndSeconds(audioStatus.durationMillis));
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        if(news.media.audios.length > 0){
+            getAudioLength();
+        }
+    }, [])
+
     return (
         <View>
             <View style={styles.glanceItem}>
@@ -14,10 +43,10 @@ const GlanceItem = () => {
                 </View>
                 <View style={styles.glanceDetailsBox}>
                     <View style={styles.glanceDetails}>
-                        <Text style={styles.glanceItemTitle}>Last days in Iraq: The sad birth of Isis</Text>
+                        <Text style={styles.glanceItemTitle}>{news.title}</Text>
                         <View style={{flexDirection: 'row'}}>
-                            <View style={styles.date}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.dateText}> Oct 27, 2020</Text></View>
-                            <View style={styles.date}><Feather size={14} color={Colors.text1} name='headphones' /><Text style={styles.dateText}> 4:30</Text></View>
+                            <View style={styles.date}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.dateText}> {news.date}</Text></View>
+                            {duration ? <View style={styles.date}><Feather size={14} color={Colors.text1} name='headphones' /><Text style={styles.dateText}> {duration}</Text></View> : null}
                         </View>
                     </View>
                     <View style={{height: 22, width: 22, justifyContent: 'center', alignItems: 'center'}}>
