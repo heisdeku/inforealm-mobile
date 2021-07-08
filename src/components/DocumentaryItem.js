@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableOpacity, Share } from 'react-native';
 import Colors from '../colors/colors';
 import { Feather, MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -7,7 +7,18 @@ import { useNavigation } from '@react-navigation/native';
 
 const DocumentaryItem = ({news}) => {
     navigation = useNavigation();
-    const refRBSheet = useRef();
+    const refRBSheet = useRef();    
+    const onShare = async () => {
+        try {
+            Share.share({
+                message: 'Check this out on the inforealm',
+                url: `https:theinforealm.com/news/${news.id}`
+            })
+        } catch (error) {  
+            console.log(error);
+        }
+    }
+
     return (
         <View style={styles.item}>
             <View style={{borderRadius: 5, overflow: 'hidden'}}>
@@ -69,7 +80,7 @@ const DocumentaryItem = ({news}) => {
                         <Text style={styles.rbText}>Download</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => onShare()}>
                     <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
                         <View style={styles.rbIcon}><Feather name='share' color='#fff' size={20} /></View> 
                         <Text style={styles.rbText}>Share</Text>
