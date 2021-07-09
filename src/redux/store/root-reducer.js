@@ -1,13 +1,39 @@
 import { combineReducers } from 'redux'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { persistReducer } from 'redux-persist';
 
 import userReducer from '../reducers/user.reducer.js'
 import interestReducer from '../reducers/interest.reducer'
 import newsCategoriesReducer from '../reducers/news-categories.reducer'
+import mediaReducer from '../reducers/media.reducer.js'
+import feedReducer from '../reducers/feed.reducer.js'
+import { searchReducer } from '../reducers/search.reducer.js'
+feedReducer
 
-const rootReducer = combineReducers({
-  user: userReducer,
+const rootPersistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+  blacklist: [    
+    'interest',
+    'search',    
+    'feed',    
+    'media',    
+  ],
+}
+
+const persistConfig = {
+  key: 'user',
+  storage: AsyncStorage,
+  whitelist: ['user']
+  
+}
+export const rootReducer = combineReducers({
+  user: persistReducer(persistConfig, userReducer),
   newsCategories: newsCategoriesReducer,
-  interest: interestReducer
+  interest: interestReducer,  
+  feed: feedReducer,
+  search: searchReducer,
+  medias: mediaReducer  
 })
 
-export default rootReducer
+export default persistReducer(rootPersistConfig, rootReducer)
