@@ -10,7 +10,6 @@ const SelectedLocationScreen = ({navigation, route}) => {
     const [error, setError] = useState('');
     const [news, setNews] = useState(null);
     const { location_id } = route.params;
-    console.log('news', news);
     
     const getNewsByLocation = async () => {
         setError('');
@@ -20,7 +19,6 @@ const SelectedLocationScreen = ({navigation, route}) => {
             bodyForm.append('location_id', location_id);
             const response = await apiConnect.post('/getNewsByLocation', bodyForm);
             if(response.data.status === 'success'){
-                console.log(response)
                 setIsLoading(false);
                 setNews(response.data.news)
             }else{
@@ -57,7 +55,7 @@ const SelectedLocationScreen = ({navigation, route}) => {
                 !isLoading && error ?
                 <View style={styles.errorView}>
                     <Text >{error}</Text>
-                    <TouchableOpacity style={{width: '100%'}} onPress={() => getTerms()}>
+                    <TouchableOpacity style={{width: '100%'}} onPress={() => getNewsByLocation()}>
                         <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
                             <Text
                             style={{...styles.buttonText, color: '#fff'}}
@@ -86,9 +84,10 @@ const SelectedLocationScreen = ({navigation, route}) => {
                         {
                             news.map((news,i) => {
                                 return (
-                                    <TouchableOpacity onPress={() => navigation.navigate('NewsLocation', {news_id: news.id})} key={i}>
-                                        <NewsItem news={news} />
-                                    </TouchableOpacity>
+                                    <NewsItem news={news} key={i} />
+                                    // <TouchableOpacity onPress={() => navigation.navigate('NewsLocation', {news_id: news.id})} key={i}>
+                                    //     <NewsItem news={news} />
+                                    // </TouchableOpacity>
                                 )
                             })
                         }

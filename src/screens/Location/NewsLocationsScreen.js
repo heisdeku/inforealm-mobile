@@ -51,7 +51,7 @@ const NewsLocationsScreen = ({navigation}) => {
                 !isLoading && error ?
                 <View style={styles.errorView}>
                     <Text >{error}</Text>
-                    <TouchableOpacity style={{width: '100%'}} onPress={() => getTerms()}>
+                    <TouchableOpacity style={{width: '100%'}} onPress={() => getNewsLocation()}>
                         <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
                             <Text
                             style={{...styles.buttonText, color: '#fff'}}

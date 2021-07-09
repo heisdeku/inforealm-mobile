@@ -8,7 +8,7 @@ import { bookmarkCategories } from '../tabs/bookmarkcategories.tabs'
 const Bookmarks = createStackNavigator();
 
 export const bookmarksStack = ({navigation}) => {
-  console.log(navigation);
+  
   return(
     <Bookmarks.Navigator>
       <Bookmarks.Screen 

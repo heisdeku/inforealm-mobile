@@ -4,7 +4,7 @@ import Colors from '../../colors/colors';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 
 const BookmarksScreen = ({navigation}) => {
-    console.log(navigation);
+    
     return (
         <SafeAreaView style={{flex: 1}}>
             <View style={styles.container}>
