@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Share } from 'react-native';
 import Colors from '../colors/colors';
 import { Feather, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -8,9 +8,18 @@ import { Audio } from 'expo-av';
 
 const GlanceItem = ({news}) => {
     const [duration, setDuration] = useState(null);
-    console.log('glanceNews', news) 
     console.log('glanceNewsAudio', news.media.audios[0]) 
-    const navigation = useNavigation();
+    const navigation = useNavigation(); 
+    const onShare = async () => {
+        try {
+            Share.share({
+                message: `Check this out on the inforealm https:theinforealm.com/news/${news.id}`
+            })
+        } catch (error) {  
+            console.log(error);
+        }
+    }
+
     const refRBSheet = useRef();
     const millisToMinutesAndSeconds = (millis) => {
         var minutes = Math.floor(millis / 60000);
@@ -87,7 +96,7 @@ const GlanceItem = ({news}) => {
                         <Text style={styles.rbText}>Download</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => onShare()}>
                     <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
                         <View style={styles.rbIcon}><Feather name='share' color='#fff' size={20} /></View> 
                         <Text style={styles.rbText}>Share</Text>

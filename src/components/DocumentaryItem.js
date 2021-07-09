@@ -11,8 +11,7 @@ const DocumentaryItem = ({news}) => {
     const onShare = async () => {
         try {
             Share.share({
-                message: 'Check this out on the inforealm',
-                url: `https:theinforealm.com/news/${news.id}`
+                message: `Check this out on the inforealm https:theinforealm.com/news/${news.id}`
             })
         } catch (error) {  
             console.log(error);
