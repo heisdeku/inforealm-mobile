@@ -1,8 +1,11 @@
 import React from 'react'
 import { TouchableOpacity, StyleSheet, View, Text, Image, Dimensions } from 'react-native'
 import { Feather } from '@expo/vector-icons';
+import { useSelector } from 'react-redux'
+import { getCurrentUser } from '../../redux/selectors/user.selector';
 
-export const ReaderNavigation = ({ visitProfile, visitSearch }) => {    
+export const ReaderNavigation = ({ visitProfile, visitSearch }) => {
+    const user = useSelector(getCurrentUser)    
     return (
         <View style={styles.container}>                    
             <View style={styles.mainNavigation}>   
@@ -22,7 +25,7 @@ export const ReaderNavigation = ({ visitProfile, visitSearch }) => {
             </View>  
             <View> 
                 <Text style={styles.readerScreenTitle}>Reader</Text> 
-                <Text style={styles.userName}>Welcome Sensei</Text>               
+                <Text style={styles.userName}>Welcome {user.firstname}</Text>               
             </View>            
         </View>
     )
@@ -52,6 +55,7 @@ const styles = StyleSheet.create({
         marginTop: 3,
         fontSize: 13,
         lineHeight: 17,
-        color: '#000000'
+        color: '#000000',
+        textTransform: 'capitalize'
     }
 })

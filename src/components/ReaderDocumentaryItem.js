@@ -9,7 +9,41 @@ import {
 import Colors from '../colors/colors'
 import { Feather, MaterialIcons, Ionicons } from '@expo/vector-icons'
 
-const ReaderDocumentaryItem = ({ item }) => {
+const ReaderDocumentaryItem = ({ navigation, news }) => {
+  if(!news){
+    news = {
+        "author": "Test author",
+        "caption": "Dummy News Caption 3",
+        "categories": [
+           {
+            "category": "News",
+            "category_id": "3",
+          },
+        ],
+        "date": "May 05, 2021",
+        "id": "cc63aa2a9ab8f5ab1f25220dca666ac6",
+        "interests": [
+          {
+            "interest": "Video",
+            "interest_id": "8",
+          },
+          {
+            "interest": "News",
+            "interest_id": "1",
+          },
+        ],
+        "media": {
+          "audios": [],
+          "images": [],
+          "thumbnail": "http://aledoyhost.com/inforealm/thumbnails/main_thumbnail.png",
+          "videos": [],
+        },
+        "time": "11:51:37",
+        "time_to_read": "1",
+        "title": "Dummy News Title 3",
+        "user_id": null,
+      }
+} 
   return (
     <View style={styles.news}>
       <View
@@ -21,7 +55,7 @@ const ReaderDocumentaryItem = ({ item }) => {
         }}
       >
         <ImageBackground
-          source={require('../../assets/images/demo-documentary.png')}
+          source={{uri: news.media.thumbnail}}
           style={styles.Image}
         >
           <TouchableOpacity style={{ flexDirection: 'row' }}>
@@ -42,10 +76,10 @@ const ReaderDocumentaryItem = ({ item }) => {
       </View>
       <View style={{ flex: 1 }}>
         <TouchableOpacity>
-          <Text style={styles.title}>How these economic super powers...</Text>
+          <Text style={styles.title}>{news.title}</Text>
         </TouchableOpacity>
         <Text style={styles.caption}>
-          The African continent has 15% of the world’s...
+          {news.caption}
         </Text>
         <View
           style={{
@@ -56,11 +90,11 @@ const ReaderDocumentaryItem = ({ item }) => {
         >
           <View style={styles.date}>
             <Feather size={14} color={Colors.text1} name='clock' />
-            <Text style={styles.dateText}> Oct 27, 2020</Text>
+            <Text style={styles.dateText}> {news.date}</Text>
           </View>
           <View style={styles.date}>
             <Ionicons name='md-play-circle' size={14} color={Colors.text1} />
-            <Text style={styles.dateText}> 3 min watch</Text>
+            <Text style={styles.dateText}> {news.time_to_read} min watch</Text>
           </View>
         </View>
       </View>
@@ -70,7 +104,7 @@ const ReaderDocumentaryItem = ({ item }) => {
 
 const styles = StyleSheet.create({
   news: {
-    padding: 10,
+    padding: 16,
     borderBottomWidth: 0.5,
     borderBottomColor: '#cdcccc',
     flexDirection: 'row',

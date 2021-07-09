@@ -7,18 +7,53 @@ import {
   Text,
   ImageBackground,  
 } from 'react-native'
-
+import { useNavigation } from '@react-navigation/native';
 import { Feather, MaterialIcons } from '@expo/vector-icons'
 
 const { width } = Dimensions.get('window')
-const ReaderSliderNewsItem = () => {
+const ReaderSliderNewsItem = ({ news }) => {
+  const navigation = useNavigation();
+  if(!news){
+    news = {
+        "author": "Test author",
+        "caption": "Dummy News Caption 3",
+        "categories": [
+           {
+            "category": "News",
+            "category_id": "3",
+          },
+        ],
+        "date": "May 05, 2021",
+        "id": "cc63aa2a9ab8f5ab1f25220dca666ac6",
+        "interests": [
+          {
+            "interest": "Video",
+            "interest_id": "8",
+          },
+          {
+            "interest": "News",
+            "interest_id": "1",
+          },
+        ],
+        "media": {
+          "audios": [],
+          "images": [],
+          "thumbnail": "http://aledoyhost.com/inforealm/thumbnails/main_thumbnail.png",
+          "videos": [],
+        },
+        "time": "11:51:37",
+        "time_to_read": "1",
+        "title": "Dummy News Title 3",
+        "user_id": null,
+      }
+} 
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Article', { screen: 'ArticleRead', params: { news_id: news.id }})}>
         <View          
         >
           <ImageBackground
-            source={require('../../assets/images/american-flag.png')}
+            source={{uri: news.media.thumbnail}}
             style={styles.imageBackground}
           />
         </View>
@@ -26,19 +61,19 @@ const ReaderSliderNewsItem = () => {
           <View style={styles.crumbs}>
             <Text style={styles.crumbText}>News </Text>
             <Feather name='chevron-right' size={14} color={'white'} />
-            <Text style={styles.crumbText}> Interest</Text>
+            <Text style={styles.crumbText}> {news.interests.map(interest => interest.interest).join(', ')}</Text>
           </View>
           <Text style={styles.newsTitle}>
-            The wave of dark money in American Politics
+            {news.title}
           </Text>
           <View style={styles.newsSummary}>
             <View style={styles.newsSummaryItem}>
               <Feather size={14} color={'white'} name='clock' />
-              <Text style={styles.newsSummaryText}> 30 mins ago</Text>
+              <Text style={styles.newsSummaryText}> {news.date}</Text>
             </View>
             <View style={styles.newsSummaryItem}>
               <MaterialIcons size={14} color={'white'} name='library-books' />
-              <Text style={styles.newsSummaryText}> 3 min read</Text>
+              <Text style={styles.newsSummaryText}> {news.time_to_read} read</Text>
             </View>
           </View>
         </View>

@@ -4,7 +4,7 @@ const userState = (state) => state.user
 
 export const getCurrentUser = createSelector(
   [userState],
-  (userState) => userState.currentUser
+  (userState) => userState.user
 )
 
 export const getSocialUser = createSelector(
@@ -14,5 +14,5 @@ export const getSocialUser = createSelector(
 
 export const selectUserId = createSelector(
   [userState],
-  (userState) => userState.currentUser
+  (userState) => userState.user.user_id
 )
