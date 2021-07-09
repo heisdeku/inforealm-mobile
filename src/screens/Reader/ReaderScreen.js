@@ -85,11 +85,7 @@ const ReaderScreen = ({ navigation }) => {
             {
               !loading && trend.length ?    
                 <View style={styles.heading}>    
-                  {
-                    trend.map((t,i) => {                  
-                        return <SliderContiner data={t}  />
-                    })
-                  }  
+                    <SliderContiner data={trend}  />                                       
                 </View>
               :
               null

@@ -7,7 +7,7 @@ const { width } = Dimensions.get('window')
 const styles = StyleSheet.create({
   paginationContainer: {
     bottom: 10,
-    left: width / 2.6,
+    //left: width / 2.6,
   },
   pagination: {
     borderRadius: 50,

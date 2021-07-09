@@ -61,7 +61,7 @@ const ReaderSliderNewsItem = ({ news }) => {
           <View style={styles.crumbs}>
             <Text style={styles.crumbText}>News </Text>
             <Feather name='chevron-right' size={14} color={'white'} />
-            <Text style={styles.crumbText}> {news.interests.map(interest => interest.interest).join(', ')}</Text>
+            <Text style={styles.crumbText}> {news.interests[0].interest}</Text>
           </View>
           <Text style={styles.newsTitle}>
             {news.title}
@@ -73,7 +73,7 @@ const ReaderSliderNewsItem = ({ news }) => {
             </View>
             <View style={styles.newsSummaryItem}>
               <MaterialIcons size={14} color={'white'} name='library-books' />
-              <Text style={styles.newsSummaryText}> {news.time_to_read} read</Text>
+              <Text style={styles.newsSummaryText}> {news.time_to_read} min read</Text>
             </View>
           </View>
         </View>
