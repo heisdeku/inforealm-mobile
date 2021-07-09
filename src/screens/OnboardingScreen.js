@@ -22,70 +22,71 @@ const OnboardingScreen = ({navigation}) => {
         GoogleAuthWrapper.initAction()
     })*/
     return (        
-            <ScrollView style={{ flex: 1 }}>
-                 <View style={styles.container}>
-                    <Image style={styles.logo} source={require('../../assets/images/inforealm-blue.png')} />
-                <Text style={styles.heading}>Stay up to date with insightful news and trends</Text>
-                <Image style={styles.pana} source={require('../../assets/images/pana.png')} />
-                <TouchableOpacity onPress={() => navigation.navigate('Login')} style={{width: '100%'}}>
-                    <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
-                        <Text
-                          style={{...styles.buttonText, color: '#fff'}}
+            <SafeAreaView style={{flex: 1, backgroundColor: '#F7F7F7'}}>
+                <ScrollView style={{ flex: 1 }}>
+                    <View style={styles.container}>
+                        <Image style={styles.logo} source={require('../../assets/images/inforealm-blue.png')} />
+                        <Text style={styles.heading}>Stay up to date with insightful news and trends</Text>
+                        <Image style={styles.pana} source={require('../../assets/images/pana.png')} />
+                        <TouchableOpacity onPress={() => navigation.navigate('Login')} style={{width: '100%'}}>
+                            <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
+                                <Text
+                                style={{...styles.buttonText, color: '#fff'}}
+                                >
+                                <FontAwesome name="envelope" size={16} color='#fff' /> Continue with Email
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleFacebookSignIn} style={{width: '100%'}}>
+                            <View style={{...styles.onboardButton, borderColor: '#3B5999', backgroundColor: '#3B5999'}}>
+                                <Text style={{...styles.buttonText, color: '#fff'}}><FontAwesome name="facebook-square" size={16} color='#fff' /> Continue with Facebook</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleGoogleSignIn} style={{width: '100%'}}>
+                            <View style={{...styles.onboardButton}}>
+                                <Text style={{...styles.buttonText, color: '#000'}}><FontAwesome name="google" size={16} color='#000' /> Continue with Google</Text>
+                            </View>
+                        </TouchableOpacity>
+                        { Platform.os === 'ios' && 
+                            <TouchableOpacity style={{width: '100%'}}>
+                                <View style={{...styles.onboardButton}}>
+                                    <Text style={{...styles.buttonText, color: '#000'}}><FontAwesome name="apple" size={16} color='#2B2D42' /> Continue with Apple</Text>
+                                </View>
+                            </TouchableOpacity>}                
+                        <TouchableOpacity
+                        style={{width: '100%'}}
+                        onPress={() => {
+                            navigation.navigate('MainStack');
+                            navigation.reset({
+                                index: 0,
+                                routes: [{
+                                    name: 'MainStack'
+                                }]
+                            })
+                            }}
                         >
-                          <FontAwesome name="envelope" size={16} color='#fff' /> Continue with Email
-                        </Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleFacebookSignIn} style={{width: '100%'}}>
-                    <View style={{...styles.onboardButton, borderColor: '#3B5999', backgroundColor: '#3B5999'}}>
-                        <Text style={{...styles.buttonText, color: '#fff'}}><FontAwesome name="facebook-square" size={16} color='#fff' /> Continue with Facebook</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleGoogleSignIn} style={{width: '100%'}}>
-                    <View style={{...styles.onboardButton}}>
-                        <Text style={{...styles.buttonText, color: '#000'}}><FontAwesome name="google" size={16} color='#000' /> Continue with Google</Text>
-                    </View>
-                </TouchableOpacity>
-                { Platform.os === 'ios' && 
-                    <TouchableOpacity style={{width: '100%'}}>
-                        <View style={{...styles.onboardButton}}>
-                            <Text style={{...styles.buttonText, color: '#000'}}><FontAwesome name="apple" size={16} color='#2B2D42' /> Continue with Apple</Text>
+                        <View
+                            style={{...styles.onboardButton, borderColor: '#F7F7F7'}}
+                        >
+                            <Text
+                            style={{...styles.buttonText, color: '#000', fontFamily: 'DMBold'}}
+                            >
+                            Skip for now
+                            <FontAwesome name="chevron-right" size={12} color='#2B2D42' />
+                            </Text>
                         </View>
-                    </TouchableOpacity>}                
-                <TouchableOpacity
-                  style={{width: '100%'}}
-                  onPress={() => {
-                    navigation.navigate('MainStack');
-                    navigation.reset({
-                        index: 0,
-                        routes: [{
-                            name: 'MainStack'
-                        }]
-                    })
-                    }}
-                >
-                  <View
-                    style={{...styles.onboardButton, borderColor: '#F7F7F7'}}
-                  >
-                    <Text
-                      style={{...styles.buttonText, color: '#000', fontFamily: 'DMBold'}}
-                    >
-                      Skip for now
-                      <FontAwesome name="chevron-right" size={12} color='#2B2D42' />
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-                <View style={styles.footer}>
-                    <Text style={styles.footerText}>
-                        By signing up, you accept to our
-                    </Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('Terms')}><Text style={{...styles.footerText, textDecorationLine: 'underline'}}>Terms of Sevices</Text></TouchableOpacity>
-                    <Text style={styles.footerText}> & </Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('Privacy')}><Text style={{...styles.footerText, textDecorationLine: 'underline'}}>Privacy Policy</Text></TouchableOpacity>
-                </View>
-            </View>
-           
-            </ScrollView>                    
+                        </TouchableOpacity>
+                        <View style={styles.footer}>
+                            <Text style={styles.footerText}>
+                                By signing up, you accept to our
+                            </Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Terms')}><Text style={{...styles.footerText, textDecorationLine: 'underline'}}>Terms of Sevices</Text></TouchableOpacity>
+                            <Text style={styles.footerText}> & </Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Privacy')}><Text style={{...styles.footerText, textDecorationLine: 'underline'}}>Privacy Policy</Text></TouchableOpacity>
+                        </View>
+                    </View>           
+                </ScrollView>   
+            </SafeAreaView>                 
     )
 }
 

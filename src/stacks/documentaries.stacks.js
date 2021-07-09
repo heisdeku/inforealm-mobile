@@ -8,7 +8,7 @@ import DocumentaryCategory from '../screens/Documentaries/DocumentaryCategory';
 
 const Documentaries = createStackNavigator();
 
-export const DocumentariesStack = () => {
+export const DocumentariesStack = ({navigation}) => {
   return(
     <Documentaries.Navigator>
       <Documentaries.Screen 
@@ -27,7 +27,7 @@ export const DocumentariesStack = () => {
           fontSize: 16,
         },
         headerLeft: () => (
-          <TouchableOpacity style={{marginLeft: 10}}>
+          <TouchableOpacity style={{marginLeft: 10}} onPress={() => navigation.navigate('Account')}>
             <Image
               source={require('../../assets/images/header-profile.png')} style={{height: 27, width: 27, resizeMode: 'contain'}} />
           </TouchableOpacity>
