@@ -3,21 +3,19 @@ import React, { useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
-// import { createAppContainer } from 'react-navigation'
-// import createAnimatedSwitchNavigator from 'react-navigation-animated-switch'
-// import { Transition } from 'react-native-reanimated'
 import { StatusBar } from 'react-native'
 //screens
 import SplashScreen from './src/screens/SplashScreen'
 import OnboardingStack from './src/stacks/onboarding.stacks'
 //store
-import { store } from './src/redux/store/store'
+import { store, persistor } from './src/redux/store/store'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import BottomTabStack from './src/tabs/bottomtab.tabs';
 import { SearchStack } from './src/stacks/search.stacks';
 import { ArticleStack } from './src/stacks/article.stacks';
 import { AccountStack } from './src/stacks/account.stacks';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const getFonts = () =>
   Font.loadAsync({
@@ -41,6 +39,7 @@ export default () => {
   if (fontsLoaded) {
     return (
       <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
         <StatusBar barStyle='dark-content' backgroundColor='#fff' />
         {/* <App /> */}
         <NavigationContainer>
@@ -70,6 +69,7 @@ export default () => {
             <SwicthStack.Screen name="Account" component={AccountStack} />
           </SwicthStack.Navigator>
         </NavigationContainer>
+        </PersistGate>
       </Provider>
     )
   } else {

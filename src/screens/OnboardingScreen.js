@@ -1,16 +1,33 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, Image, TouchableOpacity, Platform } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import Colors from '../colors/colors';
+import { facebookSignIn, GoogleAuthWrapper, googleSignIn } from '../redux/operations/user.op';
+
 
 const OnboardingScreen = ({navigation}) => {    
-    return (
-        <SafeAreaView style={{flex: 1}}>
-            <View style={styles.container}>
-                <Image style={styles.logo} source={require('../../assets/images/inforealm-blue.png')} />
+    const dispatch = useDispatch()
+
+    const handleGoogleSignIn = () => {
+        dispatch(googleSignIn())
+    }
+
+    const handleFacebookSignIn = () => {
+        dispatch(facebookSignIn())
+    }
+/*
+    useEffect(() => {
+        GoogleAuthWrapper.initAction()
+    })*/
+    return (        
+            <ScrollView style={{ flex: 1 }}>
+                 <View style={styles.container}>
+                    <Image style={styles.logo} source={require('../../assets/images/inforealm-blue.png')} />
                 <Text style={styles.heading}>Stay up to date with insightful news and trends</Text>
                 <Image style={styles.pana} source={require('../../assets/images/pana.png')} />
-                <TouchableOpacity style={{width: '100%'}}>
+                <TouchableOpacity onPress={() => navigation.navigate('Login')} style={{width: '100%'}}>
                     <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
                         <Text
                           style={{...styles.buttonText, color: '#fff'}}
@@ -19,25 +36,25 @@ const OnboardingScreen = ({navigation}) => {
                         </Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={{width: '100%'}}>
+                <TouchableOpacity onPress={handleFacebookSignIn} style={{width: '100%'}}>
                     <View style={{...styles.onboardButton, borderColor: '#3B5999', backgroundColor: '#3B5999'}}>
                         <Text style={{...styles.buttonText, color: '#fff'}}><FontAwesome name="facebook-square" size={16} color='#fff' /> Continue with Facebook</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={{width: '100%'}}>
+                <TouchableOpacity onPress={handleGoogleSignIn} style={{width: '100%'}}>
                     <View style={{...styles.onboardButton}}>
                         <Text style={{...styles.buttonText, color: '#000'}}><FontAwesome name="google" size={16} color='#000' /> Continue with Google</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={{width: '100%'}}>
-                    <View style={{...styles.onboardButton}}>
-                        <Text style={{...styles.buttonText, color: '#000'}}><FontAwesome name="apple" size={16} color='#2B2D42' /> Continue with Apple</Text>
-                    </View>
-                </TouchableOpacity>
+                { Platform.os === 'ios' && 
+                    <TouchableOpacity style={{width: '100%'}}>
+                        <View style={{...styles.onboardButton}}>
+                            <Text style={{...styles.buttonText, color: '#000'}}><FontAwesome name="apple" size={16} color='#2B2D42' /> Continue with Apple</Text>
+                        </View>
+                    </TouchableOpacity>}                
                 <TouchableOpacity
                   style={{width: '100%'}}
                   onPress={() => {
-                    //   navigation.reset([NavigationActions.navigate({ routeName: 'MainOne' })], 0)
                     navigation.navigate('MainStack');
                     navigation.reset({
                         index: 0,
@@ -67,7 +84,8 @@ const OnboardingScreen = ({navigation}) => {
                     <TouchableOpacity onPress={() => navigation.navigate('Privacy')}><Text style={{...styles.footerText, textDecorationLine: 'underline'}}>Privacy Policy</Text></TouchableOpacity>
                 </View>
             </View>
-        </SafeAreaView>
+           
+            </ScrollView>                    
     )
 }
 
@@ -112,6 +130,7 @@ const styles = StyleSheet.create({
     },
     footer: {
         marginTop: 65,
+        marginBottom: 60,
         flexDirection: 'row',
         width: 195,
         flexWrap: 'wrap',

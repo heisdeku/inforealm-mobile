@@ -5,7 +5,8 @@ import { AntDesign } from '@expo/vector-icons';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
 import TermsOfServiceScreen from '../screens/TermsOfServiceScreen';
-
+import OnboardingRegisterScreen from '../screens/OnboardingRegisterScreen'
+import LoginScreen from '../screens/LoginScreen'
 import { createStackNavigator } from '@react-navigation/stack'
 
 const Stack = createStackNavigator();
@@ -18,6 +19,30 @@ const OnboardingStack = ({navigation}) => {
       component={OnboardingScreen}
       options={{
         headerShown: false,
+      }}
+      />
+      <Stack.Screen 
+      name='Register'
+      component={OnboardingRegisterScreen}
+      options={{
+        title: '',
+        headerLeft: (props) => (
+          <TouchableOpacity {...props} style={{marginLeft: 10}}>
+              <AntDesign name='arrowleft' color='black' size={30} />
+            </TouchableOpacity>
+        )
+      }}
+      />
+      <Stack.Screen 
+      name='Login'
+      component={LoginScreen}
+      options={{
+        title: '',
+        headerLeft: (props) => (
+          <TouchableOpacity {...props} style={{marginLeft: 10}}>
+              <AntDesign name='arrowleft' color='black' size={30} />
+            </TouchableOpacity>
+        )
       }}
       />
       <Stack.Screen 
@@ -47,40 +72,5 @@ const OnboardingStack = ({navigation}) => {
     </Stack.Navigator>
   )
 }
-
-// const onboardingStack = createStackNavigator({
-//   MainOnboarding: {
-//     screen: OnboardingScreen,
-//     navigationOptions: ({navigation}) => ({
-//       header: () => null
-//     })
-//   },
-//   Privacy: {
-//     screen: PrivacyPolicyScreen,
-//     navigationOptions: ({navigation}) => ({
-//       title: '',
-//       headerLeft: () => (
-//         <TouchableOpacity onPress={() =>  navigation.goBack()} style={{marginLeft: 10}}>
-//           <AntDesign name='arrowleft' color='black' size={30} />
-//         </TouchableOpacity>)
-//     })
-//   },
-//   Terms: {
-//     screen: TermsOfServiceScreen,
-//     navigationOptions: ({navigation}) => ({
-//       title: '',
-//       headerLeft: () => (
-//         <TouchableOpacity onPress={() => navigation.goBack()} style={{marginLeft: 10}}>
-//           <AntDesign name='arrowleft' color='black' size={30} />
-//         </TouchableOpacity>)
-//     })
-//   },
-//   MainOne: {
-//     screen: bottomTab,
-//     navigationOptions: {
-//       header: () => null
-//     }
-//   }
-// });
 
 export default OnboardingStack
