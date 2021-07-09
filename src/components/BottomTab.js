@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         alignItems: 'center',
         height: 70,
-        paddingTop: 10,
+        paddingTop: 6,
         backgroundColor: '#fff',
     },
     tab: {
