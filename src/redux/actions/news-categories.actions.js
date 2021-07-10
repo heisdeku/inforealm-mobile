@@ -43,8 +43,7 @@ export const getNewsCategories = () => {
                 dispatch(endNewsCategoriesLoading())
                 dispatch(setNewsCategoriesError(response.data.message))
             }
-        } catch (error) {
-            console.log(error);
+        } catch (error) {            
             dispatch(setNewsCategoriesError('Something went wrong'))
         }
     }

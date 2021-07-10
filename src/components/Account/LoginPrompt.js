@@ -21,8 +21,7 @@ export const LoginPrompt = () => {
 const styles = StyleSheet.create({  
     container: {
         flex: 1,  
-        marginTop: 16,
-        marginBottom: 32,
+        marginTop: 16,        
         flexDirection: 'row',
         padding: 16, 
         alignItems: 'baseline',        

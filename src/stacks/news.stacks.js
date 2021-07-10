@@ -3,7 +3,7 @@ import apiConnect from '../api/apiConnect';
 import { TouchableOpacity, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { AntDesign, Feather } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 
 import AllNewsScreen from '../screens/News/AllNewsScreen';

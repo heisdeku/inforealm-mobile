@@ -2,8 +2,9 @@ import { searchTypes } from '../types/search.types';
 
 const DEFAULT_STATE = {
   value: null,
-  items: [],
+  data: [],
   category: [],
+  error: null,
   loading: false
 }
 
@@ -18,27 +19,26 @@ export const searchReducer = (state = DEFAULT_STATE, action ) => {
     case searchTypes.SEARCH_VALUE_BY_CATEGORY_START:
       return {
         ...state,
+        error: null,
         loading: true
       }
     case searchTypes.SEARCH_VALUE_SUCCESS:
       return {
         ...state,
-        loading: false,
-        value: action.payload.value,
-        items: action.payload.items
+        loading: false,        
+        data: action.payload.items
       }
     case searchTypes.SEARCH_VALUE_BY_CATEGORY_SUCCESS:
       return {
         ...state,
+        loading: false,
         category: action.payload.items
       }
-    case searchTypes.GET_SEARCH_VALUE:
-      return state.value;
     case searchTypes.SEARCH_VALUE_FAILED:
       return {
         ...state,
         loading: false,
-        err: action.payload
+        error: action.payload
       }
     default:
       return state;

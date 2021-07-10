@@ -1,12 +1,12 @@
 {
     "expo": {
-        "name": "inforealm-mobile",
-        "slug": "inforealm-mobile",
+        "name": "Inforealm",
+        "slug": "inforealm",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "splash": {
-            "image": "./assets/splash.png",
+            "image": "./assets/icon.png",
             "resizeMode": "contain",
             "backgroundColor": "#ffffff"
         },
@@ -21,8 +21,8 @@
         },
         "android": {
             "adaptiveIcon": {
-                "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#FFFFFF"
+                "foregroundImage": "./assets/icon.png",
+                "backgroundColor": "#050618"
             },
             "package": "com.inforealm.main",
             "googleServicesFile": "./google-services.json"

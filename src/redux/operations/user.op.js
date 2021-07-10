@@ -140,6 +140,9 @@ export const emailSignUp = (dataToSend) => {
       }
     } catch (e) {
       dispatch(signupFailed(e.response.data.message))
+      return {
+        error: e.response.data.message
+      }
     }
   }
 }
@@ -159,6 +162,38 @@ export const emailLogin = (dataToSend) => {
       }
     } catch (e) {
       dispatch(signInFailed(e.response.data.message))
+      return {
+        error: e.response.data.message
+      }
+    }
+  }
+}
+
+export const updateUserPicture = (dataToSend, userId) => {
+  return async (dispatch) => {    
+    try {
+      let response = await apiConnect.post(`/updateProfile`, dataToSend)
+      let { data } = response
+      console.log(data.message)
+      if (data.status !== 'success') {
+        return {
+          error: 'Something Went wrong, Try Uploading Again'
+        }
+      } else {
+        dispatch(setUserStart())
+        let resp = await apiConnect.post(`/getUser`, userId)        
+        if (resp.status === 200 || resp.data.status === 'success') {
+          dispatch(setUserSuccess(resp.data.user)) 
+          return data.user       
+        } else {
+          dispatch(setUserFailed(res.data.message))
+        }
+      }     
+    } catch (e) {
+      dispatch(signInFailed(e.response.data.message))
+      return {
+        error: e.response.data.message
+      }
     }
   }
 }

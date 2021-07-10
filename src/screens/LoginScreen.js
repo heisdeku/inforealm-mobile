@@ -1,23 +1,27 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux'
-import { SafeAreaView, TextInput, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { ScrollView, Alert, ActivityIndicator, TextInput, StyleSheet, Text, View, Image, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
 import { FontAwesome } from '@expo/vector-icons';
 import Colors from '../colors/colors';
 import { emailLogin } from '../redux/operations/user.op';
+import { isLoading } from '../redux/selectors/user.selector';
 
 const LoginScreen = ({navigation}) => { 
     const dispatch = useDispatch()
-
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-
-    const handleLogin = async () => {           
+    const loading = useSelector(isLoading)
+    const { control, handleSubmit, formState: { errors } } = useForm();
+    
+    const handleLogin = async (data) => {                  
         let userData = new FormData()
-        userData.append('email', email)
-        userData.append('password', password)
+        userData.append('email', data.email)
+        userData.append('password', data.password)
         const response = await dispatch(emailLogin(userData))
 
-        if (response.user_id !== null) {
+        if (response.error) {            
+            Alert.alert(response.error)
+        }
+        else if (response.user_id !== null) {
             navigation.navigate('MainStack');
             navigation.reset({
                 index: 0,
@@ -25,34 +29,61 @@ const LoginScreen = ({navigation}) => {
                     name: 'MainStack'
                 }]
             })
+        } else {
+            return;
         }
     }
-    return (        
-            <SafeAreaView style={{ flex: 1 }}>
+    return ( 
+        <ScrollView>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "position" : null}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} style={{ flex: 1 }}>
                  <View style={styles.container}>
-                {/*<Image style={styles.logo} source={require('../../assets/images/inforealm-blue.png')} />*/}
                 <Text style={styles.heading}>Stay up to date with insightful news and trends</Text>
                 <Image style={styles.pana} source={require('../../assets/images/pana.png')} />
-                <View style={{ width: '100%'}}>                                                       
-                    <TextInput
-                    style={styles.input}
-                    placeholder='Enter your e-mail'
-                    placeholderTextColor="#aaaaaa"
-                    onChangeText={(email) => setEmail(email)}
-                    value={email}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                    />                                        
-                    <TextInput
-                    style={styles.input}
-                    placeholderTextColor="#aaaaaa"
-                    secureTextEntry
-                    placeholder='Enter your password'
-                    onChangeText={(text) => setPassword(text)}
-                    value={password}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                    />                    
+                <View style={{ width: '100%'}}>         
+                    <Controller
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                placeholder='Enter your e-mail'
+                                placeholderTextColor="#aaaaaa"                                
+                                onChangeText={(value) => onChange(value)}
+                                value={value}
+                                underlineColorAndroid="transparent"
+                                autoCapitalize="none"
+                                /> 
+                            )}
+                        name="email"
+                        rules={{ required: true }}
+                        defaultValue=""
+                    />
+                    <View>
+                        {errors.email && <Text style={{ color: Colors.secondary, fontSize: 14}}>You must fill in your email</Text>}
+                    </View>  
+                    <Controller
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.input}
+                                placeholderTextColor="#aaaaaa"
+                                onBlur={onBlur}
+                                secureTextEntry
+                                placeholder='Enter your password'
+                                onChangeText={(value) => onChange(value)}
+                                value={value}
+                                underlineColorAndroid="transparent"
+                                autoCapitalize="none"
+                            />  
+                        )}
+                        name="password"
+                        rules={{ required: true }}
+                        defaultValue=""
+                    />
+                    <View>
+                        {errors.password && <Text style={{ color: Colors.secondary, fontSize: 14}}>You must fill in your password</Text>}
+                    </View>                                                                                                                        
                     <View style={styles.footerView}>
                         <Text style={styles.footerViewText}>Don't have an account? {`  `}
                             <Text onPress={() => navigation.navigate('Register')} style={styles.footerLink}>Register
@@ -60,13 +91,18 @@ const LoginScreen = ({navigation}) => {
                         </Text>
                     </View>
                 </View>
-                <TouchableOpacity onPress={handleLogin} style={{width: '100%'}}>
+                <TouchableOpacity onPress={handleSubmit(handleLogin)} style={{width: '100%'}}>
                     <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
-                        <Text
-                          style={{...styles.buttonText, color: '#fff'}}
-                        >
-                          Login
-                        </Text>
+                        {
+                            loading && <ActivityIndicator color='#FFF' size='large' />
+                        }
+                        {
+                            !loading && <Text
+                            style={{...styles.buttonText, color: '#fff'}}
+                          >
+                            Login
+                          </Text>
+                        }                        
                     </View>
                 </TouchableOpacity>               
                 <TouchableOpacity
@@ -95,7 +131,8 @@ const LoginScreen = ({navigation}) => {
                 </TouchableOpacity>
             </View>
            
-            </SafeAreaView>                    
+            </KeyboardAvoidingView>  
+            </ScrollView>                         
     )
 }
 
@@ -132,7 +169,6 @@ const styles = StyleSheet.create({
         borderBottomColor: '#cdcccc',
         borderBottomWidth: 1.25,        
         marginBottom: 10,                
-        paddingLeft: 16
     },
     footerView: {             
         marginVertical: 25,

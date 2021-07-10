@@ -1,9 +1,19 @@
-import React, { useState} from 'react'
+import React, { useState } from 'react'
 import { TouchableOpacity, StyleSheet, View, Text, TextInput, Dimensions } from 'react-native'
 import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { getSearchData } from '../redux/operations/search.op';
+import { useDispatch, useSelector } from 'react-redux';
+import { setValue } from '../redux/actions/search.action';
+import { getSearchValue } from '../redux/selectors/search.selector';
+
 
 export const SearchNavigation = ({ goBackEvt }) => {
-    const [ searchValue, setSearchValue ] = useState('')
+    const dispatch = useDispatch()   
+    const value = useSelector(getSearchValue) 
+    const [ searchValue, setSearchValue ] = useState('')    
+    const handleNewsSearch = () => {
+        dispatch(getSearchData(searchValue))        
+    }       
     return (
         <View style={styles.container}>
             <TouchableOpacity
@@ -16,10 +26,18 @@ export const SearchNavigation = ({ goBackEvt }) => {
             <View style={styles.flexArea}>
                 <View style={styles.searchBox}>
                     <Ionicons style={styles.searchIcon} name="md-search" size={18} color="#8e8e93" />
-                    <TextInput style={styles.searchInput} onChangeText={searchValue => setSearchValue(searchValue)}
+                    <TextInput onSubmitEditing={() => handleNewsSearch()} style={styles.searchInput} onChangeText={text => {
+                        dispatch(setValue(text))
+                        setSearchValue(text)                        
+                    }}
                     defaultValue={searchValue} />
                 </View>
-                <Text style={styles.cancelText}>Cancel</Text> 
+                <TouchableOpacity onPress={() => {
+                    dispatch(setValue(''))
+                    setSearchValue('')
+                }}>
+                    <Text style={styles.cancelText}>Cancel</Text>     
+                </TouchableOpacity>                
             </View>            
         </View>
     )

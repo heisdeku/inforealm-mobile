@@ -9,7 +9,7 @@ const DynamicNewsScreen = ({interest_id}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [news, setNews] = useState([]);
-    
+        
     const getNewsByInterest = async () => {
         setError('');
         setIsLoading(true);

@@ -25,7 +25,7 @@ export const ReaderNavigation = ({ visitProfile, visitSearch }) => {
             </View>  
             <View> 
                 <Text style={styles.readerScreenTitle}>Reader</Text> 
-                <Text style={styles.userName}>Welcome {user.firstname}</Text>               
+                <Text style={styles.userName}>Welcome {user.user_id ? user.firstname : 'sensei'}</Text>               
             </View>            
         </View>
     )
