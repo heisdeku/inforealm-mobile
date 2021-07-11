@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-
-import { StyleSheet, View, ActivityIndicator, TouchableOpacity, Image, Text, Platform } from 'react-native'
+import { BlurView } from 'expo'
+import { StyleSheet, View, ActivityIndicator, TouchableOpacity, Image, Text, Platform, ImageBackground } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getCurrentUser, selectUserId } from '../../redux/selectors/user.selector';
+import Toast from 'react-native-root-toast'
 import * as ImagePicker from 'expo-image-picker';
 import { updateUserPicture } from '../../redux/operations/user.op';
 
@@ -14,7 +15,7 @@ export const UserDetails = () => {
     const [image, setImage] = useState(user.profile_picture);
     const [loading, setLoading ] = useState(null)
     const [error, setError ] = useState(null)
-        
+    console.log(user.profile_picture)
     useEffect(() => {
         (async () => {
         if (Platform.OS !== 'web') {
@@ -36,20 +37,36 @@ export const UserDetails = () => {
         });
 
         if (!result.cancelled) {
+            await setError(null)
+            await setLoading('loading...')            
             setImage(result.uri);
             let userData = new FormData()
+            let idData = new FormData()
+
             userData.append('user_id', userId)
             userData.append('firstname', user.firstname)
             userData.append('lastname', user.lastname)
             userData.append('email', user.email)
             userData.append('profile_picture_uri_string', result.base64)
 
-            let idData = new FormData()
             idData.append('user_id', userId)
-            dispatch(updateUserPicture(userData, idData))
-        }
-    };
 
+            const response = await dispatch(updateUserPicture(userData, idData))
+
+            await setLoading(false)            
+            if (response.error) {
+                setError(response.error);
+                Toast.show('Unable to Upload Image, Please Try Again', {
+                    duration: Toast.durations.SHORT,
+                    position: Toast.positions.CENTER
+                });
+                setError(null)
+                setImage(user.profile_picture || null)
+            } else {
+                return ;
+            }           
+        }
+    };    
     if (userId && userId !== undefined) {
         return (
             <View style={styles.container}>
@@ -59,8 +76,14 @@ export const UserDetails = () => {
                         <MaterialCommunityIcons name="account" size={26} color="#6C757D" />
                     </View>
                     }                    
-                    {image && 
-                        <Image resizeMode="cover" source={{ uri: image }} style={{ width: 60, height: 60,borderRadius: 50, justifyContent: 'center', alignItems: 'center' }} />}
+                    {!error && image && 
+                        <View style={{ position: 'relative'}}>
+                            <Image blurRadius={loading ? 20 : 0} resizeMode="cover" source={{ uri: image }} style={{ width: 60, height: 60,borderRadius: 50, justifyContent: 'center', alignItems: 'center' }} />
+                            {
+                                loading && <ActivityIndicator style={{ position: 'absolute', top: 10, left: 12}} color="#2b2d42" size='large' />
+                            }                            
+                        </View>
+                    }
                     <TouchableOpacity onPress={pickImage} style={styles.updatePhotoButton}>
                         <Text style={styles.updatePhotoButtonText}>Update Your Photo</Text>
                     </TouchableOpacity>

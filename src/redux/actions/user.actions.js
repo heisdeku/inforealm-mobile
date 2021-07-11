@@ -37,6 +37,11 @@ export const setUserSuccess = (user) => ({
   payload: user,
 })
 
+export const setUserProfilePicture = (image) => ({
+  type: userTypes.SET_PROFILE_PICTURE,
+  payload: image
+})
+
 export const signInFailed = (err) => ({
   type: userTypes.SIGN_IN_FAILED,
   payload: err,

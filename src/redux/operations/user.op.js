@@ -13,6 +13,7 @@ import {
   setUserStart,
   setUserSuccess,
   setUserFailed,
+  setUserProfilePicture
 } from '../actions/user.actions'
 
 import apiConnect from '../../api/apiConnect'
@@ -155,6 +156,7 @@ export const emailLogin = (dataToSend) => {
       let { data } = response
       dispatch(setUserStart())
       if (response.status === 200 || data.status === 'success') {
+        console.log(data.user)
         dispatch(setUserSuccess(data.user)) 
         return data.user       
       } else {
@@ -172,9 +174,9 @@ export const emailLogin = (dataToSend) => {
 export const updateUserPicture = (dataToSend, userId) => {
   return async (dispatch) => {    
     try {
-      let response = await apiConnect.post(`/updateProfile`, dataToSend)
+      let response = await apiConnect.post(`/updateProfile`, dataToSend)  
+      console.log(response)    
       let { data } = response
-      console.log(data.message)
       if (data.status !== 'success') {
         return {
           error: 'Something Went wrong, Try Uploading Again'
@@ -182,18 +184,17 @@ export const updateUserPicture = (dataToSend, userId) => {
       } else {
         dispatch(setUserStart())
         let resp = await apiConnect.post(`/getUser`, userId)        
-        if (resp.status === 200 || resp.data.status === 'success') {
-          dispatch(setUserSuccess(resp.data.user)) 
-          return data.user       
+        if (resp.status === 200 || resp.data.status === 'success') {                    
+          dispatch(setUserProfilePicture(resp.data.user.profile_picture)) 
+          return resp.data.user.profile_picture       
         } else {
           dispatch(setUserFailed(res.data.message))
         }
       }     
-    } catch (e) {
-      dispatch(signInFailed(e.response.data.message))
+    } catch (e) {      
       return {
-        error: e.response.data.message
-      }
+        error: e
+      }      
     }
   }
 }

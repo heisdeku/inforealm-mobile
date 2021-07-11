@@ -3,6 +3,7 @@ import { TouchableOpacity, StyleSheet, View, Text, Image, Dimensions } from 'rea
 import { Feather } from '@expo/vector-icons';
 import { useSelector } from 'react-redux'
 import { getCurrentUser } from '../../redux/selectors/user.selector';
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 export const ReaderNavigation = ({ visitProfile, visitSearch }) => {
     const user = useSelector(getCurrentUser)    
@@ -10,10 +11,14 @@ export const ReaderNavigation = ({ visitProfile, visitSearch }) => {
         <View style={styles.container}>                    
             <View style={styles.mainNavigation}>   
                 <TouchableOpacity onPress={visitProfile}>
-                    <Image
-                    source={require('../../../assets/images/header-profile.png')}
-                    style={{ height: 27, width: 27, resizeMode: 'contain' }}
-                    />
+                    {
+                        !user.profile_picture && <View style={styles.emptyPhoto}>
+                        <MaterialCommunityIcons name="account" size={27} color="#6C757D" />
+                    </View>
+                    }                    
+                    {user.profile_picture && 
+                        <Image resizeMode="cover" source={{ uri: user.profile_picture }} style={{ width: 30, height: 30, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
+                    }                    
                 </TouchableOpacity>                 
                     <Image
                         source={require('../../../assets/images/inforealm-blue.png')}
