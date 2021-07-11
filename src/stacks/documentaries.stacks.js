@@ -5,10 +5,13 @@ import { AntDesign, Feather } from '@expo/vector-icons';
 
 import DocumentariesScreen from '../screens/Documentaries/DocumentariesScreen';
 import DocumentaryCategory from '../screens/Documentaries/DocumentaryCategory';
+import { useSelector } from 'react-redux';
+import { getCurrentUser } from '../redux/selectors/user.selector'
 
 const Documentaries = createStackNavigator();
 
 export const DocumentariesStack = ({navigation}) => {
+  const user = useSelector(getCurrentUser)
   return(
     <Documentaries.Navigator>
       <Documentaries.Screen 
@@ -28,8 +31,15 @@ export const DocumentariesStack = ({navigation}) => {
         },
         headerLeft: () => (
           <TouchableOpacity style={{marginLeft: 10}} onPress={() => navigation.navigate('Account')}>
-            <Image
-              source={require('../../assets/images/header-profile.png')} style={{height: 27, width: 27, resizeMode: 'contain'}} />
+            {
+              !user.profile_picture && 
+              <View style={styles.emptyPhoto}>
+                <MaterialCommunityIcons name="account" size={27} color="#6C757D" />
+              </View>
+            }                    
+            {user.profile_picture && 
+              <Image resizeMode="cover" source={{ uri: user.profile_picture }} style={{ width: 30, height: 30, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
+            }
           </TouchableOpacity>
         ),
         headerRight: () => (

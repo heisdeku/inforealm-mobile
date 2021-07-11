@@ -1,7 +1,4 @@
 import React from 'react'
-import { TouchableOpacity, Image, Text, View } from 'react-native'
-import { Feather } from '@expo/vector-icons'
-
 import ReaderScreen from '../screens/Reader/ReaderScreen'
 import DummyScreen from '../screens/Reader/DummyScreen'
 import Colors from '../colors/colors'

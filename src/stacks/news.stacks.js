@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import apiConnect from '../api/apiConnect';
+import React from 'react';
+import { useSelector } from 'react-redux'
 import { TouchableOpacity, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -10,10 +10,10 @@ import AllNewsScreen from '../screens/News/AllNewsScreen';
 import DynamicNewsScreen from '../screens/News/DynamicNewsScreen';
 import { LocationStack } from './locations.stacks';
 
-
 import Colors from '../colors/colors';
 import { createStructuredSelector } from 'reselect';
 import { selectInterests } from '../redux/selectors/interest.selectors';
+import { getCurrentUser } from '../redux/selectors/user.selector'
 
 const News = createStackNavigator();
 const NewsTabs = createMaterialTopTabNavigator();
@@ -23,9 +23,7 @@ const MainNews = ({navigation, interests}) => {
   let actualRoute = state.routes[state.index];  
   while (actualRoute.state) {
       actualRoute = actualRoute.state.routes[actualRoute.state.index];
-  }
-
-  console.log(interests);
+  }  
   
   return(
     <NewsTabs.Navigator
@@ -83,6 +81,7 @@ const mapStateToProps = createStructuredSelector({
 const ConnectedMainNews = connect(mapStateToProps)(MainNews);
 
 export const NewsStack = ({navigation}) => {
+  const user = useSelector(getCurrentUser)
   const state = navigation.dangerouslyGetState();
   let actualRoute = state.routes[state.index];  
   while (actualRoute.state) {
@@ -110,9 +109,15 @@ export const NewsStack = ({navigation}) => {
         },
         headerLeft: () => (
           <TouchableOpacity style={{marginLeft: 10}} onPress={() => navigation.navigate('Account')}>
-            <Image
-              source={require('../../assets/images/header-profile.png')} style={{height: 27, width: 27, resizeMode: 'contain'}}
-            />
+            {
+              !user.profile_picture && 
+              <View style={styles.emptyPhoto}>
+                <MaterialCommunityIcons name="account" size={27} color="#6C757D" />
+              </View>
+            }                    
+            {user.profile_picture && 
+              <Image resizeMode="cover" source={{ uri: user.profile_picture }} style={{ width: 30, height: 30, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
+            }
           </TouchableOpacity>
         ),
         headerShown: actualRoute.name === 'NewsLocation' ? false: true
