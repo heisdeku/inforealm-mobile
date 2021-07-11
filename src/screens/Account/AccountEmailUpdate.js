@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TextInput, ScrollView, View, ImageBackground, Dimensions } from 'react-native';
-const AccountEmailUpdate = ({ saveAction}) => {
-    const [ email, setEmail ] = useState('')
-    const [ newEmail, setNewEmail ] = useState('')
-    const [ confirmNewEmail, setConfirmNewEmail ] = useState('')
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, TextInput, ScrollView, View, Dimensions } from 'react-native';
 
+const AccountEmailUpdate = ({ saveAction, email, setEmailState }) => {
     useEffect(() => {
-        if (email.length > 0 && newEmail.length > 0 && confirmNewEmail.length > 0) {
+        if (email.current.length > 0 && email.new.length > 0 && email.confirmNew.length > 0) {
             saveAction(true)
         }else {
             saveAction(false)
         }
-    }, [email, newEmail, confirmNewEmail])
+    }, [email])
     return (
         <ScrollView style={styles.news}>   
                <Text style={{ fontSize: 24, marginBottom: 20, fontWeight: '700'}}>Update Email Address</Text>
@@ -23,8 +20,8 @@ const AccountEmailUpdate = ({ saveAction}) => {
                         placeholder="Enter your current email address"
                         keyboardType='email-address'
                         placeholderTextColor="#cdcccc"
-                        onChangeText={email => setEmail(email)}
-                        defaultValue={email}
+                        onChangeText={text => setEmailState({...email, current: text})}
+                        defaultValue={email.current}
                     />    
                 </View>   
                 <View>
@@ -35,8 +32,8 @@ const AccountEmailUpdate = ({ saveAction}) => {
                         placeholder="Enter your new email address"
                         keyboardType='email-address'
                         placeholderTextColor="#cdcccc"
-                        onChangeText={newEmail => setNewEmail(newEmail)}
-                        defaultValue={newEmail}
+                        onChangeText={text => setEmailState({...email, new: text})}
+                        defaultValue={email.new}
                     />    
                 </View>
                 <View>
@@ -47,8 +44,8 @@ const AccountEmailUpdate = ({ saveAction}) => {
                         placeholder="Confirm your new email address"
                         keyboardType='email-address'
                         placeholderTextColor="#cdcccc"
-                        onChangeText={confirmNewEmail => setConfirmNewEmail(confirmNewEmail)}
-                        defaultValue={confirmNewEmail}
+                        onChangeText={text => setEmailState({...email, confirmNew: text})}
+                        defaultValue={email.confirmNew}
                     />    
                 </View>     
         </ScrollView>

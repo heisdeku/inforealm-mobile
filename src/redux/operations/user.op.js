@@ -13,7 +13,8 @@ import {
   setUserStart,
   setUserSuccess,
   setUserFailed,
-  setUserProfilePicture
+  setUserProfilePicture,
+  setUserEmail
 } from '../actions/user.actions'
 
 import apiConnect from '../../api/apiConnect'
@@ -187,6 +188,61 @@ export const updateUserPicture = (dataToSend, userId) => {
         if (resp.status === 200 || resp.data.status === 'success') {                    
           dispatch(setUserProfilePicture(resp.data.user.profile_picture)) 
           return resp.data.user.profile_picture       
+        } else {
+          dispatch(setUserFailed(res.data.message))
+        }
+      }     
+    } catch (e) {      
+      return {
+        error: e
+      }      
+    }
+  }
+}
+
+
+export const updateUserEmail = (dataToSend, userId) => {
+  return async (dispatch) => {    
+    try {
+      let response = await apiConnect.post(`/updateProfile`, dataToSend)          
+      let { data } = response
+      if (data.status !== 'success') {
+        return {
+          error: 'Something Went wrong, Try Uploading Again'
+        }
+      } else {
+        dispatch(setUserStart())
+        let resp = await apiConnect.post(`/getUser`, userId)        
+        if (resp.status === 200 || resp.data.status === 'success') {                    
+          dispatch(setUserEmail(resp.data.user.email)) 
+          return resp.data.user.email
+        } else {
+          dispatch(setUserFailed(res.data.message))
+        }
+      }     
+    } catch (e) {      
+      return {
+        error: e
+      }      
+    }
+  }
+}
+
+export const updateUserPassword = (dataToSend, userId) => {
+  return async (dispatch) => {    
+    try {
+      let response = await apiConnect.post(`/updatePassword`, dataToSend)          
+      let { data } = response
+      if (data.status !== 'success') {
+        return {
+          error: 'Something Went wrong, Try Uploading Again'
+        }
+      } else {
+        dispatch(setUserStart())
+        let resp = await apiConnect.post(`/getUser`, userId)        
+        if (resp.status === 200 || resp.data.status === 'success') {                    
+          dispatch(setUserProfilePicture(resp.data.user.email)) 
+          return resp.data.user.email
         } else {
           dispatch(setUserFailed(res.data.message))
         }

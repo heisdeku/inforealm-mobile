@@ -52,6 +52,15 @@ const userReducer = (state = DEFAULT_STATE, action) => {
           profile_picture: action.payload
         }
       }
+    case userTypes.SET_USER_EMAIL:
+      return {
+        ...state,
+        isLoading: false,
+        user: {
+          ...state.user,
+          email: action.payload
+        }
+      }
     case userTypes.LOGOUT_USER:
       return {
         ...state,

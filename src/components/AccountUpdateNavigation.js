@@ -2,7 +2,7 @@ import React from 'react'
 import { TouchableOpacity, StyleSheet, Image, View, Text, Dimensions } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 
-export const AccountUpdateNavigation = ({ goBackEvt, title, saveActive }) => {    
+export const AccountUpdateNavigation = ({ goBackEvt, title, saveActive, saveAction }) => {    
     return (
         <View style={styles.container}>
             <TouchableOpacity
@@ -12,7 +12,9 @@ export const AccountUpdateNavigation = ({ goBackEvt, title, saveActive }) => {
                 <AntDesign name='arrowleft' color='black' size={24} />
             </TouchableOpacity>        
             {
-                saveActive && <Text style={styles.navigationSave}>Save</Text> 
+                saveActive && <TouchableOpacity onPress={saveAction}>
+                    <Text style={styles.navigationSave}>Save</Text>
+                </TouchableOpacity> 
             }                                                   
         </View>
     )

@@ -6,7 +6,8 @@ import { getCurrentUser } from '../../redux/selectors/user.selector';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 export const ReaderNavigation = ({ visitProfile, visitSearch }) => {
-    const user = useSelector(getCurrentUser)    
+    const user = useSelector(getCurrentUser)   
+    console.log(user.profile_picture) 
     return (
         <View style={styles.container}>                    
             <View style={styles.mainNavigation}>   
