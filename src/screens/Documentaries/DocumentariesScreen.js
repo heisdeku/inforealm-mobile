@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from "react-redux";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import Colors from '../../colors/colors';
 import DocumentaryItem from '../../components/DocumentaryItem';
-import { Feather } from '@expo/vector-icons';
 import apiConnect from '../../api/apiConnect';
+import { getCurrentUser, selectUserId } from '../../redux/selectors/user.selector'
 
 const DocumentariesScreen = () => {
+    const userId = useSelector(selectUserId)
+    const user = useSelector(getCurrentUser)
     const [refreshing, setRefreshing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -84,7 +87,7 @@ const DocumentariesScreen = () => {
                     <View style={styles.container}>
                         <View style={styles.heading}>
                             <Text style={styles.headingText}>Documentaries</Text>
-                            <Text style={{fontFamily: 'DMRegular', fontSize: 13}}>Welcome sensei</Text>
+                            <Text style={{fontFamily: 'DMRegular', fontSize: 13}}>Welcome {userId ? `${user.firstname}` : 'sensei'}</Text>
                         </View>
                         <View style={styles.body}>
                             <View style={styles.category}>

@@ -32,6 +32,7 @@ export const AccountSettings = ({ navigation }) => {
 const styles = StyleSheet.create({  
     container: {        
         paddingLeft: 17,
+        marginTop: 32,
         width: (Dimensions.get('window').width) - 10,
     },
     containerTitle: {

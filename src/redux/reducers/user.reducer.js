@@ -1,8 +1,7 @@
 import { userTypes } from '../types/user.types'
 
 const DEFAULT_STATE = {
-  user: null,
-  socialUser: null,
+  user: null,  
   error: null,
   isLoading: false,
   authMethod: null,
@@ -35,8 +34,7 @@ const userReducer = (state = DEFAULT_STATE, action) => {
     case userTypes.SIGN_IN_SUCCESS:
         return {
           ...state,
-          isLoading: false,
-          socialUser: null,
+          isLoading: false,          
           error: false,
         }      
     case userTypes.SET_USER_SUCCESS:
@@ -45,11 +43,23 @@ const userReducer = (state = DEFAULT_STATE, action) => {
         isLoading: false,
         user: action.payload,
       }
-    case userTypes.CLEAR_SOCIAL_USER:
+    case userTypes.SET_PROFILE_PICTURE:
       return {
         ...state,
-        socialUser: null,
-        authMethod: null,
+        isLoading: false,
+        user: {
+          ...state.user,
+          profile_picture: action.payload
+        }
+      }
+    case userTypes.SET_USER_EMAIL:
+      return {
+        ...state,
+        isLoading: false,
+        user: {
+          ...state.user,
+          email: action.payload
+        }
       }
     case userTypes.LOGOUT_USER:
       return {

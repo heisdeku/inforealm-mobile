@@ -1,61 +1,27 @@
 import React, { useState } from 'react';
-import apiConnect from '../api/apiConnect';
-import { TouchableOpacity, Image, View, Text, Dimensions } from 'react-native';
+import { connect } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useNavigationState, useRoute } from '@react-navigation/native';
 
-
 import MainSearchScreen from '../screens/Search/MainSearchScreen';
 import DynamicSearchScreen from '../screens/Search/DynamicSearchScreen'
-
 
 import Colors from '../colors/colors';
 import { SearchNavigation } from '../components/SearchNavigation';
 
+import { selectInterests } from '../redux/selectors/interest.selectors';
+import { createStructuredSelector } from 'reselect';
+
 const Search = createStackNavigator();
 const SearchTabs = createMaterialTopTabNavigator();
 
-const fetchInterests = [{
-  interest: "News",
-  interest_id: "1"
-  },
-  {
-  interest: "Business",
-  interest_id: "2"
-  },
-  {
-  interest: "Sport",
-  interest_id: "3"
-  },
-  {
-  interest: "Health",
-  interest_id: "4"
-  },
-  {
-  interest: "Investigation",
-  interest_id: "5"
-  },
-  {
-  interest: "Politics",
-  interest_id: "6"
-  },
-  {
-  interest: "Documentary",
-  interest_id: "7"
-  },
-  {
-  interest: "Video",
-  interest_id: "8"
-}]
-
-const MainSearch = ({navigation}) => {
+const MainSearch = ({navigation, interests}) => {
   const state = navigation.dangerouslyGetState();
   let actualRoute = state.routes[state.index];  
   while (actualRoute.state) {
       actualRoute = actualRoute.state.routes[actualRoute.state.index];
-  }
-  
+  }  
   return(
     <SearchTabs.Navigator
         tabBarOptions= {{
@@ -85,15 +51,23 @@ const MainSearch = ({navigation}) => {
       }}
       />
       {
-        fetchInterests.map((interest, i) => {
+        interests.map((interest, i) => {
           return(
-            <SearchTabs.Screen name={interest.interest} component={DynamicSearchScreen} key={i} />
+            <SearchTabs.Screen name={interest.interest} key={i}>
+              { props => <DynamicSearchScreen props={props} id={interest.interest_id} />}
+            </SearchTabs.Screen>
           )
         })
       }
     </SearchTabs.Navigator>
   )
 }
+
+const mapStateToProps = createStructuredSelector({
+  interests: selectInterests
+})
+
+const ConnectedSearchNews = connect(mapStateToProps)(MainSearch)
 
 export const SearchStack = ({navigation}) => {
   const state = navigation.dangerouslyGetState();
@@ -106,7 +80,7 @@ export const SearchStack = ({navigation}) => {
     <Search.Navigator>
       <Search.Screen 
       name='MainSearch'
-      component={MainSearch}
+      component={ConnectedSearchNews}
       options={{
         header: ({ scene, previous, navigation }) => {
             const { options } = scene.descriptor;

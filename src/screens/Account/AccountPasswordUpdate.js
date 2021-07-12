@@ -4,24 +4,39 @@ import { PasswordTextField } from '../../components/Account/PasswordText';
 import { AntDesign } from '@expo/vector-icons';
 
 
-const AccountPasswordUpdate = ({ saveAction}) => {
-    const [ password, setPassword ] = useState('')
-    const [ newPassword, setNewPassword ] = useState('')
-    const [ confirmNewPassword, setConfirmNewPassword ] = useState('')
-
+const AccountPasswordUpdate = ({ saveAction, password, setPasswordState }) => {
     useEffect(() => {
-        if (password.length > 0 && newPassword.length > 0 && confirmNewPassword.length > 0) {
+        if (password.current.length > 0 && password.new.length > 0 && password.confirmNew.length > 0) {
             saveAction(true)
         }else {
             saveAction(false)
         }
-    }, [password, newPassword, confirmNewPassword])
+    }, [password])
+
+    const setPasswordCurrent = (text) => {
+        setPasswordState({
+            ...password,
+            current: text
+        })
+    }
+    const setPasswordNew = (text) => {
+        setPasswordState({
+            ...password,
+            new: text
+        })
+    }
+    const setPasswordConfirm = (text) => {
+        setPasswordState({
+            ...password,
+            confirmNew: text
+        })
+    }
     return (
         <ScrollView style={styles.news}>   
                <Text style={{ fontSize: 24, marginBottom: 8, fontWeight: '700'}}>Create a strong Password</Text>
-               <PasswordTextField content={password} onChange={setPassword} placeholder="Enter your current Password" />
-               <PasswordTextField content={newPassword} onChange={setNewPassword} placeholder="Enter your new password" />
-               <PasswordTextField content={confirmNewPassword} onChange={setConfirmNewPassword} placeholder="Confirm your new password" />  
+               <PasswordTextField content={password.current} onChange={setPasswordCurrent} placeholder="Enter your current Password" />
+               <PasswordTextField content={password.new} onChange={setPasswordNew} placeholder="Enter your new password" />
+               <PasswordTextField content={password.confirmNew} onChange={setPasswordConfirm} placeholder="Confirm your new password" />  
                <View style={{ marginTop: 34}}>
                     <Text style={{ fontSize: 16, fontWeight: '700', marginBottom: 16, color: '#343a40'}}>Must Contain</Text>   
                     <View>

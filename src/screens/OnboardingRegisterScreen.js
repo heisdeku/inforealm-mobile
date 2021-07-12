@@ -1,73 +1,125 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux'
-import { SafeAreaView, ScrollView, TextInput, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { ScrollView, Alert, ActivityIndicator, Platform, TextInput, StyleSheet, Text, View, Image, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { useForm, Controller } from 'react-hook-form'
 import Colors from '../colors/colors';
 import { emailSignUp } from '../redux/operations/user.op';
+import { isLoading } from '../redux/selectors/user.selector';
 
 const LoginScreen = ({navigation}) => { 
     const dispatch = useDispatch()
-    const [ name, setName ] = useState('')
-    const [ lastName, setLastName ] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const loading = useSelector(isLoading)
+    const { control, handleSubmit, formState: { errors } } = useForm();
 
-    const handleRegistration = async () => {
+    const handleRegistration = async (data) => {        
         let userData = new FormData()
 
-        userData.append('firstname', name)
-        userData.append('lastname', lastName)
-        userData.append('email', email)
-        userData.append('password', password)
+        userData.append('firstname', data.firstname)
+        userData.append('lastname', data.lastname)
+        userData.append('email', data.email)
+        userData.append('password', data.password)
         
-        const response = await dispatch(emailSignUp(userData))  
-
-        if (response.status !== 'success') {
+        const response = await dispatch(emailSignUp(userData))          
+        if (response.error) {            
+            Alert.alert(response.error)
+        }
+        else if (response === 'success') {            
             navigation.navigate('Login');
+        } else {
+            return;
         }
     }
-    return (        
-            <SafeAreaView style={{ flex: 1 }}>
+    return (       
+        <ScrollView>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : 'position'}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} style={{ flex: 1 }}>
                  <View style={styles.container}>
-                {/*<Image style={styles.logo} source={require('../../assets/images/inforealm-blue.png')} />*/}
                 <Text style={styles.heading}>Stay up to date with insightful news and trends</Text>
                 <Image style={styles.pana} source={require('../../assets/images/pana.png')} />
-                <View style={{ width: '100%'}}>     
-                    <TextInput
-                    style={styles.input}
-                    placeholder='Enter your First name'
-                    placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setName(text)}
-                    value={name}
-                    underlineColorAndroid="transparent"                    
+                <View style={{ width: '100%'}}>   
+                    <Controller
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                placeholder='Enter your First name'
+                                placeholderTextColor="#aaaaaa"             onChangeText={(value) => onChange(value)}
+                                value={value}
+                                underlineColorAndroid="transparent"
+                                autoCapitalize="none"
+                                /> 
+                            )}
+                        name="firstname"
+                        rules={{ required: true }}
+                        defaultValue=""
                     />
-                    <TextInput
-                    style={styles.input}
-                    placeholder='Enter your Last name'
-                    placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setLastName(text)}
-                    value={lastName}
-                    underlineColorAndroid="transparent"                    
+                    <View>
+                        {errors.firstname && <Text style={{ color: Colors.secondary, fontSize: 14}}>Firstname Field Cannot be Empty</Text>}
+                    </View> 
+                    <Controller
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                placeholder='Enter your Last name'
+                                placeholderTextColor="#aaaaaa"             onChangeText={(value) => onChange(value)}
+                                value={value}
+                                underlineColorAndroid="transparent"
+                                autoCapitalize="none"
+                                /> 
+                            )}
+                        name="lastname"
+                        rules={{ required: true }}
+                        defaultValue=""
                     />
-                    <TextInput
-                    style={styles.input}
-                    placeholder='Enter your e-mail'
-                    placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setEmail(text)}
-                    value={email}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                    />                                        
-                    <TextInput
-                    style={styles.input}
-                    placeholderTextColor="#aaaaaa"
-                    secureTextEntry
-                    placeholder='Enter your password'
-                    onChangeText={(text) => setPassword(text)}
-                    value={password}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                    />                    
+                    <View>
+                        {errors.lastname && <Text style={{ color: Colors.secondary, fontSize: 14}}>Lastname Field Cannot be Empty</Text>}
+                    </View>
+                    <Controller
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.input}
+                                onBlur={onBlur}
+                                placeholder='Enter your e-mail'
+                                placeholderTextColor="#aaaaaa"                                
+                                onChangeText={(value) => onChange(value)}
+                                value={value}
+                                underlineColorAndroid="transparent"
+                                autoCapitalize="none"
+                                /> 
+                            )}
+                        name="email"
+                        rules={{ required: true }}
+                        defaultValue=""
+                    />
+                    <View>
+                        {errors.email && <Text style={{ color: Colors.secondary, fontSize: 14}}>You must fill in an email address</Text>}
+                    </View> 
+                    <Controller
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.input}
+                                placeholderTextColor="#aaaaaa"
+                                onBlur={onBlur}
+                                secureTextEntry
+                                placeholder='Enter your password'
+                                onChangeText={(value) => onChange(value)}
+                                value={value}
+                                underlineColorAndroid="transparent"
+                                autoCapitalize="none"
+                            />  
+                        )}
+                        name="password"
+                        rules={{ required: true }}
+                        defaultValue=""
+                    />
+                    <View>
+                        {errors.password && <Text style={{ color: Colors.secondary, fontSize: 14}}>You must fill in your password</Text>}
+                    </View>                                                        
                     <View style={styles.footerView}>
                         <Text style={styles.footerViewText}>Created an Acccount?  {``}
                             <Text onPress={() => navigation.navigate('Login')} style={styles.footerLink}>Login
@@ -75,13 +127,18 @@ const LoginScreen = ({navigation}) => {
                         </Text>
                     </View>
                 </View>
-                <TouchableOpacity onPress={handleRegistration} style={{width: '100%'}}>
+                <TouchableOpacity onPress={handleSubmit(handleRegistration)} style={{width: '100%'}}>
                     <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
-                        <Text
-                          style={{...styles.buttonText, color: '#fff'}}
-                        >
-                          Register
-                        </Text>
+                        {
+                            loading && <ActivityIndicator color='#FFF' size='large' />
+                        }
+                        {
+                            !loading && <Text
+                            style={{...styles.buttonText, color: '#fff'}}
+                          >
+                            Register
+                          </Text>
+                        }                        
                     </View>
                 </TouchableOpacity>               
                 <View style={styles.footer}>
@@ -94,7 +151,8 @@ const LoginScreen = ({navigation}) => {
                 </View>
             </View>
            
-            </SafeAreaView>                    
+            </KeyboardAvoidingView>   
+            </ScrollView>                          
     )
 }
 
@@ -130,8 +188,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         borderBottomColor: '#cdcccc',
         borderBottomWidth: 1.25,        
-        marginBottom: 10,                
-        paddingLeft: 16
+        marginBottom: 10,                        
     },
     footerView: {             
         marginVertical: 25,
