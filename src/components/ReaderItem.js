@@ -52,7 +52,15 @@ const ReaderItem = ({ navigation, news }) => {
           <Feather name='chevron-right' size={14} color={Colors.text2} />
           <Text style={styles.crumbText}>{news.interests.map(interest => interest.interest).join(', ')}</Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('Article', { screen: 'ArticleRead', params: { news_id: news.id }})}>
+        <TouchableOpacity activeOpacity={0.1}
+          onPress={() => 
+            navigation.navigate('Article', {
+              screen: 'ArticleRead',
+              params: {news_id: news.id},
+            })
+            
+          }
+        >
           <Text style={styles.newsTitle}>
             {news.title}
           </Text>

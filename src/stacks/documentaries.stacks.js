@@ -1,12 +1,13 @@
 import React from 'react';
-import { TouchableOpacity, Image } from 'react-native';
+import { TouchableOpacity, Image, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AntDesign, Feather } from '@expo/vector-icons';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DocumentariesScreen from '../screens/Documentaries/DocumentariesScreen';
 import DocumentaryCategory from '../screens/Documentaries/DocumentaryCategory';
 import { useSelector } from 'react-redux';
 import { getCurrentUser } from '../redux/selectors/user.selector'
+
 
 const Documentaries = createStackNavigator();
 
@@ -32,13 +33,18 @@ export const DocumentariesStack = ({navigation}) => {
         headerLeft: () => (
           <TouchableOpacity style={{marginLeft: 10}} onPress={() => navigation.navigate('Account')}>
             {
-              !user.profile_picture && 
-              <View style={styles.emptyPhoto}>
+              !user?.profile_picture && 
+              <View style={{                
+                width: 56,
+                height: 56,        
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
                 <MaterialCommunityIcons name="account" size={27} color="#6C757D" />
               </View>
             }                    
-            {user.profile_picture && 
-              <Image resizeMode="cover" source={{ uri: user.profile_picture }} style={{ width: 30, height: 30, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
+            {user?.profile_picture && 
+              <Image resizeMode="cover" source={{ uri: user?.profile_picture }} style={{ width: 30, height: 30, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
             }
           </TouchableOpacity>
         ),

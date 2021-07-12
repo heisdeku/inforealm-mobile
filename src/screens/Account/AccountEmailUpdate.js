@@ -1,14 +1,24 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, TextInput, ScrollView, View, Dimensions } from 'react-native';
+import Toast from 'react-native-root-toast'
 
-const AccountEmailUpdate = ({ saveAction, email, setEmailState }) => {
+const AccountEmailUpdate = ({ saveAction, email, emailStatus, setEmailStatus, setEmailState }) => {
     useEffect(() => {
-        if (email.current.length > 0 && email.new.length > 0 && email.confirmNew.length > 0) {
+        if (email.current.length > 0 && email.new.length > 0 && email.confirmNew.length > 0 && email.new === email.confirmNew) {
             saveAction(true)
         }else {
             saveAction(false)
         }
     }, [email])
+    useEffect(() => {
+        if (emailStatus) {
+        Toast.show(emailStatus, {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.CENTER
+        });
+        } 
+        setEmailStatus(null)       
+    }, [emailStatus])
     return (
         <ScrollView style={styles.news}>   
                <Text style={{ fontSize: 24, marginBottom: 20, fontWeight: '700'}}>Update Email Address</Text>

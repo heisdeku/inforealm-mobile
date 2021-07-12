@@ -6,19 +6,18 @@ import { getCurrentUser } from '../../redux/selectors/user.selector';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 export const ReaderNavigation = ({ visitProfile, visitSearch }) => {
-    const user = useSelector(getCurrentUser)   
-    console.log(user.profile_picture) 
+    const user = useSelector(getCurrentUser)       
     return (
         <View style={styles.container}>                    
             <View style={styles.mainNavigation}>   
                 <TouchableOpacity onPress={visitProfile}>
                     {
-                        !user.profile_picture && <View style={styles.emptyPhoto}>
+                        user === null && !user?.profile_picture && <View style={styles.emptyPhoto}>
                         <MaterialCommunityIcons name="account" size={27} color="#6C757D" />
                     </View>
                     }                    
-                    {user.profile_picture && 
-                        <Image resizeMode="cover" source={{ uri: user.profile_picture }} style={{ width: 30, height: 30, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
+                    {user !== null && user?.profile_picture &&
+                        <Image resizeMode="cover" source={{ uri: user?.profile_picture }} style={{ width: 30, height: 30, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
                     }                    
                 </TouchableOpacity>                 
                     <Image
@@ -31,7 +30,7 @@ export const ReaderNavigation = ({ visitProfile, visitSearch }) => {
             </View>  
             <View> 
                 <Text style={styles.readerScreenTitle}>Reader</Text> 
-                <Text style={styles.userName}>Welcome {user.user_id ? user.firstname : 'sensei'}</Text>               
+                <Text style={styles.userName}>Welcome {user?.user_id ? user.firstname : 'sensei'}</Text>               
             </View>            
         </View>
     )

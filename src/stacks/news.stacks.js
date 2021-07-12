@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux'
-import { TouchableOpacity, Image } from 'react-native';
+import { TouchableOpacity, Image, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Feather } from '@expo/vector-icons';
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 
 import AllNewsScreen from '../screens/News/AllNewsScreen';
@@ -110,13 +110,18 @@ export const NewsStack = ({navigation}) => {
         headerLeft: () => (
           <TouchableOpacity style={{marginLeft: 10}} onPress={() => navigation.navigate('Account')}>
             {
-              !user.profile_picture && 
-              <View style={styles.emptyPhoto}>
+              !user?.profile_picture && 
+              <View style={{                
+                width: 56,
+                height: 56,        
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
                 <MaterialCommunityIcons name="account" size={27} color="#6C757D" />
               </View>
             }                    
-            {user.profile_picture && 
-              <Image resizeMode="cover" source={{ uri: user.profile_picture }} style={{ width: 30, height: 30, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
+            {user?.profile_picture && 
+              <Image resizeMode="cover" source={{ uri: user?.profile_picture }} style={{ width: 30, height: 30, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
             }
           </TouchableOpacity>
         ),

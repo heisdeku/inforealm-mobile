@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, ScrollView, View,  Dimensions } from 'react-native';
 import { PasswordTextField } from '../../components/Account/PasswordText';
 import { AntDesign } from '@expo/vector-icons';
+import Toast from 'react-native-root-toast'
 
-
-const AccountPasswordUpdate = ({ saveAction, password, setPasswordState }) => {
+const AccountPasswordUpdate = ({ saveAction, pwdStatus, setPwdStatus, password, setPasswordState }) => {
     useEffect(() => {
         if (password.current.length > 0 && password.new.length > 0 && password.confirmNew.length > 0) {
             saveAction(true)
@@ -12,7 +12,16 @@ const AccountPasswordUpdate = ({ saveAction, password, setPasswordState }) => {
             saveAction(false)
         }
     }, [password])
-
+    
+    useEffect(() => {
+        if (pwdStatus) {
+            Toast.show(pwdStatus, {
+                duration: Toast.durations.SHORT,
+                position: Toast.positions.CENTER
+            });
+        } 
+        setPwdStatus(null)       
+    }, [pwdStatus])
     const setPasswordCurrent = (text) => {
         setPasswordState({
             ...password,
