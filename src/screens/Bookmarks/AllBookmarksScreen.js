@@ -70,7 +70,7 @@ const AllBookmarksScreen = () => {
             }
             {
                 !isLoading && news.length ?
-                <ScrollView style={{flex: 1, backgroundColor: '#E5E5E5'}}
+                <ScrollView contentContainerStyle={{flex: 1, backgroundColor: '#E5E5E5'}}
                 refreshControl={
                     <RefreshControl
                     refreshing={refreshing}

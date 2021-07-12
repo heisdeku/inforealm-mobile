@@ -16,6 +16,8 @@ import { SearchStack } from './src/stacks/search.stacks';
 import { ArticleStack } from './src/stacks/article.stacks';
 import { AccountStack } from './src/stacks/account.stacks';
 import { PersistGate } from 'redux-persist/integration/react';
+//toast
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 const getFonts = () =>
   Font.loadAsync({
@@ -42,33 +44,35 @@ export default () => {
         <PersistGate loading={null} persistor={persistor}>
         <StatusBar barStyle='dark-content' backgroundColor='#fff' />
         {/* <App /> */}
+        <RootSiblingParent>
         <NavigationContainer>
-          <SwicthStack.Navigator
-          screenOptions={{
-            headerShown: false
-          }}
-          >
-            {
-              splash ?
+            <SwicthStack.Navigator
+            screenOptions={{
+              headerShown: false
+            }}
+            >
+              {
+                splash ?
+                <SwicthStack.Screen 
+                name='Splash' 
+                component={SplashScreen}
+                />
+                : null
+              }
               <SwicthStack.Screen 
-              name='Splash' 
-              component={SplashScreen}
+              name='OnboardingStack' 
+              component={OnboardingStack}
               />
-              : null
-            }
-            <SwicthStack.Screen 
-            name='OnboardingStack' 
-            component={OnboardingStack}
-            />
-            <SwicthStack.Screen 
-            name='MainStack' 
-            component={BottomTabStack}
-            />
-            <SwicthStack.Screen name="Search" component={SearchStack} />
-            <SwicthStack.Screen name="Article" component={ArticleStack} />
-            <SwicthStack.Screen name="Account" component={AccountStack} />
-          </SwicthStack.Navigator>
-        </NavigationContainer>
+              <SwicthStack.Screen 
+              name='MainStack' 
+              component={BottomTabStack}
+              />
+              <SwicthStack.Screen name="Search" component={SearchStack} />
+              <SwicthStack.Screen name="Article" component={ArticleStack} />
+              <SwicthStack.Screen name="Account" component={AccountStack} />
+            </SwicthStack.Navigator>
+          </NavigationContainer>
+        </RootSiblingParent>
         </PersistGate>
       </Provider>
     )

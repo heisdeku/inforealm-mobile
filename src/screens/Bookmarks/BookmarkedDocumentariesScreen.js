@@ -72,7 +72,57 @@ const BookmarkedDocumentariesScreen = () => {
             }
             {
                 !isLoading && news.length ?
-                <ScrollView style={{flex: 1}}
+                <View style={{flex: 1, backgroundColor: '#E5E5E5'}}>
+                    <ScrollView contentContainerStyle={{flex: 1}}
+                    refreshControl={
+                        <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        colors={[Colors.brand, Colors.secondary, Colors.caption]}
+                        tintColor={Colors.brand}
+                        />
+                    }
+                    >
+                        <View style={styles.container}>
+                            <View style={styles.heading}>
+                                <Text style={styles.headingText}>Documentaries</Text>
+                                <Text style={{fontFamily: 'DMRegular', fontSize: 13}}>Welcome sensei</Text>
+                            </View>
+                            <View style={styles.body}>
+                                <View style={styles.category}>
+                                    {/* <View style={styles.categoryHeadView}>
+                                        <View style={{width: '50%'}}>
+                                            <Text style={styles.categoryHead}>
+                                                Category
+                                            </Text>
+                                            <Text style={styles.categoryCaption}>
+                                                Breaking news for all of the latest updates about the category.
+                                            </Text>
+                                        </View>
+                                        <TouchableOpacity onPress={() => navigation.navigate('DocCategory')} style={{flexDirection: 'row'}}>
+                                            <Text style={{fontSize: 14, color: Colors.secondary}}>View all </Text><Feather size={18} name='chevron-right' color={Colors.secondary} />
+                                        </TouchableOpacity>
+                                    </View> */}
+                                    <View style={styles.categoryItems}>
+                                        {
+                                            news.map((news, i) => {
+                                                return(
+                                                    <DocumentaryItem key={i} news={news} />
+                                                )
+                                            })
+                                        }
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    </ScrollView>
+                </View>
+                :
+                null
+            }
+            {
+                !isLoading && !news.length ?
+                <ScrollView contentContainerStyle={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
                 refreshControl={
                     <RefreshControl
                     refreshing={refreshing}
@@ -80,51 +130,11 @@ const BookmarkedDocumentariesScreen = () => {
                     colors={[Colors.brand, Colors.secondary, Colors.caption]}
                     tintColor={Colors.brand}
                     />
-                }
-                >
-                    <View style={styles.container}>
-                        <View style={styles.heading}>
-                            <Text style={styles.headingText}>Documentaries</Text>
-                            <Text style={{fontFamily: 'DMRegular', fontSize: 13}}>Welcome sensei</Text>
-                        </View>
-                        <View style={styles.body}>
-                            <View style={styles.category}>
-                                {/* <View style={styles.categoryHeadView}>
-                                    <View style={{width: '50%'}}>
-                                        <Text style={styles.categoryHead}>
-                                            Category
-                                        </Text>
-                                        <Text style={styles.categoryCaption}>
-                                            Breaking news for all of the latest updates about the category.
-                                        </Text>
-                                    </View>
-                                    <TouchableOpacity onPress={() => navigation.navigate('DocCategory')} style={{flexDirection: 'row'}}>
-                                        <Text style={{fontSize: 14, color: Colors.secondary}}>View all </Text><Feather size={18} name='chevron-right' color={Colors.secondary} />
-                                    </TouchableOpacity>
-                                </View> */}
-                                <View style={styles.categoryItems}>
-                                    {
-                                        news.map((news, i) => {
-                                            return(
-                                                <DocumentaryItem key={i} news={news} />
-                                            )
-                                        })
-                                    }
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </ScrollView>
-                :
-                null
-            }
-            {
-                !isLoading && !news.length ?
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                }>
                     <View style={styles.emptyView}>
                         <Text style={styles.emptyText}>Here’s a little empty</Text>
                     </View>
-                </View>
+                </ScrollView>
                 :
                 null
             }

@@ -14,5 +14,5 @@ export const getSocialUser = createSelector(
 
 export const selectUserId = createSelector(
   [userState],
-  (userState) => userState.currentUser
+  (userState) => userState.user.user_id
 )

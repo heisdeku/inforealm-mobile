@@ -8,7 +8,6 @@ import { Audio } from 'expo-av';
 
 const GlanceItem = ({news}) => {
     const [duration, setDuration] = useState(null);
-    console.log('glanceNewsAudio', news.media.audios[0]) 
     const navigation = useNavigation(); 
     const onShare = async () => {
         try {

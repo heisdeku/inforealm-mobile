@@ -19,7 +19,6 @@
     "expo-app-loading": "^1.0.3",
     "expo-av": "~9.1.2",
     "expo-font": "~9.1.0",
-    "expo-google-sign-in": "~9.1.0",
     "expo-image-picker": "~10.1.4",
     "expo-status-bar": "~1.0.4",
     "firebase": "8.2.3",
@@ -30,6 +29,7 @@
     "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-reanimated": "~2.1.0",
     "react-native-render-html": "^5.1.1",
+    "react-native-root-toast": "^3.2.1",
     "react-native-safe-area-context": "3.2.0",
     "react-native-safe-area-view": "^1.1.1",
     "react-native-screens": "~3.0.0",
@@ -47,7 +47,9 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "reselect": "^4.0.0"
+    "reselect": "^4.0.0",
+    "expo-file-system": "~11.0.2",    
+    "expo-google-sign-in": "~9.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
