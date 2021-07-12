@@ -7,6 +7,7 @@ import DocumentariesScreen from '../screens/Documentaries/DocumentariesScreen';
 import DocumentaryCategory from '../screens/Documentaries/DocumentaryCategory';
 import { useSelector } from 'react-redux';
 import { getCurrentUser } from '../redux/selectors/user.selector'
+import ArticleRead from '../screens/Article/ArticleRead';
 
 const Documentaries = createStackNavigator();
 
@@ -47,6 +48,21 @@ export const DocumentariesStack = ({navigation}) => {
             <Feather name='search' size={20} />
           </TouchableOpacity>
         ),
+      }}
+      />
+      <Documentaries.Screen 
+      component={ArticleRead}
+      name='ArticleRead'
+      options={{
+        title: '',
+        headerLeft: (props) => (
+          <TouchableOpacity
+            {...props}
+            style={{marginLeft: 10}}
+          >
+            <AntDesign name='arrowleft' color='black' size={30} />
+          </TouchableOpacity>
+        )
       }}
       />
       <Documentaries.Screen 

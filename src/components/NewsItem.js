@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Share, Vibration } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Share, Vibration, ScrollView } from 'react-native';
 import Colors from '../colors/colors';
 import { useNavigation } from '@react-navigation/native';
 import { createStructuredSelector } from 'reselect'
@@ -7,15 +7,23 @@ import { selectUserId } from '../redux/selectors/user.selector';
 import { connect } from 'react-redux';
 import apiConnect from '../api/apiConnect';
 import Toast from 'react-native-root-toast';
+import * as FileSystem from 'expo-file-system';
 import { Feather, MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
+import { selectDownloadsArray, selectDownloadsArticles, selectDownloadsError, selectDownloadsLoading } from '../redux/selectors/downloads.selectors';
+import { addDownload, addDownloadArticle, deleteDownload, deleteDownloadArticle } from '../redux/actions/downloads.actions';
 
-const NewsItem = ({news, user_id}) => {
+const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle}) => {
     const [bookmarksStatus, setBookmarkStatus] = useState(false);
     const [bookmarkError, setBookmarkError] = useState('');
     const [doBookmarkError, setDoBookmarkError] = useState('');
-    navigation = useNavigation();
-    const refRBSheet = useRef();    
+    const [downloadProgress, setDownloadProgress] = useState(0);
+    const [downloadInProgress, setDownloadInProgress] = useState(false);
+    const [downloadInProgressName, setDownloadInProgressName] = useState('');
+    const [audioDownloadDoesntExist, setaudioDownloadDoesntExist] = useState(false);
+    const [videoDownloadDoesntExist, setvideoDownloadDoesntExist] = useState(false);
+    const navigation = useNavigation();
+    const refRBSheet = useRef();   
     const onShare = async () => {
         try {
             Share.share({
@@ -25,6 +33,9 @@ const NewsItem = ({news, user_id}) => {
             console.log(error);
         }
     }
+    console.log('dlArt', downloadArticles)
+    console.log('dl', downloadsArray)
+    // console.log('cong', audioDownloadDoesntExist && videoDownloadDoesntExist)
 
     const getBookmarkStatus = async () => {
         setBookmarkError('');
@@ -36,11 +47,19 @@ const NewsItem = ({news, user_id}) => {
             if(response.data.status === 'success'){
                 setBookmarkStatus(response.data.bookmark_status);
             }else{
-                setBookmarkError(response.data.message)
+                setBookmarkError(response.data.message);
+                Toast.show(bookmarkError, {
+                    duration: Toast.durations.SHORT,
+                    position: Toast.positions.CENTER
+                });
             }
         } catch (error) {
             console.log(error);
             setBookmarkError('Something went wrong');
+            Toast.show(bookmarkError, {
+                duration: Toast.durations.SHORT,
+                position: Toast.positions.CENTER
+            });
         }
     }
 
@@ -59,53 +78,137 @@ const NewsItem = ({news, user_id}) => {
                 getBookmarkStatus();
             }else{
                 setDoBookmarkError(response.data.message);
+                Toast.show(doBookmarkError, {
+                    duration: Toast.durations.SHORT,
+                    position: Toast.positions.CENTER
+                })
             }
         } catch (error) {
             console.log(error);
             setDoBookmarkError('Something went wrong');
+            Toast.show(doBookmarkError, {
+                duration: Toast.durations.SHORT,
+                position: Toast.positions.CENTER
+            })
         }
     }
+
+    const toastDownloadInProgress = () => {
+        Toast.show('A download is currently in progress for this article', {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.CENTER
+        })
+    }
+
+    const createDownload = async (downloadUrl) => {
+        const callback = downProgress => {
+            const progress = downProgress.totalBytesWritten / downProgress.totalBytesExpectedToWrite;
+            setDownloadProgress(progress * 100);
+            if(downProgress.totalBytesWritten === downProgress.totalBytesExpectedToWrite){
+                setDownloadInProgress(false);
+                Toast.show('Download Completed', {
+                    duration: Toast.durations.SHORT,
+                    position: Toast.positions.CENTER
+                });
+                setDownloadProgress(0);
+                addDownload(downloadsArray, downloadUrl.substring(downloadUrl.lastIndexOf('/')+1));
+                addDownloadArticle(downloadArticles, news);
+            }
+        };
+
+        const downloadResumable = FileSystem.createDownloadResumable(
+            `${downloadUrl}`,
+            FileSystem.documentDirectory + `${downloadUrl.substring(downloadUrl.lastIndexOf('/')+1)}`,
+            {},
+            callback
+        );
+        
+        setDownloadInProgress(true);
+        setDownloadInProgressName(downloadUrl.substring(downloadUrl.lastIndexOf('/')+1));
+
+        try {
+            const { uri } = await downloadResumable.downloadAsync();
+          } catch (e) {
+            console.error(e);
+          }
+    }
+
+    const checkIfDownloadExists = (downloadsArray, fileName) => {
+        if(downloadsArray.length){
+            const itemExists = downloadsArray.find(download => download === fileName)
+    
+            if(itemExists){
+                return true
+            }else{
+                return false
+            }
+        }else{
+            return false
+        }
+    }
+
+    const checkAudiosDownloaded = () => {
+        // console.log('audL', news.media.audios.length)
+        if(news.media.audios.length > 0){
+            const newSet = news.media.audios.map(audio => {
+                // console.log('audio', audio)
+                // console.log('downloadsArray', downloadsArray)
+                const kwi = downloadsArray.find(aud => aud == audio.substring(audio.lastIndexOf('/')+1))
+                return kwi;
+            })
+            console.log('newSet', newSet);
+            if(newSet.length){
+                setaudioDownloadDoesntExist(false);
+            }else{
+                setaudioDownloadDoesntExist(true);
+            }
+        }else{
+            setaudioDownloadDoesntExist(true);
+        }
+    }
+
+    const checkVideosDownloaded = () => {
+        // console.log('vidL', news.media.videos.length)
+        if(news.media.videos.length > 0){
+            const newSet = news.media.videos.map(video => {
+                const kwi = downloadsArray.find(vid => vid == video.substring(video.lastIndexOf('/')+1));
+                    // console.log('vid', vid)
+                    // console.log('video', video.substring(video.lastIndexOf('/')+1))
+                return kwi;
+            })
+            if(newSet.length){
+                setvideoDownloadDoesntExist(false);
+            }else{
+                setvideoDownloadDoesntExist(true);
+            }
+        }else{
+            setvideoDownloadDoesntExist(true);
+        }
+    }
+
+    const removeDownload = async (fileName) => {
+        try {
+            FileSystem.deleteAsync(FileSystem.documentDirectory + fileName);
+            deleteDownload(downloadsArray, fileName);
+            checkAudiosDownloaded();
+            checkVideosDownloaded();
+
+            if(audioDownloadDoesntExist && videoDownloadDoesntExist){                
+                deleteDownloadArticle(downloadArticles, news);
+            }
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     useEffect(() => {
         if(user_id){
             getBookmarkStatus();
         }
     }, [])
-    
-    if(!news){
-        news = {
-            "author": "Test author",
-            "caption": "Dummy News Caption 3",
-            "categories": [
-               {
-                "category": "News",
-                "category_id": "3",
-              },
-            ],
-            "date": "May 05, 2021",
-            "id": "cc63aa2a9ab8f5ab1f25220dca666ac6",
-            "interests": [
-              {
-                "interest": "Video",
-                "interest_id": "8",
-              },
-              {
-                "interest": "News",
-                "interest_id": "1",
-              },
-            ],
-            "media": {
-              "audios": [],
-              "images": [],
-              "thumbnail": "http://aledoyhost.com/inforealm/thumbnails/main_thumbnail.png",
-              "videos": [],
-            },
-            "time": "11:51:37",
-            "time_to_read": "1",
-            "title": "Dummy News Title 3",
-            "user_id": null,
-          }
-    }
+
     return (
         <View style={styles.news}>
             <View style={styles.imageContainer}>
@@ -122,7 +225,16 @@ const NewsItem = ({news, user_id}) => {
                     <View style={styles.newsSummaryItem}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.newsSummaryText}> {news.date}</Text></View>
                     <View style={styles.newsSummaryItem}><MaterialIcons size={14} color={Colors.text1} name='library-books' /><Text style={styles.newsSummaryText}> {news.time_to_read} min read</Text></View>
                 </View>
+                {
+                    downloadProgress ?
+                    <View style={styles.dowloadProgressHolder}>
+                        <View style={{...styles.downloadProgress, width: `${downloadProgress}%`}}></View>
+                    </View>
+                    :
+                    null
+                }
             </View>
+            
             <RBSheet
                 ref={refRBSheet}
                 closeOnDragDown={true}
@@ -144,39 +256,83 @@ const NewsItem = ({news, user_id}) => {
                 }
                 }}
             >
-                {
-                    user_id ?
-                    <TouchableOpacity onPress={() => doBookmark()} >
+                <ScrollView>
+                    {
+                        user_id ?
+                        <TouchableOpacity onPress={() => doBookmark()} >
+                            <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
+                                <View style={styles.rbIcon}><Feather name='bookmark' color='#fff' size={20} /></View> 
+                                <Text style={styles.rbText}>{bookmarksStatus ? 'Remove from bookmarks' : 'Bookmark'}</Text>
+                            </View>
+                        </TouchableOpacity>
+                        :
+                        null
+                    }
+                    {
+                        news.media.audios.length || news.media.videos.length ?
+                        <View>
+                            {
+                            news.media.audios.map((audio, i) => {
+                                if(checkIfDownloadExists(downloadsArray, audio.substring(audio.lastIndexOf('/')+1))){
+                                    return(
+                                        <TouchableOpacity onPress={() => removeDownload(audio.substring(audio.lastIndexOf('/')+1))} key={i}>
+                                            <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
+                                                <View style={styles.rbIcon}><Feather name='trash' color='#fff' size={20} /></View> 
+                                                <Text style={styles.rbText}>Delete Audio {i+1}</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    )
+                                }else{
+                                    return(
+                                        <TouchableOpacity onPress={downloadInProgress ? () => toastDownloadInProgress() : () => createDownload(audio)} key={i}>
+                                            <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
+                                                <View style={styles.rbIcon}><Feather name='download-cloud' color='#fff' size={20} /></View> 
+                                                <Text style={styles.rbText}>Download Audio {i+1}</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    )
+                                }
+                            })                            
+                            }
+                            {
+                                news.media.videos.map((video, i) => {
+                                    if(checkIfDownloadExists(downloadsArray, video.substring(video.lastIndexOf('/')+1))){
+                                        return(
+                                            <TouchableOpacity onPress={() => removeDownload(video.substring(video.lastIndexOf('/')+1))} key={i}>
+                                                <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
+                                                    <View style={styles.rbIcon}><Feather name='trash' color='#fff' size={20} /></View> 
+                                                    <Text style={styles.rbText}>Delete Video {i+1}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        )
+                                    }else{
+                                        return(
+                                            <TouchableOpacity onPress={downloadInProgress ? () => toastDownloadInProgress() : () => createDownload(video)} key={i}>
+                                                <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
+                                                    <View style={styles.rbIcon}><Feather name='download-cloud' color='#fff' size={20} /></View> 
+                                                    <Text style={styles.rbText}>Download Video {i+1}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        )
+                                    }
+                                })
+                            }
+                        </View>
+                        :
+                        null
+                    }
+                    <TouchableOpacity onPress={() => onShare()}>
                         <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
-                            <View style={styles.rbIcon}><Feather name='bookmark' color='#fff' size={20} /></View> 
-                            <Text style={styles.rbText}>{bookmarksStatus ? 'Remove from bookmarks' : 'Bookmark'}</Text>
+                            <View style={styles.rbIcon}><Feather name='share' color='#fff' size={20} /></View> 
+                            <Text style={styles.rbText}>Share</Text>
                         </View>
                     </TouchableOpacity>
-                    :
-                    null
-                }
-                {
-                    news.media.audios.length || news.media.videos.length ?
-                    <TouchableOpacity>
-                        <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
-                            <View style={styles.rbIcon}><Feather name='download-cloud' color='#fff' size={20} /></View> 
-                            <Text style={styles.rbText}>Download</Text>
+                    <TouchableOpacity onPress={() => refRBSheet.current.close()} >
+                        <View style={{...styles.closeBtn, marginTop: !user_id && !news.media.audios.length ? 90 : !user_id && !news.media.videos.length ? 90 : !user_id && news.media.audios.length ? 60 : !user_id && news.media.videos.length ? 60 : 30}}>
+                            <Text style={styles.closeBtnText}>Close</Text>
                         </View>
                     </TouchableOpacity>
-                    :
-                    null
-                }
-                <TouchableOpacity onPress={() => onShare()}>
-                    <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
-                        <View style={styles.rbIcon}><Feather name='share' color='#fff' size={20} /></View> 
-                        <Text style={styles.rbText}>Share</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => refRBSheet.current.close()} >
-                    <View style={{...styles.closeBtn, marginTop: !user_id && !news.media.audios.length ? 90 : !user_id && !news.media.videos.length ? 90 : user_id && !news.media.audios.length ? 60 : user_id && !news.media.videos.length ? 60 : 30}}>
-                        <Text style={styles.closeBtnText}>Close</Text>
-                    </View>
-                </TouchableOpacity>
+                </ScrollView>
             </RBSheet>
         </View>
     )
@@ -261,11 +417,33 @@ const styles = StyleSheet.create({
         fontFamily: 'DMBold',
         color: Colors.text2,
         fontSize: 16
+    },
+    dowloadProgressHolder: {
+        height: 7,
+        backgroundColor: '#000',
+        width: '100%',
+        justifyContent: 'center',
+        marginTop: 7
+    },
+    downloadProgress: {
+        height: 5,
+        backgroundColor: Colors.secondary
     }
 });
 
 const mapStateToProps = createStructuredSelector({
-    user_id: selectUserId
+    user_id: selectUserId,
+    downloadsArray: selectDownloadsArray,
+    downloadsLoading: selectDownloadsLoading,
+    downloadsError: selectDownloadsError,
+    downloadArticles: selectDownloadsArticles
 })
 
-export default connect(mapStateToProps)(NewsItem);
+const mapDispatchToProps = dispatch => ({
+    addDownload: (savedDownloads, fileName) => dispatch(addDownload(savedDownloads, fileName)),
+    deleteDownload: (savedDownloads, fileName) => dispatch(deleteDownload(savedDownloads, fileName)),
+    addDownloadArticle: (savedArticles, article) => dispatch(addDownloadArticle(savedArticles, article)),
+    deleteDownloadArticle: (savedArticles, article) => dispatch(deleteDownloadArticle(savedArticles, article))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewsItem);

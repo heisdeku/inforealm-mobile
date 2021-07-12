@@ -1,26 +1,27 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableOpacity, Share } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableOpacity, Share, ScrollView } from 'react-native';
 import Colors from '../colors/colors';
 import { Feather, MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { createStructuredSelector } from 'reselect'
 import { selectUserId } from '../redux/selectors/user.selector';
 import { connect } from 'react-redux';
 import apiConnect from '../api/apiConnect';
 import Toast from 'react-native-root-toast';
 import * as FileSystem from 'expo-file-system';
-import { ScrollView } from 'react-native-gesture-handler';
-import { selectDownloadsArray, selectDownloadsError, selectDownloadsLoading } from '../redux/selectors/downloads.selectors';
-import { addDownload, deleteDownload } from '../redux/actions/downloads.actions';
+import { selectDownloadsArray, selectDownloadsArticles, selectDownloadsError, selectDownloadsLoading } from '../redux/selectors/downloads.selectors';
+import { addDownload, addDownloadArticle, deleteDownload, deleteDownloadArticle } from '../redux/actions/downloads.actions';
 
-const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading}) => {
+const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle}) => {
     const [bookmarksStatus, setBookmarkStatus] = useState(false);
     const [bookmarkError, setBookmarkError] = useState('');
     const [doBookmarkError, setDoBookmarkError] = useState('');
     const [downloadProgress, setDownloadProgress] = useState(0);
     const [downloadInProgress, setDownloadInProgress] = useState(false);
     const [downloadInProgressName, setDownloadInProgressName] = useState('');
+    const [audioDownloadDoesntExist, setaudioDownloadDoesntExist] = useState(false);
+    const [videoDownloadDoesntExist, setvideoDownloadDoesntExist] = useState(false);
     const navigation = useNavigation();
     const refRBSheet = useRef();   
     const onShare = async () => {
@@ -108,6 +109,7 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
                 });
                 setDownloadProgress(0);
                 addDownload(downloadsArray, downloadUrl.substring(downloadUrl.lastIndexOf('/')+1));
+                addDownloadArticle(downloadArticles, news);
             }
         };
 
@@ -128,19 +130,10 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
           }
     }
 
-    const removeDownload = async (fileName) => {
-        try {
-            FileSystem.deleteAsync(FileSystem.documentDirectory + fileName);
-            deleteDownload(downloadsArray, fileName);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
     const checkIfDownloadExists = (downloadsArray, fileName) => {
         if(downloadsArray.length){
             const itemExists = downloadsArray.find(download => download === fileName)
-
+    
             if(itemExists){
                 return true
             }else{
@@ -148,6 +141,56 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
             }
         }else{
             return false
+        }
+    }
+
+    const checkAudiosDownloaded = () => {
+        if(news.media.audios.length){
+            const newSet = news.media.audios.map(audio => {
+                if(downloadsArray.find(aud => aud === audio)){
+                    return audio
+                }
+            })
+            if(newSet.length){
+                setaudioDownloadDoesntExist(false);
+            }else{
+                setaudioDownloadDoesntExist(true);
+            }
+        }else{
+            setaudioDownloadDoesntExist(true);
+        }
+    }
+
+    const checkVideosDownloaded = () => {
+        if(news.media.videos.length){
+            const newSet = news.media.videos.map(video => {
+                if(downloadsArray.find(vid => vid == video)){
+                    return video
+                }
+            })
+            if(newSet.length){
+                setvideoDownloadDoesntExist(false);
+            }else{
+                setvideoDownloadDoesntExist(true);
+            }
+        }else{
+            setvideoDownloadDoesntExist(true);
+        }
+    }
+
+    const removeDownload = async (fileName) => {
+        try {
+            FileSystem.deleteAsync(FileSystem.documentDirectory + fileName);
+            deleteDownload(downloadsArray, fileName);
+            checkAudiosDownloaded();
+            checkVideosDownloaded();
+
+            if(audioDownloadDoesntExist && videoDownloadDoesntExist){                
+                deleteDownloadArticle(downloadArticles, news);
+            }
+            
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -174,7 +217,16 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
                     }
                 </ImageBackground>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate('Article', { screen: 'ArticleRead', params: {news_id: news.id}})}><Text style={styles.title}>{news.title}</Text></TouchableOpacity>
+            <TouchableOpacity onPress={
+                // () => navigation.navigate({
+                //     name:'Article',
+                //     params: {                        
+                //         screen: 'ArticleRead',
+                //         pr: news.id
+                //     }
+                // })
+                () => navigation.navigate('ArticleRead', {news_id: news.id})
+                }><Text style={styles.title}>{news.title}</Text></TouchableOpacity>
             <Text style={styles.caption}>{news.caption}</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 5}}>
                 <View>
@@ -376,12 +428,15 @@ const mapStateToProps = createStructuredSelector({
     user_id: selectUserId,
     downloadsArray: selectDownloadsArray,
     downloadsLoading: selectDownloadsLoading,
-    downloadsError: selectDownloadsError
+    downloadsError: selectDownloadsError,
+    downloadArticles: selectDownloadsArticles
 })
 
 const mapDispatchToProps = dispatch => ({
     addDownload: (savedDownloads, fileName) => dispatch(addDownload(savedDownloads, fileName)),
-    deleteDownload: (savedDownloads, fileName) => dispatch(deleteDownload(savedDownloads, fileName))
+    deleteDownload: (savedDownloads, fileName) => dispatch(deleteDownload(savedDownloads, fileName)),
+    addDownloadArticle: (savedArticles, article) => dispatch(addDownloadArticle(savedArticles, article)),
+    deleteDownloadArticle: (savedArticles, article) => dispatch(deleteDownloadArticle(savedArticles, article))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentaryItem);

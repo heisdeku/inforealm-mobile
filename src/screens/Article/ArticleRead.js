@@ -3,7 +3,8 @@ import { StyleSheet, Text, ScrollView, View, ImageBackground, Dimensions } from 
 import { Feather, MaterialIcons, AntDesign, FontAwesome5  } from '@expo/vector-icons';
 import Colors from '../../colors/colors';
 
-const ArticleRead = () => {
+const ArticleRead = ({navigation, route}) => {
+    console.log(route)
     return (
         <ScrollView style={styles.news}>
             <View style={styles.imageContainer}>
