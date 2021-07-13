@@ -1,5 +1,7 @@
 import axios from 'axios'
 import * as GoogleSignIn from 'expo-google-sign-in';
+import * as Google from 'expo-google-app-auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { provider, auth, fbProvider } from '../../../firebase'
 //eslint-disable-next-line
 import {
@@ -17,7 +19,10 @@ import {
   setUserEmail
 } from '../actions/user.actions'
 
+import Secrets from '../../../constants/env'
 import apiConnect from '../../api/apiConnect'
+
+
 /*
 export const GoogleAuthWrapper = {
   initAction: async () => {
@@ -48,17 +53,23 @@ export const GoogleAuthWrapper = {
   }
 }
 */
+
 export const googleSignIn = () => {
   return async (dispatch) => {
-      dispatch(googleSignInProcess())
-      auth
-      .signInWithPopup(provider)
-      .then(async (result) => {
-        //set variables with data gotten
-        let user = result.user
-        let email = user.email
-        let firstname = user.displayName.split(' ')[0]
-        let lastname = user.displayName.split(' ')[1]        
+    dispatch(googleSignInProcess())
+      let googleResFb;
+      const res = await Google.logInAsync({   
+        clientId: '781405863501-1i2ctff48ggmu884qouo4ulnvfi4fscd.apps.googleusercontent.com',                        
+      });
+
+        if (res.type === 'success') {          
+          googleResFb = res.user
+        }            
+      try {
+        //set variables with data gotten        
+        let email = googleResFb.email
+        let firstname = googleResFb.givenName
+        let lastname = googleResFb.familyName
 
         let formData = new FormData()
         formData.append('firstname', firstname)
@@ -67,23 +78,22 @@ export const googleSignIn = () => {
         formData.append('type', "firebase")
 
         try {
-          let response = await axios.post(`${BASE_URL}login`, formData)          
+          let response = await apiConnect.post(`/login`, formData)          
           let { data } = response
           dispatch(setUserStart())
           if (response.status === 200 || data.status === 'success') {
             dispatch(setUserSuccess(data.user))
-            window.location.replace('/')
+            return data.user            
           } else {
             dispatch(setUserFailed(response.message))
           }
         } catch (e) {
           dispatch(signInFailed(e))
-        }
-      })
-      .catch((error) => {
+        } 
+      } catch(error) {
         console.warn(error.message)
         dispatch(signInFailed(error.message))
-      })
+      }     
   }
 }
 
@@ -214,11 +224,11 @@ export const updateUserEmail = (dataToSend, userId) => {
         dispatch(setUserStart())
         let resp = await apiConnect.post(`/getUser`, userId)        
         if (resp.status === 200 || resp.data.status === 'success') {                    
-          dispatch(setUserEmail(resp.data.user.email)) 
-          return resp.data.user.email
+          dispatch(setUserEmail(resp.data.user.email))           
         } else {
           dispatch(setUserFailed(res.data.message))
         }
+        return response.data.message
       }     
     } catch (e) {      
       return {
@@ -228,28 +238,20 @@ export const updateUserEmail = (dataToSend, userId) => {
   }
 }
 
-export const updateUserPassword = (dataToSend, userId) => {
-  return async (dispatch) => {    
+export const updateUserPassword = (dataToSend) => {
+  return async () => {    
     try {
       let response = await apiConnect.post(`/updatePassword`, dataToSend)          
-      let { data } = response
+      let { data } = response      
       if (data.status !== 'success') {
         return {
           error: 'Something Went wrong, Try Uploading Again'
         }
-      } else {
-        dispatch(setUserStart())
-        let resp = await apiConnect.post(`/getUser`, userId)        
-        if (resp.status === 200 || resp.data.status === 'success') {                    
-          dispatch(setUserProfilePicture(resp.data.user.email)) 
-          return resp.data.user.email
-        } else {
-          dispatch(setUserFailed(res.data.message))
-        }
-      }     
+      }
+      return data.message;    
     } catch (e) {      
       return {
-        error: e
+        error: 'Something Went Wrong, Try Again'
       }      
     }
   }

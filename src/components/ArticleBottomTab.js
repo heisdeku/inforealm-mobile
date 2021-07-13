@@ -6,8 +6,9 @@ import RBSheet from 'react-native-raw-bottom-sheet'
 import Colors from '../colors/colors';
 import ArticleCommentsContainer from './ArticleCommentsContainer';
 
-const ArticleBottomTab = (props) => {
+const ArticleBottomTab = (props) => {    
     const refRBSheet = useRef()
+    const [ likeStatus, setLikeStatus ] = useState(false)
     const [morePressed, setMorePressed] = useState(false)
     const { navigation, state } = props;
     // const [mode, setMode] = useState(0);
@@ -45,7 +46,7 @@ const ArticleBottomTab = (props) => {
 
     return (
         <Animated.View
-          style={{height: componentHeight, backgroundColor: 'transparent'}}
+          style={{height: 120, backgroundColor: 'transparent', width: Dimensions.get('window').width, position: 'absolute', top: Dimensions.get('window').width + 200, left: 0}}
         >
             <View style={styles.tabBar}>
               <TouchableOpacity onPress={() => refRBSheet.current.open()}>
@@ -54,10 +55,10 @@ const ArticleBottomTab = (props) => {
                       <Text style={styles.tabLabel}>Comment</Text>
                   </View>
               </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => setLikeStatus(!likeStatus)}>
                     <View style={styles.tab}>                        
-                        <AntDesign name="like2" size={24} color={state.index === 1 && !morePressed ? Colors.secondary : '#050618'} />
-                        <Text style={styles.tabLabel}>Like</Text>
+                        <AntDesign name="like2" size={24} color={likeStatus ? Colors.secondary : '#050618'} />
+                        <Text style={{ ...styles.tabLabel, color: likeStatus ? Colors.secondary : '#050618' }}>Like</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity>

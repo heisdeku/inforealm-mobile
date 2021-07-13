@@ -1,4 +1,4 @@
-import { newsTypes } from '../constants'
+import { newsTypes } from "../types/news.types"
 
 export const getNewsStart = () => ({
   type: newsTypes.FETCH_NEWS_START,

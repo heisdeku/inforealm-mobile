@@ -1,0 +1,5 @@
+export const newsTypes = {
+    FETCH_NEWS_START: 'FETCH_NEWS_START',
+    FETCH_NEWS: 'FETCH_NEWS',
+    FETCH_NEWS_FAILED: 'FETCH_NEWS_FAILED'
+}

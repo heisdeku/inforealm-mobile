@@ -9,6 +9,7 @@ import mediaReducer from '../reducers/media.reducer.js'
 import feedReducer from '../reducers/feed.reducer.js'
 import { searchReducer } from '../reducers/search.reducer.js'
 import downloadsReducer from '../reducers/downloads.reducer';
+import newsReducer from '../reducers/news.reducer.js';
 
 const rootPersistConfig = {
   key: 'root',
@@ -17,7 +18,7 @@ const rootPersistConfig = {
     'interest',
     'search',    
     'feed',    
-    'media'
+    'media',    
   ],
 }
 
@@ -37,6 +38,7 @@ export const rootReducer = combineReducers({
   feed: feedReducer,
   search: searchReducer,
   medias: mediaReducer,
+  news: newsReducer,
   downloads: downloadsReducer
 })
 

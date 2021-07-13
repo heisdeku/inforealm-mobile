@@ -16,7 +16,7 @@ const AccountMain = ({ navigation }) => {
             <ScrollView>
                 <View>
                     <UserDetails />
-                    {!user.user_id && <LoginPrompt /> }
+                    {!user?.user_id && <LoginPrompt /> }
                     <AccountSettings navigation={navigation} />  
                     <ConnectedAccounts />  
                     <ManageNotifications navigation={navigation} />               
