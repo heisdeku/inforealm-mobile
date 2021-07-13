@@ -12,10 +12,9 @@ export const UserDetails = () => {
     const dispatch = useDispatch()
     const userId = useSelector(selectUserId)
     const user = useSelector(getCurrentUser)
-    const [image, setImage] = useState(user.profile_picture);
+    const [image, setImage] = useState(user?.profile_picture);
     const [loading, setLoading ] = useState(null)
-    const [error, setError ] = useState(null)
-    console.log(user.profile_picture)
+    const [error, setError ] = useState(null)    
     useEffect(() => {
         (async () => {
         if (Platform.OS !== 'web') {
@@ -44,9 +43,9 @@ export const UserDetails = () => {
             let idData = new FormData()
 
             userData.append('user_id', userId)
-            userData.append('firstname', user.firstname)
-            userData.append('lastname', user.lastname)
-            userData.append('email', user.email)
+            userData.append('firstname', user?.firstname)
+            userData.append('lastname', user?.lastname)
+            userData.append('email', user?.email)
             userData.append('profile_picture_uri_string', result.base64)
 
             idData.append('user_id', userId)
@@ -89,8 +88,8 @@ export const UserDetails = () => {
                     </TouchableOpacity>
                 </View>
                 <View style={{ marginTop: 10, }}> 
-                    <Text style={styles.accountName}>{`${user.firstname} ${user.lastname}`}</Text> 
-                    <Text style={styles.accountEmail}>{user.email}</Text>               
+                    <Text style={styles.accountName}>{`${user?.firstname} ${user?.lastname}`}</Text> 
+                    <Text style={styles.accountEmail}>{user?.email}</Text>               
                 </View>
             </View>
         )

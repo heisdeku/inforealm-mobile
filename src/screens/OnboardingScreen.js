@@ -1,26 +1,42 @@
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, Image, TouchableOpacity, Platform } from 'react-native';
+import { SafeAreaView, ActivityIndicator, ScrollView, StyleSheet, Text, View, Image, TouchableOpacity, Alert, Platform } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import Colors from '../colors/colors';
-import { facebookSignIn, GoogleAuthWrapper, googleSignIn } from '../redux/operations/user.op';
+import * as Google from 'expo-google-app-auth';
+
+import { facebookSignIn, googleSignIn } from '../redux/operations/user.op';
+import { checkAuthMethod, isLoading } from '../redux/selectors/user.selector';
 
 
 const OnboardingScreen = ({navigation}) => {    
     const dispatch = useDispatch()
+    const loading = useSelector(isLoading)
+    const authType = useSelector(checkAuthMethod
+        )
+    const handleGoogleSignIn = async () => {
+       const response = await dispatch(googleSignIn())
 
-    const handleGoogleSignIn = () => {
-        dispatch(googleSignIn())
+        if (response.error) {            
+            Alert.alert(response.error)
+        } 
+        else if (response.user_id !== null) {
+            navigation.navigate('MainStack');
+            navigation.reset({
+                index: 0,
+                routes: [{
+                    name: 'MainStack'
+                }]
+            })
+        } else {
+            return;
+        }
     }
 
     const handleFacebookSignIn = () => {
         dispatch(facebookSignIn())
     }
-/*
-    useEffect(() => {
-        GoogleAuthWrapper.initAction()
-    })*/
     return (        
             <SafeAreaView style={{flex: 1, backgroundColor: '#F7F7F7'}}>
                 <ScrollView style={{ flex: 1 }}>
@@ -44,7 +60,13 @@ const OnboardingScreen = ({navigation}) => {
                         </TouchableOpacity>
                         <TouchableOpacity onPress={handleGoogleSignIn} style={{width: '100%'}}>
                             <View style={{...styles.onboardButton}}>
-                                <Text style={{...styles.buttonText, color: '#000'}}><FontAwesome name="google" size={16} color='#000' /> Continue with Google</Text>
+                                {
+                                    loading && authType === 'social' ?<ActivityIndicator size="large" color="#000" /> : 
+                                    <Text style={{...styles.buttonText, color: '#000'}}>
+                                        <FontAwesome name="google" size={16} color='#000' /> Continue with Google
+                                    </Text>
+                                }
+                                
                             </View>
                         </TouchableOpacity>
                         { Platform.os === 'ios' && 

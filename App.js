@@ -38,7 +38,9 @@ export default () => {
     }, 3000);
   }, [])
 
-  if (fontsLoaded) {
+  if (fontsLoaded) {  
+    const state = store.getState()
+    console.log(state.user.user)
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
@@ -59,18 +61,20 @@ export default () => {
                 />
                 : null
               }
-              { 
-              /*
-                store.user !== null && store.user?.user_id && <SwicthStack.Screen 
+              {                 
+                state.user.user == null && !state.user.user?.user_id && <SwicthStack.Screen 
                 name='OnboardingStack' 
                 component={OnboardingStack}
-                />
-                */
+                />                
               } 
-              <SwicthStack.Screen 
+              {
+                /**
+                 * <SwicthStack.Screen 
                 name='OnboardingStack' 
                 component={OnboardingStack}
-                />             
+                /> 
+                 */
+              }                          
               <SwicthStack.Screen 
               name='MainStack' 
               component={BottomTabStack}

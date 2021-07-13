@@ -15,7 +15,7 @@ const userReducer = (state = DEFAULT_STATE, action) => {
           ...state,
           isLoading: true,
           error: null,
-          authMethod: 'direct-social',
+          authMethod: 'social',
         }
     case userTypes.SIGN_UP_START:
     case userTypes.SIGN_IN_START:
@@ -41,6 +41,7 @@ const userReducer = (state = DEFAULT_STATE, action) => {
       return {
         ...state,
         isLoading: false,
+        authMethod: null,
         user: action.payload,
       }
     case userTypes.SET_PROFILE_PICTURE:

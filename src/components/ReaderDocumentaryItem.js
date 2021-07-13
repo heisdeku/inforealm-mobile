@@ -75,7 +75,15 @@ const ReaderDocumentaryItem = ({ navigation, news }) => {
         </ImageBackground>
       </View>
       <View style={{ flex: 1 }}>
-        <TouchableOpacity>
+      <TouchableOpacity 
+          onPress={() => 
+            navigation.navigate('Article', {
+              screen: 'ArticleRead',
+              params: {news_id: news.id},
+            })
+            
+          }
+        >
           <Text style={styles.title}>{news.title}</Text>
         </TouchableOpacity>
         <Text style={styles.caption}>

@@ -16,6 +16,7 @@ const Account = createStackNavigator();
 export const AccountStack = ({navigation}) => {
   const dispatch = useDispatch()
   const user = useSelector(getCurrentUser)
+  
   const state = navigation.dangerouslyGetState();
   let actualRoute = state.routes[state.index];  
   while (actualRoute.state) {
@@ -31,24 +32,30 @@ export const AccountStack = ({navigation}) => {
     new: '',
     confirmNew: ''
   })
+  const [ emailResponse, setEmailResponse ] = useState(null)
 
   const updateEmail = async () => {
     let emailData =  new FormData()
     let idData = new FormData()
-    emailData.append('user_id', user.user_id)
-    emailData.append('firstname', user.firstname)
-    emailData.append('lastname', user.lastname)
+    emailData.append('user_id', user?.user_id)
+    emailData.append('firstname', user?.firstname)
+    emailData.append('lastname', user?.lastname)
     emailData.append('email', email.new)
 
-    idData.append('user_id', user.user_id)
+    idData.append('user_id', user?.user_id)
 
     let response = await dispatch(updateUserEmail(emailData, idData))
-    console.log(response)
+    if (typeof response !== 'string') {
+      setEmailResponse(response.error)
+    } else {
+      setEmailResponse(response)
+    }
     setEmail({
       current: '',
       new: '',
       confirmNew: ''
     })
+
     navigation.navigate('AccountLanding')
   }
 
@@ -57,19 +64,23 @@ export const AccountStack = ({navigation}) => {
     new: '',
     confirmNew: ''
   })
-
+  const [ pwdResponse, setPwdResponse ] = useState(null)
   const updatePassword = async () => {
     let passwordData =  new FormData()
     let idData = new FormData()
     
-    passwordData.append('user_id', user.user_id)
-    passwordData.append('old_password', user.firstname)  
+    passwordData.append('user_id', user?.user_id)
+    passwordData.append('current_password', password.current)  
     passwordData.append('new_password', password.new)
 
-    idData.append('user_id', user.user_id)
+    idData.append('user_id', user?.user_id)
 
-    let response = await dispatch(updateUserPassword(emailData, idData))
-    console.log(response)
+    let response = await dispatch(updateUserPassword(passwordData, idData))
+    if (typeof response !== 'string') {      
+      setPwdResponse(response.error)
+    } else {
+      setPwdResponse(response)
+    }
     setPassword({
       current: '',
       new: '',
@@ -115,7 +126,7 @@ export const AccountStack = ({navigation}) => {
               }                                  
         }}
       >
-        {props => <AccountEmailUpdate {...props} email={email} setEmailState={setEmail} saveAction={setEmailSaveBtn} />}
+        {props => <AccountEmailUpdate {...props} email={email} setEmailState={setEmail} emailStatus={emailResponse} setEmailStatus={setEmailResponse} saveAction={setEmailSaveBtn} />}
       </Account.Screen>
       <Account.Screen 
         name='AccountPasswordUpdate'      
@@ -128,7 +139,7 @@ export const AccountStack = ({navigation}) => {
               }                                  
         }}
       >
-      {props => <AccountPasswordUpdate {...props} password={password} setPasswordState={setPassword} saveAction={setPasswordStateBtn} />}
+      {props => <AccountPasswordUpdate {...props} password={password} setPasswordState={setPassword} pwdStatus={pwdResponse} setPwdStatus={setPwdResponse} saveAction={setPasswordStateBtn} />}
     </Account.Screen>
     </Account.Navigator>
   )

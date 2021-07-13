@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Dimensions, StyleSheet, Text, TextInput } from 'react-native'
+import { View, Dimensions, StyleSheet, KeyboardAvoidingView, TextInput } from 'react-native'
 
 export const CommentBox = () => {
     const [ comment, setComment ] = useState('')
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         paddingTop: 21,
         paddingBottom: 34,
         paddingHorizontal: 16,
-        left: 0,
+        left: -20,
         bottom: 0,
         backgroundColor: '#F7F7F7',
         borderTopLeftRadius: 24,

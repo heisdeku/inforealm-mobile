@@ -1,10 +1,17 @@
 import React from 'react'
 
-import { StyleSheet, View, TouchableOpacity, Image, Text, } from 'react-native'
+import { StyleSheet, View, TouchableHighlight, Image, Text, } from 'react-native'
 import { MaterialIcons, AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export const LoginPrompt = () => {
-    return (        
+    const navigation = useNavigation()
+    return (     
+        <TouchableHighlight style={{ marginTop: 16, }} activeOpacity={0.8} onPress={() => 
+            navigation.navigate('OnboardingStack', {
+              screen: 'Onboarding',              
+            })            
+          }>
             <View style={styles.container}>
             <MaterialIcons name="info-outline" size={25} color="#f7f7f7" />
             <View style={styles.promptBoxMain}>
@@ -14,14 +21,15 @@ export const LoginPrompt = () => {
                 </View>                
                     <Text style={{ fontSize: 28, alignSelf: 'center', paddingHorizontal: 15 }}>🦊</Text>                
             </View>
-        </View>              
+            </View> 
+        </TouchableHighlight>   
+                         
     )
 }
 
 const styles = StyleSheet.create({  
     container: {
-        flex: 1,  
-        marginTop: 16,        
+        flex: 1,                
         flexDirection: 'row',
         padding: 16, 
         alignItems: 'baseline',        
