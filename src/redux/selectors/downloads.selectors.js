@@ -7,6 +7,11 @@ export const selectDownloadsArray = createSelector(
     downloads => downloads.downloads
 );
 
+export const selectDownloadsArticles = createSelector(
+    [selectDownloads],
+    downloads => downloads.downloadArticles
+)
+
 export const selectDownloadsError = createSelector(
     [selectDownloads],
     downloads => downloads.downloadError

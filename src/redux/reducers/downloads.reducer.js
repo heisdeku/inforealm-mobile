@@ -2,6 +2,7 @@ import { DownloadTypes } from '../types/download.types'
 
 const DEFAULT_STATE = {
     downloads: [],
+    downloadArticles: [],
     loading: false,
     downloadError: ''
 }
@@ -37,6 +38,26 @@ const downloadsReducer = (state = DEFAULT_STATE, action) => {
       return {
         ...state,
         loading: false
+      }
+    case DownloadTypes.SET_DOWNLOAD_ARTICLE:
+      return {
+        ...state,
+        downloadArticles: action.payload
+      }
+    case DownloadTypes.PUSH_DOWNLOAD_ARTICLE:
+      return {
+        ...state,
+        downloadArticles: state.downloadArticles.find(savedArticle => savedArticle.id === article.id) ? state.downloadArticles : state.downloadArticles.push(action.payload)
+      }
+    case DownloadTypes.POP_DOWNLOAD_ARTICLE:
+      return {
+        ...state,
+        downloadArticles: state.downloadArticles.filter(savedArticle => savedArticle.id !== action.payload.id)
+      }
+    case DownloadTypes.CLEAR_DOWNLOAD_ARTICLES:
+      return {
+        ...state,
+        downloadArticles: []
       }
     default:
       return state

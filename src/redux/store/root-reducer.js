@@ -25,7 +25,7 @@ const persistConfig = {
   key: 'user',
   storage: AsyncStorage,
   whitelist: [
-    'user',    
+    'user',
     'downloads'
   ]
   
