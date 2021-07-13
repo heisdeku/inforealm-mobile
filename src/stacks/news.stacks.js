@@ -102,7 +102,7 @@ export const NewsStack = ({navigation}) => {
         title: '',
         headerTitle: () => (
           <Image
-            source={require('../../assets/images/inforealm-blue.png')} style={{height: 24, marginLeft: 'auto', marginRight: 'auto'}}
+            source={require('../../assets/images/inforealm-blue.png')} style={{height: 64, marginLeft: 'auto', marginRight: 'auto'}}
           />),
         headerTitleStyle: {
           alignSelf: 'center'

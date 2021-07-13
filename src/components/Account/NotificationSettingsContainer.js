@@ -76,7 +76,7 @@ export const NotificationSettingsContainer = ({ active }) => {
                     <View style={styles.settings}>
                         <View>
                             <Text style={styles.settingText}>Product Updates</Text>
-                            <Text style={styles.settingTextDesc}>Get Notified of new features and improvements to youur app</Text>
+                            <Text style={styles.settingTextDesc}>Get Notified of new features and improvements to your app</Text>
                         </View>
                         <View style={{ marginLeft: -35}}>
                         <Switch

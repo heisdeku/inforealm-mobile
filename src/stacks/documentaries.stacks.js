@@ -22,7 +22,7 @@ export const DocumentariesStack = ({navigation}) => {
         title: '',
         headerTitle: () => (
           <Image
-            source={require('../../assets/images/inforealm-blue.png')} style={{height: 24, marginLeft: 'auto', marginRight: 'auto'}}
+            source={require('../../assets/images/inforealm-blue.png')} style={{height: 54, marginLeft: 'auto', marginRight: 'auto'}}
           />
         ),
         headerTitleStyle: {

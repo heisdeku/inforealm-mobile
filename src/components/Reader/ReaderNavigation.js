@@ -22,7 +22,7 @@ export const ReaderNavigation = ({ visitProfile, visitSearch }) => {
                 </TouchableOpacity>                 
                     <Image
                         source={require('../../../assets/images/inforealm-blue.png')}
-                        style={{ height: 24, marginLeft: 'auto', marginRight: 'auto' }}
+                        style={{ height: 44, marginLeft: 'auto', marginRight: 'auto' }}
                     /> 
                 <TouchableOpacity onPress={visitSearch}>
                     <Feather name='search' size={24} />
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     readerScreenTitle: {
-        marginTop: 20,
+        marginTop: 10,
         fontFamily: 'DMSerif',
         fontSize: 30,  
         lineHeight: 40,
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     },
     userName: {
         marginTop: 3,
-        fontSize: 13,
+        fontSize: 14,
         lineHeight: 17,
         color: '#000000',
         textTransform: 'capitalize'
