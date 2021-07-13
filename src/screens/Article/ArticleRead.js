@@ -1,74 +1,169 @@
-import React from 'react';
-import { StyleSheet, Text, ScrollView, View, ImageBackground, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { StyleSheet, TouchableOpacity, Text, ScrollView, RefreshControl, ActivityIndicator, View, Alert, ImageBackground, Dimensions } from 'react-native';
 import { Feather, MaterialIcons, AntDesign, FontAwesome5  } from '@expo/vector-icons';
 import Colors from '../../colors/colors';
+import ArticleBottomTab from '../../components/ArticleBottomTab';
+import { getNewsData } from '../../redux/operations/news.op';
+import { hasError, isLoading, selectNews, selectNewsCaption, selectNewsTitle } from '../../redux/selectors/news.selector';
 
-const ArticleRead = ({navigation, route}) => {
-    console.log(route)
+const ArticleRead = ({ route }) => {
+    const dispatch = useDispatch()
+    const loading = useSelector(isLoading)
+    const error = useSelector(hasError)
+    const news = useSelector(selectNews)
+    const title = useSelector(selectNewsTitle)
+    const caption = useSelector(selectNewsCaption)
+    const { news_id } = route.params; 
+
+    const [refreshing, setRefreshing] = useState(false) 
+
+    const onRefresh = () => {
+        setRefreshing(true)
+        getNews()  
+        setRefreshing(false)    
+      }      
+    const getNews = async () => {
+        const response = await dispatch(getNewsData(news_id))
+        if (response.error) {
+            Alert.alert(response.err)
+        } else {
+            return response.news
+        }
+    }
+    useEffect(() => {
+        getNews()
+    }, [news_id])    
+          
     return (
-        <ScrollView style={styles.news}>
+    <View style={{ position: 'relative', flex: 1}} refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={[Colors.brand, Colors.secondary, Colors.caption]}
+          tintColor={Colors.brand}
+        />
+      }>
+        {
+            loading &&
+            <View style={styles.loadingView}>
+                <ActivityIndicator color={Colors.secondary} size='large' />
+            </View>
+        }
+         {
+            !loading && error ?
+            <View style={styles.errorView}>
+                <Text>{error}</Text>
+                <TouchableOpacity style={{width: '100%'}} onPress={() => getFeed()}>
+                    <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
+                        <Text
+                        style={{...styles.buttonText, color: '#fff'}}
+                        >
+                        Try Again
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+            :
+            null
+        }        
+        {
+            !loading && news ? <ScrollView
+            style={styles.news} 
+            >
             <View style={styles.imageContainer}>
-                <ImageBackground source={require('../../../assets/images/dummy-article-image.png')} style={styles.image} />
+                <ImageBackground source={{uri: news.media.thumbnail}} style={styles.image} />
             </View>
             <View style={styles.articleCategoryContainer}>
                 <Text style={styles.articleCategoryText}>Business</Text>
                 <AntDesign name="right" size={12} color="black" />
-                <Text style={styles.articleCategoryText}>Features</Text>
+                <Text style={styles.articleCategoryText}>{news.interests.map(interest => interest.interest).join(', ')}</Text>
             </View>
             <View style={styles.newsDetails}>
                 <View style={styles.crumbs}>
                     <View>
-                        <Text style={styles.newsTitle}>How Qatar became the richest country in the world</Text>
-                        <Text style={styles.newsCaption}>Qatar, By far, the richest country in the world, with a GNI per capita of $116,799 — more than $20,000 higher than any other nation in the world.</Text>
+                        <Text style={styles.newsTitle}>{title}</Text>
+                        <Text style={styles.newsCaption}>{caption}</Text>
                     </View>                    
                     <View style={styles.newsSummary}>
                         <View style={styles.newsSummaryItem}>
                             <Feather size={14} color={Colors.text1} name='clock' />
-                            <Text style={styles.newsSummaryText}> Oct 27, 2020</Text>
+                            <Text style={styles.newsSummaryText}>{news.date}</Text>
                         </View>
                         <View style={styles.newsSummaryItem}>
                             <MaterialIcons size={14} color={Colors.text1} name='library-books' />
-                            <Text style={styles.newsSummaryText}> 3 min read</Text>
+                            <Text style={styles.newsSummaryText}> {news.time_to_read} min read</Text>
                         </View>
                         <View style={styles.newsSummaryItem}>
                         <FontAwesome5 name="user-alt" size={14} color={Colors.text1} />                            
-                            <Text style={styles.newsSummaryText}> Jude-Bela</Text>
+                            <Text style={styles.newsSummaryText}> {news.author}</Text>
                         </View>
                         
                     </View>
                 </View>
                 <View>
                     <Text style={styles.articleWriteUp}>
-                        The country has more in oil reserves than all but two other countries worldwide — that is equal to 13% of the global supply. But just about 50 years ago, Qatar’s economy was largely dependent on fishing, and one of the poorest in the world. So what happened? You’re about to find out the most incredible economic success story ever.
-
-                        GDP may be the standard method for gauging the size of a particular country or region’s economy, but it does not account for all of the wealth generated by that nation. A more accurate indicator of a country’s economic output is its gross national income, or GNI.This measure captures all economic activity within a nation’s borders in addition to the wealth created by nationally-owned entities operating in other countries. With that said, Qatar’s GNI per capita equals a whooping $116,799. took a galley of type and scrambled it to make a type specimen book.
-
-                        But how did a small country with population size of less than 3 million people living on a 12,000 sq km of land amass such wealth? The short answer to that is oil. But there are other small countries with oil not doing as well, take for example Kuwait. 
-
-                        This brings us to the story of Qatar’s economy. Before the emergence of the petrol-based industry, Qatar was a poor pearl diving country. The exploration of oil and gas fields began in 1939. 
-
-                        In 1973, oil production and revenues increased dramatically, moving Qatar out of the ranks of the world’s poorest countries and providing it with one of the highest per capita incomes in the world. But that is not the full story behind the transformation.
-
-                        The primary sources of income for this tiny nation used to be its dwindling fishing industry, and extraction of pearls out of the ocean.
+                        {news.content}
                     </Text>
-                </View>
-            </View>
+                </View>                        
+        </View>            
         </ScrollView>
+        : null
+        }
+        
+        <ArticleBottomTab id={news_id} />
+    </View>        
     )
 }
 
 export default ArticleRead;
 
 const styles = StyleSheet.create({
-    news: {
+    loadingView: {
         flex: 1,
-        paddingVertical: 16,
+        justifyContent: 'center',
+        alignItems: 'center'
+      },
+      errorView: {
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingHorizontal: 25
+      },
+      onboardButton: {
+        height: 50,
+        width: '100%',
+        borderRadius: 4,
+        borderWidth: 0.7,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 8
+      },
+      buttonText: {
+          fontSize: 14,
+          fontFamily: 'DMRegular'
+      },
+      emptyView: {
+          height: 200,
+          borderColor: Colors.caption,
+          borderRadius: 8,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderWidth: 1,
+          width: '80%'
+      },
+      emptyText: {
+          fontSize: 20,
+          fontFamily: 'DMBold'
+      },
+    news: {        
+        flex: 1,
+        paddingTop: 16,
         paddingHorizontal: 20,            
         width: Dimensions.get('window').width,
     },
     imageContainer: {
-        width: Dimensions.get('window').width,
-        marginRight: 19
+        width: Dimensions.get('window').width,                
     },
     image: {
         height: 170,        
@@ -115,12 +210,12 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontFamily: 'DMRegular',
         color: '#8E8D8D',
-        lineHeight: 18
+        lineHeight: 18,
+        marginLeft: 6
     },
     newsSummaryItem: {
         flexDirection: 'row',
-        minWidth: 75,
-        justifyContent: 'space-between'
+        minWidth: 75,        
     },
     articleCategoryContainer: {
         minWidth: 100,
