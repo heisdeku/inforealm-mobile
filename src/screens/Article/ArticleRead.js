@@ -24,11 +24,15 @@ const ArticleRead = ({ route }) => {
         setRefreshing(false)    
       }      
     const getNews = async () => {
-        const response = await dispatch(getNewsData(news_id))
-        if (response.error) {
-            Alert.alert(response.err)
-        } else {
-            return response.news
+        try {
+            const response = await dispatch(getNewsData(news_id))
+            if (response.error) {
+                Alert.alert(response.err)
+            } else {
+                return response.news
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
     useEffect(() => {

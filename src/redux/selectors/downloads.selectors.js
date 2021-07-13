@@ -21,3 +21,13 @@ export const selectDownloadsLoading = createSelector(
     [selectDownloads],
     downloads => downloads.loading
 );
+
+export const selectDownloadStatus = createSelector(
+    [selectDownloads],
+    downloads => downloads.downloadStatus
+);
+
+export const selectBookmarkStatus = createSelector(
+    [selectDownloads],
+    downloads => downloads.bookmarkStatus
+)

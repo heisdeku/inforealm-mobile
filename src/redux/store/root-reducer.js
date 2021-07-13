@@ -18,7 +18,7 @@ const rootPersistConfig = {
     'interest',
     'search',    
     'feed',    
-    'media',    
+    'media' 
   ],
 }
 
@@ -27,7 +27,7 @@ const persistConfig = {
   storage: AsyncStorage,
   whitelist: [
     'user',
-    'downloads'
+    'downloads' 
   ]
   
 }

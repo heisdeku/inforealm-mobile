@@ -11,9 +11,9 @@ import apiConnect from '../api/apiConnect';
 import Toast from 'react-native-root-toast';
 import * as FileSystem from 'expo-file-system';
 import { selectDownloadsArray, selectDownloadsArticles, selectDownloadsError, selectDownloadsLoading } from '../redux/selectors/downloads.selectors';
-import { addDownload, addDownloadArticle, deleteDownload, deleteDownloadArticle } from '../redux/actions/downloads.actions';
+import { addDownload, addDownloadArticle, deleteDownload, deleteDownloadArticle, setBookmarkStatus as setDownloadBookmarkStatus, setDownloadStatus } from '../redux/actions/downloads.actions';
 
-const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle}) => {
+const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle, setDownloadStatus, setDownloadBookmarkStatus}) => {
     const [bookmarksStatus, setBookmarkStatus] = useState(false);
     const [bookmarkError, setBookmarkError] = useState('');
     const [doBookmarkError, setDoBookmarkError] = useState('');
@@ -73,6 +73,7 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
                     position: Toast.positions.CENTER
                 })
                 getBookmarkStatus();
+                setDownloadBookmarkStatus(true)
             }else{
                 setDoBookmarkError(response.data.message);
                 Toast.show(doBookmarkError, {
@@ -110,6 +111,7 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
                 setDownloadProgress(0);
                 addDownload(downloadsArray, downloadUrl.substring(downloadUrl.lastIndexOf('/')+1));
                 addDownloadArticle(downloadArticles, news);
+                setDownloadBookmarkStatus(true);
             }
         };
 
@@ -144,37 +146,12 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
         }
     }
 
-    const checkAudiosDownloaded = () => {
-        if(news.media.audios.length){
-            const newSet = news.media.audios.map(audio => {
-                if(downloadsArray.find(aud => aud === audio)){
-                    return audio
-                }
-            })
-            if(newSet.length){
-                setaudioDownloadDoesntExist(false);
-            }else{
-                setaudioDownloadDoesntExist(true);
-            }
+    const checkIfArticleIsDownloaded = (downloadedArticles, article) => {
+        const articleExists = downloadedArticles.find(downloadArticle => downloadArticle.id === article.id);
+        if(articleExists){
+            return true;
         }else{
-            setaudioDownloadDoesntExist(true);
-        }
-    }
-
-    const checkVideosDownloaded = () => {
-        if(news.media.videos.length){
-            const newSet = news.media.videos.map(video => {
-                if(downloadsArray.find(vid => vid == video)){
-                    return video
-                }
-            })
-            if(newSet.length){
-                setvideoDownloadDoesntExist(false);
-            }else{
-                setvideoDownloadDoesntExist(true);
-            }
-        }else{
-            setvideoDownloadDoesntExist(true);
+            return false
         }
     }
 
@@ -182,17 +159,27 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
         try {
             FileSystem.deleteAsync(FileSystem.documentDirectory + fileName);
             deleteDownload(downloadsArray, fileName);
-            checkAudiosDownloaded();
-            checkVideosDownloaded();
-
-            if(audioDownloadDoesntExist && videoDownloadDoesntExist){                
-                deleteDownloadArticle(downloadArticles, news);
-            }
             
         } catch (error) {
             console.log(error)
         }
     }
+
+    const removeDownloadedArticle = async(article) => {
+        try {
+            deleteDownloadArticle(downloadArticles, article);
+            for(let dai=0; dai<article.media.audios; dai++){
+                removeDownload(article.media.audios[dai].substring(article.media.audios[dai].lastIndexOf('/')+1))
+            }
+            for(let dvi=0; dvi<article.media.videos; dvi++){
+                removeDownload(article.media.videos[dvi].substring(article.media.videos[dvi].lastIndexOf('/')+1))
+            }
+            setDownloadBookmarkStatus(true)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     useEffect(() => {
         if(user_id){
@@ -217,16 +204,13 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
                     }
                 </ImageBackground>
             </View>
-            <TouchableOpacity onPress={
-                // () => navigation.navigate({
-                //     name:'Article',
-                //     params: {                        
-                //         screen: 'ArticleRead',
-                //         pr: news.id
-                //     }
-                // })
-                () => navigation.navigate('ArticleRead', {news_id: news.id})
-                }><Text style={styles.title}>{news.title}</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => 
+            navigation.navigate('Article', {
+              screen: 'ArticleRead',
+              params: {news_id: news.id},
+            })
+            
+          }><Text style={styles.title}>{news.title}</Text></TouchableOpacity>
             <Text style={styles.caption}>{news.caption}</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 5}}>
                 <View>
@@ -325,6 +309,22 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
                         </View>
                         :
                         null
+                    }
+                    {
+                        !checkIfArticleIsDownloaded(downloadArticles, news) ?
+                        <TouchableOpacity onPress={() => addDownloadArticle(downloadArticles, news)}>
+                            <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
+                                <View style={styles.rbIcon}><Feather name='download-cloud' color='#fff' size={20} /></View> 
+                                <Text style={styles.rbText}>Download Article</Text>
+                            </View>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity onPress={() => removeDownloadedArticle(news)}>
+                            <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
+                                <View style={styles.rbIcon}><Feather name='download-cloud' color='#fff' size={20} /></View> 
+                                <Text style={styles.rbText}>Delete Article</Text>
+                            </View>
+                        </TouchableOpacity>
                     }
                     <TouchableOpacity onPress={() => onShare()}>
                         <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
@@ -436,7 +436,9 @@ const mapDispatchToProps = dispatch => ({
     addDownload: (savedDownloads, fileName) => dispatch(addDownload(savedDownloads, fileName)),
     deleteDownload: (savedDownloads, fileName) => dispatch(deleteDownload(savedDownloads, fileName)),
     addDownloadArticle: (savedArticles, article) => dispatch(addDownloadArticle(savedArticles, article)),
-    deleteDownloadArticle: (savedArticles, article) => dispatch(deleteDownloadArticle(savedArticles, article))
+    deleteDownloadArticle: (savedArticles, article) => dispatch(deleteDownloadArticle(savedArticles, article)),
+    setDownloadBookmarkStatus: status => dispatch(setDownloadBookmarkStatus(status)),
+    setDownloadStatus: status => dispatch(setDownloadStatus(status))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentaryItem);
