@@ -3,8 +3,11 @@ import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView, Ref
 import Colors from '../colors/colors';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 import DocumentaryItem from '../components/DocumentaryItem';
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
+import { selectDownloadsArticles } from '../redux/selectors/downloads.selectors';
 
-const BookmarksScreen = ({navigation}) => {
+const BookmarksScreen = ({navigation, downloadedArticles}) => {
     const [reloaded, setReloaded] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = () => {
@@ -17,7 +20,7 @@ const BookmarksScreen = ({navigation}) => {
     return (
         <SafeAreaView style={{flex: 1}}>
             {
-                !reloaded ?
+                !downloadedArticles.length ?
                 <View style={styles.container}>
                     <View style={styles.emptyBox}>
                         <View style={styles.graphicBox}>
@@ -39,17 +42,17 @@ const BookmarksScreen = ({navigation}) => {
                             </View>
                         </View>
                         <Text style={styles.emptyHeadingText}>Here’s a little empty</Text>
-                        <Text style={styles.emptyText}>Swipe left to download videos you might want to watch even when you’re offline.</Text>
-                        <TouchableOpacity style={{flexDirection: 'row'}}>
+                        <Text style={styles.emptyText}>Download articles to read when you’re offline.</Text>
+                        {/* <TouchableOpacity style={{flexDirection: 'row'}}>
                             <Text style={styles.emptyActionText}>Let's try it </Text><Feather name='chevron-right' color={Colors.secondary} style={{marginTop: 2}} size={16} />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => setReloaded(true)}>
+                        </TouchableOpacity> */}
+                        {/* <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => setReloaded(true)}>
                             <Text style={styles.emptyActionText}>Test filled view </Text><Feather name='chevron-right' color={Colors.secondary} style={{marginTop: 2}} size={16} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 </View>
                 :
-                <ScrollView style={{flex: 1}}
+                <ScrollView contentContainerStyle={{flex: 1}}
                 refreshControl={
                 <RefreshControl 
                 refreshing={refreshing}
@@ -63,11 +66,13 @@ const BookmarksScreen = ({navigation}) => {
                         <View style={styles.body}>
                             <View style={styles.category}>
                                 <View style={styles.categoryItems}>
-                                    <DocumentaryItem />
-                                    <DocumentaryItem />
-                                    <DocumentaryItem />
-                                    <DocumentaryItem />
-                                    <DocumentaryItem />
+                                    {
+                                        downloadedArticles.map((article, i) => {
+                                            return(
+                                                <DocumentaryItem news={article} key={i} />
+                                            )
+                                        })
+                                    }                                    
                                 </View>
                             </View>
                         </View>
@@ -77,8 +82,6 @@ const BookmarksScreen = ({navigation}) => {
         </SafeAreaView>
     )
 }
-
-export default BookmarksScreen;
 
 const styles = StyleSheet.create({
     container: {
@@ -184,3 +187,9 @@ const styles = StyleSheet.create({
         paddingLeft: 15
     }
 });
+
+const mapStateToProps = createStructuredSelector({
+    downloadedArticles: selectDownloadsArticles
+})
+
+export default connect(mapStateToProps)(BookmarksScreen);

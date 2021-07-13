@@ -11,9 +11,9 @@ import * as FileSystem from 'expo-file-system';
 import { Feather, MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { selectDownloadsArray, selectDownloadsArticles, selectDownloadsError, selectDownloadsLoading } from '../redux/selectors/downloads.selectors';
-import { addDownload, addDownloadArticle, deleteDownload, deleteDownloadArticle } from '../redux/actions/downloads.actions';
+import { addDownload, addDownloadArticle, deleteDownload, deleteDownloadArticle, setBookmarkStatus as setDownloadBookmarkStatus, setDownloadStatus } from '../redux/actions/downloads.actions';
 
-const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle}) => {
+const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle, setDownloadStatus, setDownloadBookmarkStatus}) => {
     const [bookmarksStatus, setBookmarkStatus] = useState(false);
     const [bookmarkError, setBookmarkError] = useState('');
     const [doBookmarkError, setDoBookmarkError] = useState('');
@@ -33,9 +33,6 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
             console.log(error);
         }
     }
-    console.log('dlArt', downloadArticles)
-    console.log('dl', downloadsArray)
-    // console.log('cong', audioDownloadDoesntExist && videoDownloadDoesntExist)
 
     const getBookmarkStatus = async () => {
         setBookmarkError('');
@@ -76,6 +73,7 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
                     position: Toast.positions.CENTER
                 })
                 getBookmarkStatus();
+                setDownloadBookmarkStatus(true)
             }else{
                 setDoBookmarkError(response.data.message);
                 Toast.show(doBookmarkError, {
@@ -113,6 +111,7 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
                 setDownloadProgress(0);
                 addDownload(downloadsArray, downloadUrl.substring(downloadUrl.lastIndexOf('/')+1));
                 addDownloadArticle(downloadArticles, news);
+                setDownloadBookmarkStatus(true);
             }
         };
 
@@ -147,42 +146,12 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
         }
     }
 
-    const checkAudiosDownloaded = () => {
-        // console.log('audL', news.media.audios.length)
-        if(news.media.audios.length > 0){
-            const newSet = news.media.audios.map(audio => {
-                // console.log('audio', audio)
-                // console.log('downloadsArray', downloadsArray)
-                const kwi = downloadsArray.find(aud => aud == audio.substring(audio.lastIndexOf('/')+1))
-                return kwi;
-            })
-            console.log('newSet', newSet);
-            if(newSet.length){
-                setaudioDownloadDoesntExist(false);
-            }else{
-                setaudioDownloadDoesntExist(true);
-            }
+    const checkIfArticleIsDownloaded = (downloadedArticles, article) => {
+        const articleExists = downloadedArticles.find(downloadArticle => downloadArticle.id === article.id);
+        if(articleExists){
+            return true;
         }else{
-            setaudioDownloadDoesntExist(true);
-        }
-    }
-
-    const checkVideosDownloaded = () => {
-        // console.log('vidL', news.media.videos.length)
-        if(news.media.videos.length > 0){
-            const newSet = news.media.videos.map(video => {
-                const kwi = downloadsArray.find(vid => vid == video.substring(video.lastIndexOf('/')+1));
-                    // console.log('vid', vid)
-                    // console.log('video', video.substring(video.lastIndexOf('/')+1))
-                return kwi;
-            })
-            if(newSet.length){
-                setvideoDownloadDoesntExist(false);
-            }else{
-                setvideoDownloadDoesntExist(true);
-            }
-        }else{
-            setvideoDownloadDoesntExist(true);
+            return false
         }
     }
 
@@ -190,15 +159,24 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
         try {
             FileSystem.deleteAsync(FileSystem.documentDirectory + fileName);
             deleteDownload(downloadsArray, fileName);
-            checkAudiosDownloaded();
-            checkVideosDownloaded();
-
-            if(audioDownloadDoesntExist && videoDownloadDoesntExist){                
-                deleteDownloadArticle(downloadArticles, news);
-            }
             
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    const removeDownloadedArticle = async(article) => {
+        try {
+            deleteDownloadArticle(downloadArticles, article);
+            for(let dai=0; dai<article.media.audios; dai++){
+                removeDownload(article.media.audios[dai].substring(article.media.audios[dai].lastIndexOf('/')+1))
+            }
+            for(let dvi=0; dvi<article.media.videos; dvi++){
+                removeDownload(article.media.videos[dvi].substring(article.media.videos[dvi].lastIndexOf('/')+1))
+            }
+            setDownloadBookmarkStatus(true)
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -219,7 +197,13 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
                 <TouchableOpacity onLongPress={() => {
                     Vibration.vibrate(50, false);
                     refRBSheet.current.open();
-                }} onPress={() => navigation.navigate('Article', { screen: 'ArticleRead', params: {news_id: news.id}})}><Text style={styles.newsTitle}>{news.title}</Text></TouchableOpacity>
+                }} onPress={() => 
+                    navigation.navigate('Article', {
+                      screen: 'ArticleRead',
+                      params: {news_id: news.id},
+                    })
+                    
+                  }><Text style={styles.newsTitle}>{news.title}</Text></TouchableOpacity>
                 <Text style={styles.newsCaption}>{news.caption}</Text>
                 <View style={styles.newsSummary}>
                     <View style={styles.newsSummaryItem}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.newsSummaryText}> {news.date}</Text></View>
@@ -320,6 +304,22 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
                         </View>
                         :
                         null
+                    }
+                    {
+                        !checkIfArticleIsDownloaded(downloadArticles, news) ?
+                        <TouchableOpacity onPress={() => addDownloadArticle(downloadArticles, news)}>
+                            <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
+                                <View style={styles.rbIcon}><Feather name='download-cloud' color='#fff' size={20} /></View> 
+                                <Text style={styles.rbText}>Download Article</Text>
+                            </View>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity onPress={() => removeDownloadedArticle(news)}>
+                            <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
+                                <View style={styles.rbIcon}><Feather name='download-cloud' color='#fff' size={20} /></View> 
+                                <Text style={styles.rbText}>Delete Article</Text>
+                            </View>
+                        </TouchableOpacity>
                     }
                     <TouchableOpacity onPress={() => onShare()}>
                         <View style={{flexDirection: 'row', paddingVertical: 12, alignItems: 'center'}}>
@@ -443,7 +443,9 @@ const mapDispatchToProps = dispatch => ({
     addDownload: (savedDownloads, fileName) => dispatch(addDownload(savedDownloads, fileName)),
     deleteDownload: (savedDownloads, fileName) => dispatch(deleteDownload(savedDownloads, fileName)),
     addDownloadArticle: (savedArticles, article) => dispatch(addDownloadArticle(savedArticles, article)),
-    deleteDownloadArticle: (savedArticles, article) => dispatch(deleteDownloadArticle(savedArticles, article))
+    deleteDownloadArticle: (savedArticles, article) => dispatch(deleteDownloadArticle(savedArticles, article)),
+    setDownloadBookmarkStatus: status => dispatch(setDownloadBookmarkStatus(status)),
+    setDownloadStatus: status => dispatch(setDownloadStatus(status))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewsItem);

@@ -47,11 +47,17 @@ const GlanceItem = ({news}) => {
         <View>
             <View style={styles.glanceItem}>
                 <View style={styles.imageContainer}>
-                    <Image source={require('../../assets/images/bookmarked-glance.png')} style={styles.image} />
+                    <Image source={{uri: news.media.thumbnail}} style={styles.image} />
                 </View>
                 <View style={styles.glanceDetailsBox}>
                     <View style={styles.glanceDetails}>
-                        <Text style={styles.glanceItemTitle}>{news.title}</Text>
+                        <TouchableOpacity onPress={() => 
+                            navigation.navigate('Article', {
+                            screen: 'ArticleRead',
+                            params: {news_id: news.id},
+                            })
+                            
+                        }><Text style={styles.glanceItemTitle}>{news.title}</Text></TouchableOpacity>                        
                         <View style={{flexDirection: 'row'}}>
                             <View style={styles.date}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.dateText}> {news.date}</Text></View>
                             {duration ? <View style={styles.date}><Feather size={14} color={Colors.text1} name='headphones' /><Text style={styles.dateText}> {duration}</Text></View> : null}
@@ -123,7 +129,7 @@ const styles = StyleSheet.create({
     image: {
         height: 64,
         width: 64,
-        resizeMode: 'contain'
+        resizeMode: 'cover'
     },
     imageContainer: {
         marginRight: 18,

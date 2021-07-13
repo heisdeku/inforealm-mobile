@@ -4,7 +4,9 @@ const DEFAULT_STATE = {
     downloads: [],
     downloadArticles: [],
     loading: false,
-    downloadError: ''
+    downloadError: '',
+    bookmarksUpdated: false,
+    downloadsUpdated: false
 }
 
 const downloadsReducer = (state = DEFAULT_STATE, action) => {
@@ -58,6 +60,16 @@ const downloadsReducer = (state = DEFAULT_STATE, action) => {
       return {
         ...state,
         downloadArticles: []
+      }
+    case DownloadTypes.SET_BOOKMARK_STATUS:
+      return {
+        ...state,
+        bookmarksUpdated: action.payload
+      }
+    case DownloadTypes.SET_DOWNLOAD_STATUS:
+      return {
+        ...state,
+        downloadsUpdated: action.payload
       }
     default:
       return state

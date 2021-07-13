@@ -52,10 +52,8 @@ export const deleteDownloadArticle = (savedArticles, article) => {
         const articleExists = savedArticles.find(savedArticle => savedArticle.id === article.id);
         if(articleExists){
             const newArticles = savedArticles.filter(savedArticle => savedArticle.id !== article.id);
-            console.log('newArticle', newArticles)
             dispatch(setDownloadArticle(newArticles));
         }else{
-            console.log('newArticle', savedArticles)
             dispatch(setDownloadArticle(savedArticles));
         }
     }
@@ -79,25 +77,23 @@ export const addDownload = (savedDownloads, fileName) => {
 
 export const addDownloadArticle = (savedArticles, article) => {
     return (dispatch) => {
-        console.log('articleToBeAdded', article);
         const articleExists = savedArticles.find(savedArticle => savedArticle.id === article.id);
         if(articleExists){
-            console.log('newArticle', savedArticles)
             dispatch(setDownloadArticle(savedArticles))
         }else{
-            const newArticles = savedArticles.push(article);
-            console.log('newArticle', newArticles)
+            const newArticles = [...savedArticles, article];
             dispatch(setDownloadArticle(newArticles));
         }
     }
 }
 
-export const pushArticle = (article) => ({
-    type: DownloadTypes.PUSH_DOWNLOAD_ARTICLE,
-    payload: article
+export const setDownloadStatus = (status) => ({
+    type: DownloadTypes.SET_DOWNLOAD_STATUS,
+    payload: status
 })
 
-export const popArticle = (article) => ({
-    type: DownloadTypes.POP_DOWNLOAD_ARTICLE,
-    payload: article
+
+export const setBookmarkStatus = (sttaus) => ({
+    type: DownloadTypes.SET_BOOKMARK_STATUS,
+    payload: status
 })

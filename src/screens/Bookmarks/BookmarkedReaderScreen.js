@@ -3,9 +3,11 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View, RefreshControl, Activ
 import NewsItem from '../../components/NewsItem';
 import Colors from '../../colors/colors';
 import apiConnect from '../../api/apiConnect';
+import { createStructuredSelector } from 'reselect'
+import { selectUserId } from '../../redux/selectors/user.selector';
+import { connect } from 'react-redux';
 
-const BookmarkedReaderScreen = ({navigation}) => {
-    const user_id = 'ebfcbd110f6758249df0e7f7d5f7b950';
+const BookmarkedReaderScreen = ({navigation, user_id}) => {
     const category_id = 1;
     const [refreshing, setRefreshing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -16,16 +18,20 @@ const BookmarkedReaderScreen = ({navigation}) => {
         setError('');
         setIsLoading(true);
         try {
-            const bodyForm = new FormData();
-            bodyForm.append('user_id', user_id);
-            bodyForm.append('category_id', category_id);
-            const response = await apiConnect.post('/getBookmarks', bodyForm);
-            if(response.data.status === 'success'){
-                setIsLoading(false);
-                setNews(response.data.news)
+            if(user_id){
+                const bodyForm = new FormData();
+                bodyForm.append('user_id', user_id);
+                bodyForm.append('category_id', category_id);
+                const response = await apiConnect.post('/getBookmarks', bodyForm);
+                if(response.data.status === 'success'){
+                    setIsLoading(false);
+                    setNews(response.data.news)
+                }else{
+                    setIsLoading(false);
+                    setError(response.data.message);
+                }
             }else{
-                setIsLoading(false);
-                setError(response.data.message);
+                setError('You have to be logged in to view your bookmarks');
             }
         } catch (error) {
             console.log(error);
@@ -40,8 +46,9 @@ const BookmarkedReaderScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-        getBookmarks();
-    }, [])
+        // getBookmarks();    
+        navigation.addListener('focus', () => getBookmarks())
+    }, [navigation])
 
     return (
         <SafeAreaView style={{flex: 1}}>
@@ -107,8 +114,6 @@ const BookmarkedReaderScreen = ({navigation}) => {
     )
 }
 
-export default BookmarkedReaderScreen;
-
 const styles = StyleSheet.create({
     container: {
         flex: 1
@@ -151,3 +156,9 @@ const styles = StyleSheet.create({
         fontFamily: 'DMBold'
     }
 });
+
+const mapStateToProps = createStructuredSelector({
+    user_id: selectUserId
+});
+
+export default connect(mapStateToProps)(BookmarkedReaderScreen);
