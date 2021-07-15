@@ -20,14 +20,21 @@ export const selectNewsCaption = createSelector(
   (selectNews) => selectNews.caption
 )
 
+export const selectNewsComments = createSelector(
+  [selectNews],
+  selectNews => selectNews?.comments
+)
+
 export const selectNewsCategory = createSelector(
   [selectNews],
   (selectNews) => selectNews?.categories[0].category
 )
+
 export const isLoading = createSelector(
   [news], 
   (news) => news.loading
   )
+
 
 
 export const hasError = createSelector(

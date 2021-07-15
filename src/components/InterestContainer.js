@@ -56,7 +56,7 @@ export const InterestContainer = () => {
 const styles = StyleSheet.create({
   interests: {
     flex: 1,
-    marginTop: 25,
+    marginTop: 20,
     flexDirection: 'row',
     marginBottom: 10,
   },

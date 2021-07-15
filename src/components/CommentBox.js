@@ -17,10 +17,10 @@ export const CommentBox = () => {
 
 const styles = StyleSheet.create({
     container: {        
-        position: 'absolute',
-        backgroundColor: 'red',
+        position: 'absolute',         
         width: Dimensions.get('window').width,
         height: 120,
+        marginTop: 'auto',
         paddingTop: 21,
         paddingBottom: 34,
         paddingHorizontal: 16,

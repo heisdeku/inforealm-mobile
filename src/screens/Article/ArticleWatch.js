@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { StyleSheet, TouchableOpacity, Text, ScrollView, ActivityIndicator, View, Alert, ImageBackground, Dimensions } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, ScrollView, RefreshControl, ActivityIndicator, View, Alert, ImageBackground, Dimensions } from 'react-native';
 import { Feather, MaterialIcons, AntDesign, FontAwesome5  } from '@expo/vector-icons';
 import Colors from '../../colors/colors';
 import ArticleBottomTab from '../../components/ArticleBottomTab';
@@ -13,29 +13,37 @@ const ArticleRead = ({ route }) => {
     const error = useSelector(hasError)
     const news = useSelector(selectNews)
     const title = useSelector(selectNewsTitle)
-    const caption = useSelector(selectNewsCaption)       
+    const caption = useSelector(selectNewsCaption)
     const { news_id } = route.params; 
-    const regex = /(<([^>]+)>)/ig;  
-    
-    
+
+    const [refreshing, setRefreshing] = useState(false) 
+
+    const onRefresh = () => {
+        setRefreshing(true)
+        getNews()  
+        setRefreshing(false)    
+      }      
     const getNews = async () => {
-        try {
-            const response = await dispatch(getNewsData(news_id))
-            if (response.error) {
-                Alert.alert(response.err)
-            } else {
-                return response.news
-            }
-        } catch (error) {
-            console.log(error)
+        const response = await dispatch(getNewsData(news_id))
+        if (response.error) {
+            Alert.alert(response.err)
+        } else {
+            return response.news
         }
     }
     useEffect(() => {
         getNews()
-    }, [])    
+    }, [news_id])    
           
     return (
-    <View style={{ position: 'relative', flex: 1}} >
+    <View style={{ position: 'relative', flex: 1}} refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={[Colors.brand, Colors.secondary, Colors.caption]}
+          tintColor={Colors.brand}
+        />
+      }>
         {
             loading &&
             <View style={styles.loadingView}>
@@ -95,7 +103,7 @@ const ArticleRead = ({ route }) => {
                 </View>
                 <View>
                     <Text style={styles.articleWriteUp}>
-                        {news.content.replace(regex, '')} 
+                        {news.content}
                     </Text>
                 </View>                        
         </View>            
@@ -103,7 +111,7 @@ const ArticleRead = ({ route }) => {
         : null
         }
         
-        <ArticleBottomTab newsTitle={title} id={news_id} />
+        <ArticleBottomTab id={news_id} />
     </View>        
     )
 }

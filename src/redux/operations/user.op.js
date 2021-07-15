@@ -166,19 +166,22 @@ export const emailLogin = (dataToSend) => {
     dispatch(signInStart())
     try {
       let response = await apiConnect.post(`/login`, dataToSend)
-      let { data } = response
-      dispatch(setUserStart())
-      if (response.status === 200 || data.status === 'success') {
-        console.log(data.user)
+      let { data } = response    
+      dispatch(setUserStart())      
+      if (response.status === 200 && data.status === 'success') {        
         dispatch(setUserSuccess(data.user)) 
         return data.user       
       } else {
-        dispatch(setUserFailed(response.message))
+        dispatch(setUserFailed(data.message))
+        console.log(data.message)
+        return {
+          error: data.message
+        }
       }
     } catch (e) {
       dispatch(signInFailed(e.response.data.message))
       return {
-        error: e.response.data.message
+        error: e
       }
     }
   }

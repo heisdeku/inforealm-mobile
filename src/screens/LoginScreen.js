@@ -16,8 +16,7 @@ const LoginScreen = ({navigation}) => {
         let userData = new FormData()
         userData.append('email', data.email)
         userData.append('password', data.password)
-        const response = await dispatch(emailLogin(userData))
-
+        const response = await dispatch(emailLogin(userData))        
         if (response.error) {            
             Alert.alert(response.error)
         }
