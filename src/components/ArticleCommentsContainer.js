@@ -1,16 +1,64 @@
 import React, { useState } from 'react';
-import { FlatList, StyleSheet, View, KeyboardAvoidingView } from 'react-native';
+import { useSelector } from 'react-redux'
+import { FlatList, StyleSheet, View, Text, KeyboardAvoidingView } from 'react-native';
 import Colors from '../colors/colors';
 import ArticleCommentContainer from './ArticleCommentContainer';
 import { CommentBox } from './CommentBox';
+import { selectNewsComments } from '../redux/selectors/news.selector';
 
-const ArticleCommentsContainer = () => {
+const ArticleCommentsContainer = () => {    
+    const comments = useSelector(selectNewsComments)
     return (        
-    <View>
-        <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={10} style={styles.container}>
-            <FlatList
+    <View style={styles.container}>
+        <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={10} >                        
+            {   
+                !comments.length ?
+                <View style={{flex: 1, justifyContent: 'center', marginBottom: 150,  alignItems: 'center'}}>
+                    <View style={styles.emptyView}>
+                        <Text style={styles.emptyText}>Here’s a little empty</Text>
+                    </View>
+                </View>
+                :
+                null
+            }
+            {
+                comments.length > 0 ?
+                <FlatList
                 style={{ marginBottom: 100,}}
-                data={[
+                data={[                                
+                {key: 'Davido'},
+                {key: 'Joeboy'},
+                {key: 'Joeboy'},
+                {key: 'Joeboy'},
+                {key: 'Joeboy'},
+                {key: 'Joeboy'},
+                {key: 'Joeboy'},
+                {key: 'Joeboy'},
+                {key: 'Joeboy'},
+                ]}
+                    renderItem={({item}) => <ArticleCommentContainer name={item.key} />}
+                />
+                : null
+            }     
+            <CommentBox />                       
+        </KeyboardAvoidingView>         
+    </View>        
+    )
+}
+
+export default ArticleCommentsContainer;
+
+const styles = StyleSheet.create({
+    container: {        
+        paddingHorizontal: 18,
+        backgroundColor: '#F7F7F7',
+        position: 'relative',   
+        flex: 1,      
+    }
+});
+
+/**
+ * data={[
                 {key: 'Uduak'},
                 {key: 'Damola Moski'},
                 {key: 'Deku Feranmi'},
@@ -25,20 +73,4 @@ const ArticleCommentsContainer = () => {
                 {key: 'Dominic'},
                 {key: 'Rema'},
                 ]}
-                renderItem={({item}) => <ArticleCommentContainer name={item.key} />}
-            />
-            <CommentBox />    
-        </KeyboardAvoidingView>         
-    </View>        
-    )
-}
-
-export default ArticleCommentsContainer;
-
-const styles = StyleSheet.create({
-    container: {        
-        paddingHorizontal: 18,
-        backgroundColor: '#F7F7F7',
-        position: 'relative',         
-    }
-});
+ */

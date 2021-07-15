@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { BlurView } from 'expo'
 import { StyleSheet, View, ActivityIndicator, TouchableOpacity, Image, Text, Platform, ImageBackground } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getCurrentUser, selectUserId } from '../../redux/selectors/user.selector';

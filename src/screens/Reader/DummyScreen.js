@@ -17,11 +17,13 @@ import Colors from '../../colors/colors'
 import { ReaderTopContainer } from '../../components/ReadeTopContainer'
 import { getLatestFeed } from '../../redux/operations/feed.op'
 import { error, isLoading, selectLatestFeed } from '../../redux/selectors/feed.selector'
+import { getCurrentUser } from '../../redux/selectors/user.selector'
 
 const DummyScreen = ({ navigation }) => {
   const loading = useSelector(isLoading)
   const hasError = useSelector(error)
   const feed = useSelector(selectLatestFeed)
+  const user = useSelector(getCurrentUser)
   const dispatch = useDispatch()
   
   const [refreshing, setRefreshing] = useState(false)
@@ -77,8 +79,8 @@ const DummyScreen = ({ navigation }) => {
             }
           >                 
             <View style={styles.container}>
-              {/*<InterestContainer />*/}
-              <ReaderTopContainer />
+              {!user?.user_id && <InterestContainer />}
+              {user?.user_id && <ReaderTopContainer />}
               {
                 feed.map((f,i) => {
                   if (f.media.videos.length) {

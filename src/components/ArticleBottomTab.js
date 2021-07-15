@@ -1,23 +1,20 @@
 import React, { useEffect, useState, useRef  } from 'react';
-import { StyleSheet, ScrollView, Text, View, Dimensions, Animated, TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux'
+import { StyleSheet, ScrollView, Text, Share, View, Dimensions, Animated, TouchableOpacity } from 'react-native';
 import { EvilIcons, AntDesign, Feather } from '@expo/vector-icons';
 import RBSheet from 'react-native-raw-bottom-sheet'
-
 import Colors from '../colors/colors';
 import ArticleCommentsContainer from './ArticleCommentsContainer';
+import Toast from 'react-native-root-toast';
+import apiConnect from '../api/apiConnect';
+import { selectUserId } from '../redux/selectors/user.selector';
 
-const ArticleBottomTab = (props) => {    
+
+const ArticleBottomTab = ({ newsTitle, id }) => {    
     const refRBSheet = useRef()
     const [ likeStatus, setLikeStatus ] = useState(false)
-    const [morePressed, setMorePressed] = useState(false)
-    const { navigation, state } = props;
-    // const [mode, setMode] = useState(0);
-    const connection = {
-        state: {
-            index: 5
-        }
-    }
-
+    const [morePressed, setMorePressed] = useState(false)      
+    const userId = useSelector(selectUserId)
     const mode = new Animated.Value(0);
 
     const handlePress = () => {
@@ -29,6 +26,65 @@ const ArticleBottomTab = (props) => {
             })
         ]).start();
     }
+
+    const handleLike = async () => {
+        setLikeStatus(!likeStatus)
+        if (!userId) {
+            Toast.show("You can't like as you're not signed in", {
+                duration: Toast.durations.SHORT,
+                position: Toast.positions.CENTER
+            });
+        }
+        let data = new FormData()
+        data.append('news_id', id)
+        data.append('user_id', userId)
+        const response = await apiConnect.post('/doLike', data)        
+        const { message } = response.data
+        console.log(message)
+        if (message.includes('unliked')) {                              
+            Toast.show("Unliked", {
+                duration: Toast.durations.SHORT,
+                position: Toast.positions.CENTER
+            })    
+          } else {      
+            Toast.show("Liked", {
+                duration: Toast.durations.SHORT,
+                position: Toast.positions.CENTER
+            });  
+          }
+    }
+
+    const handleShare = async () => {
+        try {
+            Share.share({
+                message: `${newsTitle}, https://theinforealm.com/news/${id}`
+            })
+
+            let articleData = new FormData()
+            articleData.append("news_id", id)
+            articleData.append("user_id", userId)
+            const response = await apiConnect.post(`/doShare`, articleData)
+            return response.data.message
+            
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    useEffect(() => {
+        const getArticleLikedStatus = async () => {
+            let articleData = new FormData()
+            articleData.append("news_id", id)
+            articleData.append("user_id", userId)
+            const response = await apiConnect.post(`/getLikedStatus`, articleData)
+            const { like_status } = response.data
+            setLikeStatus(like_status)
+        }
+    
+        getArticleLikedStatus()
+        //eslint-disable-next-line
+      }, [likeStatus, handleLike])
+
     useEffect(() => {
         Animated.sequence([
             Animated.timing(mode, {
@@ -39,10 +95,11 @@ const ArticleBottomTab = (props) => {
         ]).start()
     }, [morePressed])
 
+    /*
     const componentHeight = mode.interpolate({
         inputRange: [0, 1],
         outputRange: [70, Dimensions.get('window').height]
-    })
+    })*/
 
     return (
         <Animated.View
@@ -55,13 +112,13 @@ const ArticleBottomTab = (props) => {
                       <Text style={styles.tabLabel}>Comment</Text>
                   </View>
               </TouchableOpacity>
-                <TouchableOpacity onPress={() => setLikeStatus(!likeStatus)}>
+                <TouchableOpacity onPress={handleLike}>
                     <View style={styles.tab}>                        
                         <AntDesign name="like2" size={24} color={likeStatus ? Colors.secondary : '#050618'} />
-                        <Text style={{ ...styles.tabLabel, color: likeStatus ? Colors.secondary : '#050618' }}>Like</Text>
+                        <Text style={{ ...styles.tabLabel, color: likeStatus ? Colors.secondary : '#050618' }}>{likeStatus ? 'Liked' : 'Like' }</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleShare}>
                     <View style={styles.tab}>
                         <Feather name="share" size={20} color="#050618" />
                         <Text style={styles.tabLabel}>Share</Text>
@@ -69,7 +126,7 @@ const ArticleBottomTab = (props) => {
                 </TouchableOpacity>
                 <TouchableOpacity onPressOut={() => setMorePressed(!morePressed)} onPress={() => handlePress()}>
                     <View>                        
-                        <AntDesign name="up" size={18} color="black" color={ morePressed ? Colors.secondary : '#050618'} />                                                
+                        <AntDesign name="up" size={18} color={ morePressed ? Colors.secondary : '#050618'} />                                                
                     </View>
                 </TouchableOpacity>
             </View>
@@ -138,8 +195,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 25,
         borderWidth: 0.3,
-        borderColor: Colors.secondary,
-        // position: 'absolute',
+        borderColor: Colors.secondary,        
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -149,8 +205,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.secondary,
         borderRadius: 25,
         borderWidth: 0.3,
-        borderColor: Colors.secondary,
-        // position: 'absolute',
+        borderColor: Colors.secondary,        
         justifyContent: 'center',
         alignItems: 'center'
     },

@@ -12,7 +12,12 @@ export const ReaderNavigation = ({ visitProfile, visitSearch }) => {
             <View style={styles.mainNavigation}>   
                 <TouchableOpacity onPress={visitProfile}>
                     {
-                        user === null && !user?.profile_picture && <View style={styles.emptyPhoto}>
+                        !user?.profile_picture && <View style={{                
+                            width: 36,
+                            height: 26,        
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}>
                         <MaterialCommunityIcons name="account" size={27} color="#6C757D" />
                     </View>
                     }                    
