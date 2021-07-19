@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { StyleSheet, TouchableOpacity, Text, ScrollView, ActivityIndicator, View, Alert, ImageBackground, Dimensions } from 'react-native';
 import { Feather, MaterialIcons, AntDesign, FontAwesome5  } from '@expo/vector-icons';
@@ -6,6 +6,8 @@ import Colors from '../../colors/colors';
 import ArticleBottomTab from '../../components/ArticleBottomTab';
 import { getNewsData } from '../../redux/operations/news.op';
 import { hasError, isLoading, selectNews, selectNewsCaption, selectNewsTitle } from '../../redux/selectors/news.selector';
+
+import HTMLView from 'react-native-htmlview'
 
 const ArticleRead = ({ route }) => {
     const dispatch = useDispatch()
@@ -32,8 +34,7 @@ const ArticleRead = ({ route }) => {
     }
     useEffect(() => {
         getNews()
-    }, [])    
-          
+    }, [])          
     return (
     <View style={{ position: 'relative', flex: 1}} >
         {
@@ -94,9 +95,15 @@ const ArticleRead = ({ route }) => {
                     </View>
                 </View>
                 <View>
-                    <Text style={styles.articleWriteUp}>
-                        {news.content.replace(regex, '')} 
-                    </Text>
+                    <View style={{
+                        marginTop: 25,
+                        marginBottom: 180,                        
+                    }}>
+                        <HTMLView
+                            value={`${news.content}`}
+                            stylesheet={styling}
+                        />                        
+                    </View>
                 </View>                        
         </View>            
         </ScrollView>
@@ -218,15 +225,29 @@ const styles = StyleSheet.create({
            
     },
     articleCategoryText: {
-        fontSize: 12,  
+        fontSize: 12,         
     },
     articleWriteUp: {   
-        marginTop: 24,     
-    fontWeight: '400',
-    fontSize: 17,
-    lineHeight: 30,
-    letterSpacing: -0.408,
-    color: '#343A40',
-    marginBottom: 100
+        
     }
 });
+
+
+const styling = StyleSheet.create({
+    a: {
+      fontWeight: '400',
+      color: '#E33127',
+    },
+    p: {         
+        fontFamily: 'DMRegular',   
+        fontWeight: '400',        
+        fontSize: 17,
+        lineHeight: 30,
+        letterSpacing: -0.408,
+        color: '#343A40',        
+    },
+    h1: {
+        fontSize: 25,
+        fontWeight: '700',
+    }
+  });

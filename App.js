@@ -19,6 +19,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 //toast
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { selectUserId } from './src/redux/selectors/user.selector'
+
 const getFonts = () =>
   Font.loadAsync({
     // fetch custom fonts
@@ -39,8 +40,7 @@ export default () => {
   }, [])
 
   if (fontsLoaded) {  
-    const state = store.getState()
-    console.log(state.user.user)
+    const state = store.getState()    
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>

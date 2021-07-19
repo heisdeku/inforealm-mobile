@@ -18,16 +18,16 @@ const rootPersistConfig = {
     'interest',
     'search',    
     'feed',    
-    'media' 
+    'media', 
+    'user',   
   ],
 }
 
 const persistConfig = {
   key: 'user',
   storage: AsyncStorage,
-  whitelist: [
-    'user',
-    'downloads' 
+  whitelist: [    
+    'downloads'     
   ]
   
 }

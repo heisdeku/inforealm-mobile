@@ -6,13 +6,15 @@ import ArticleCommentContainer from './ArticleCommentContainer';
 import { CommentBox } from './CommentBox';
 import { selectNewsComments } from '../redux/selectors/news.selector';
 
-const ArticleCommentsContainer = () => {    
+const ArticleCommentsContainer = () => {        
     const comments = useSelector(selectNewsComments)
+    const [ newsComments, setNewsComments ] = useState(comments)
+
     return (        
     <View style={styles.container}>
         <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={10} >                        
             {   
-                !comments.length ?
+                !newsComments.length ?
                 <View style={{flex: 1, justifyContent: 'center', marginBottom: 150,  alignItems: 'center'}}>
                     <View style={styles.emptyView}>
                         <Text style={styles.emptyText}>Here’s a little empty</Text>
@@ -22,25 +24,25 @@ const ArticleCommentsContainer = () => {
                 null
             }
             {
-                comments.length > 0 ?
-                <FlatList
-                style={{ marginBottom: 100,}}
-                data={[                                
-                {key: 'Davido'},
-                {key: 'Joeboy'},
-                {key: 'Joeboy'},
-                {key: 'Joeboy'},
-                {key: 'Joeboy'},
-                {key: 'Joeboy'},
-                {key: 'Joeboy'},
-                {key: 'Joeboy'},
-                {key: 'Joeboy'},
-                ]}
-                    renderItem={({item}) => <ArticleCommentContainer name={item.key} />}
-                />
+                newsComments.length > 0 ?
+                    <FlatList
+                        style={{ marginBottom: 100,}}
+                        data={[
+                            {key: 'Davido'},
+                            {key: 'Joeboy'},
+                            {key: 'Joeboy'},
+                            {key: 'Joeboy'},
+                            {key: 'Joeboy'},
+                            {key: 'Joeboy'},
+                            {key: 'Joeboy'},
+                            {key: 'Joeboy'},
+                            {key: 'Joeboy'},
+                        ]}
+                        renderItem={({item}) => <ArticleCommentContainer name={item.key} />}
+                    />
                 : null
             }     
-            <CommentBox />                       
+            <CommentBox add={setNewsComments} />                       
         </KeyboardAvoidingView>         
     </View>        
     )
