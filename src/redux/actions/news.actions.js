@@ -16,3 +16,10 @@ export const getNewsFailed = (err) => ({
   type: newsTypes.FETCH_NEWS_FAILED,
   payload: err,
 })
+
+export const addNewsComment = (comment) => ({
+  type: newsTypes.ADD_COMMENT,
+  payload: {    
+    comment: comment
+  }
+})

@@ -2,12 +2,12 @@ import { newsTypes } from "../types/news.types"
 
 const DEFAULT_STATE = {
   id: '',
-  news: null,
+  news: {},
   isLiked: false,
   isBookmarked: false,
   loading: true,
   error: null,
-  comments: []
+  comments: []  
 }
 
 const newsReducer = (state = DEFAULT_STATE, action) => {
@@ -27,6 +27,21 @@ const newsReducer = (state = DEFAULT_STATE, action) => {
         id: action.payload.id,
         news: action.payload.news,
       }
+    case newsTypes.GET_COMMENTS:
+        return {
+          ...state,
+          comments: state.news.comments
+        }
+    case newsTypes.ADD_COMMENT:
+        return {  
+          ...state,        
+          comments: [
+            ...state.comments,
+            {
+              ...action.payload.comment
+            }            
+          ]
+        }
     case newsTypes.FETCH_NEWS_FAILED:
       return {
         ...state,
