@@ -1,8 +1,8 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\deku\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add react-native-htmlview
+  C:\Program Files\nodejs\node.exe C:\Users\deku\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add expo-av@~9.1.2 @react-native-community/slider@3.0.3
 
 PATH: 
-  C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Users\deku\AppData\Local\Android\Sdk\platform-tools;c:\php;%USERPROFILE%\AppData\Local\Microsoft\WindowsApps;C:\Users\deku\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\deku\AppData\Roaming\npm;C:\Users\deku\AppData\Local\Android\Sdk\platform-tools;c:\php;;C:\ProgramData\deku\hyper\app-3.0.2\resources\bin
+  C:\Users\deku\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\deku\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\Program Files\nodejs;C:\Users\deku\AppData\Local\Android\Sdk\platform-tools;C:\php;C:\Program Files\Git\cmd;C:\WINDOWS\System32\OpenSSH;%USERPROFILE%\AppData\Local\Microsoft\WindowsApps;C:\Users\deku\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\deku\AppData\Roaming\npm;C:\Users\deku\AppData\Local\Android\Sdk\platform-tools;C:\php;C:\ProgramData\deku\hyper\app-3.0.2\resources\bin;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
 
 Yarn version: 
   1.22.10
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: EPERM: operation not permitted, unlink 'C:\Users\deku\Desktop\inforealm-mobile\node_modules\domhandler\lib'
+  Error: EPERM: operation not permitted, unlink 'C:\Users\deku\Desktop\inforealm-mobile\node_modules\@babel\preset-env\node_modules\@babel\plugin-proposal-private-methods\node_modules\@babel\core\node_modules\.bin\json5'
 
 npm manifest: 
   {
@@ -49,6 +49,7 @@ npm manifest:
       "react-hook-form": "^7.10.1",
       "react-native": "https://github.com/expo/react-native/archive/sdk-41.0.0.tar.gz",
       "react-native-gesture-handler": "~1.10.2",
+      "react-native-htmlview": "^0.16.0",
       "react-native-paper": "^4.9.2",
       "react-native-raw-bottom-sheet": "^2.2.0",
       "react-native-reanimated": "~2.1.0",
@@ -3396,6 +3397,14 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
     integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
   
+  dom-serializer@0:
+    version "0.2.2"
+    resolved "https://registry.yarnpkg.com/dom-serializer/-/dom-serializer-0.2.2.tgz#1afb81f533717175d478655debc5e332d9f9bb51"
+    integrity sha512-2/xPb3ORsQ42nHYiSunXkDjPLBaEj/xTwUO4B7XCZQTRk7EBtTOPaygh10YAAh2OI1Qrp6NWfpAhzswj0ydt9g==
+    dependencies:
+      domelementtype "^2.0.1"
+      entities "^2.0.0"
+  
   dom-serializer@^1.0.1:
     version "1.3.2"
     resolved "https://registry.yarnpkg.com/dom-serializer/-/dom-serializer-1.3.2.tgz#6206437d32ceefaec7161803230c7a20bc1b4d91"
@@ -3415,10 +3424,22 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.2.tgz#0c548bef048f4d1f2a97249002236060daa3fd84"
     integrity sha512-6QvTW9mrGeIegrFXdtQi9pk7O/nSK6lSdXW2eqUspN5LWD7UTji2Fqw5V2YLjBpHEoU9Xl/eUWNpDeZvoyOv2w==
   
+  domelementtype@1, domelementtype@^1.3.0:
+    version "1.3.1"
+    resolved "https://registry.yarnpkg.com/domelementtype/-/domelementtype-1.3.1.tgz#d048c44b37b0d10a7f2a3d5fee3f4333d790481f"
+    integrity sha512-BSKB+TSpMpFI/HOxCNr1O8aMOTZ8hT3pM3GQ0w/mWRmkhEDSFJkkyzz4XQsBV44BChwGkrDfMyjVD0eA2aFV3w==
+  
   domelementtype@^2.0.1, domelementtype@^2.2.0:
     version "2.2.0"
     resolved "https://registry.yarnpkg.com/domelementtype/-/domelementtype-2.2.0.tgz#9a0b6c2782ed6a1c7323d42267183df9bd8b1d57"
     integrity sha512-DtBMo82pv1dFtUmHyr48beiuq792Sxohr+8Hm9zoxklYPfa6n0Z3Byjj2IV7bmr2IyqClnqEQhfgHJJ5QF0R5A==
+  
+  domhandler@^2.3.0:
+    version "2.4.2"
+    resolved "https://registry.yarnpkg.com/domhandler/-/domhandler-2.4.2.tgz#8805097e933d65e85546f726d60f5eb88b44f803"
+    integrity sha512-JiK04h0Ht5u/80fdLMCEmV4zkNh2BcoMFBmZ/91WtYZ8qVXSKjiw7fXMgFPnHcSZgOo3XdinHvmnDUeMf5R4wA==
+    dependencies:
+      domelementtype "1"
   
   domhandler@^3.3.0:
     version "3.3.0"
@@ -3433,6 +3454,14 @@ Lockfile:
     integrity sha512-zk7sgt970kzPks2Bf+dwT/PLzghLnsivb9CcxkvR8Mzr66Olr0Ofd8neSbglHJHaHa2MadfoSdNlKYAaafmWfA==
     dependencies:
       domelementtype "^2.2.0"
+  
+  domutils@^1.5.1:
+    version "1.7.0"
+    resolved "https://registry.yarnpkg.com/domutils/-/domutils-1.7.0.tgz#56ea341e834e06e6748af7a1cb25da67ea9f8c2a"
+    integrity sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg==
+    dependencies:
+      dom-serializer "0"
+      domelementtype "1"
   
   domutils@^2.4.2:
     version "2.7.0"
@@ -3481,6 +3510,11 @@ Lockfile:
     integrity sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==
     dependencies:
       once "^1.4.0"
+  
+  entities@^1.1.1:
+    version "1.1.2"
+    resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.2.tgz#bdfa735299664dfafd34529ed4f8522a275fea56"
+    integrity sha512-f2LZMYl1Fzu7YSBKg+RoROelpOaNrcGmE9AZubeDfrCEia483oW4MI4VyFd5VNHIgQ/7qm1I0wUHK1eJnn2y2w==
   
   entities@^2.0.0:
     version "2.2.0"
@@ -3558,6 +3592,11 @@ Lockfile:
     version "5.0.1"
     resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
     integrity sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==
+  
+  eventemitter2@^1.0.0:
+    version "1.0.5"
+    resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-1.0.5.tgz#f983610517b1737c0b9dc643beca93893c04df18"
+    integrity sha1-+YNhBRexc3wLncZDvsqTiTwE3xg=
   
   eventemitter3@^3.0.0:
     version "3.1.2"
@@ -4236,6 +4275,19 @@ Lockfile:
     dependencies:
       react-is "^16.7.0"
   
+  htmlparser2-without-node-native@^3.9.2:
+    version "3.9.2"
+    resolved "https://registry.yarnpkg.com/htmlparser2-without-node-native/-/htmlparser2-without-node-native-3.9.2.tgz#b3ed050d877d0ff3465969e339877b7f9f6631f6"
+    integrity sha1-s+0FDYd9D/NGWWnjOYd7f59mMfY=
+    dependencies:
+      domelementtype "^1.3.0"
+      domhandler "^2.3.0"
+      domutils "^1.5.1"
+      entities "^1.1.1"
+      eventemitter2 "^1.0.0"
+      inherits "^2.0.1"
+      readable-stream "^2.0.2"
+  
   htmlparser2@5.0.1:
     version "5.0.1"
     resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-5.0.1.tgz#7daa6fc3e35d6107ac95a4fc08781f091664f6e7"
@@ -4317,7 +4369,7 @@ Lockfile:
       once "^1.3.0"
       wrappy "1"
   
-  inherits@2, inherits@2.0.4, inherits@^2.0.3, inherits@~2.0.3:
+  inherits@2, inherits@2.0.4, inherits@^2.0.1, inherits@^2.0.3, inherits@~2.0.3:
     version "2.0.4"
     resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.4.tgz#0fa2c64f932917c3433a0ded55363aae37416b7c"
     integrity sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
@@ -5908,6 +5960,14 @@ Lockfile:
       invariant "^2.2.4"
       prop-types "^15.7.2"
   
+  react-native-htmlview@^0.16.0:
+    version "0.16.0"
+    resolved "https://registry.yarnpkg.com/react-native-htmlview/-/react-native-htmlview-0.16.0.tgz#4a70d7c02ab3ab18e1cb708c0dcf0d99bc6c1cdc"
+    integrity sha512-yUrzXje+kKKLkWkccKNBeg3CbvrodA7f4+1d/XRrrg0SDFfIdj7NnjRdH+WXqGze6R501bfRZOPaZx/M5HTz3A==
+    dependencies:
+      entities "^1.1.1"
+      htmlparser2-without-node-native "^3.9.2"
+  
   react-native-iphone-x-helper@^1.3.0, react-native-iphone-x-helper@^1.3.1:
     version "1.3.1"
     resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz#20c603e9a0e765fd6f97396638bdeb0e5a60b010"
@@ -6118,7 +6178,7 @@ Lockfile:
       object-assign "^4.1.1"
       prop-types "^15.6.2"
   
-  readable-stream@^2.0.1, readable-stream@^2.2.2, readable-stream@~2.3.6:
+  readable-stream@^2.0.1, readable-stream@^2.0.2, readable-stream@^2.2.2, readable-stream@~2.3.6:
     version "2.3.7"
     resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.7.tgz#1eca1cf711aef814c04f62252a36a62f6cb23b57"
     integrity sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==
