@@ -8,12 +8,14 @@ import ArticleCommentsContainer from './ArticleCommentsContainer';
 import Toast from 'react-native-root-toast';
 import apiConnect from '../api/apiConnect';
 import { selectUserId } from '../redux/selectors/user.selector';
+import { isLoading } from '../redux/selectors/news.selector';
 
 
 const ArticleBottomTab = ({ newsTitle, id }) => {    
     const refRBSheet = useRef()
     const [ likeStatus, setLikeStatus ] = useState(false)
-    const [morePressed, setMorePressed] = useState(false)      
+    const [morePressed, setMorePressed] = useState(false)    
+    const loading = useSelector(isLoading)  
     const userId = useSelector(selectUserId)
     const mode = new Animated.Value(0);
 
@@ -27,20 +29,21 @@ const ArticleBottomTab = ({ newsTitle, id }) => {
         ]).start();
     }
 
-    const handleLike = async () => {
-        setLikeStatus(!likeStatus)
+    const handleLike = async () => {        
         if (!userId) {
             Toast.show("You can't like as you're not signed in", {
                 duration: Toast.durations.SHORT,
                 position: Toast.positions.CENTER
             });
+            return
         }
+        setLikeStatus(!likeStatus)
         let data = new FormData()
         data.append('news_id', id)
         data.append('user_id', userId)
         const response = await apiConnect.post('/doLike', data)        
         const { message } = response.data
-        console.log(message)
+
         if (message.includes('unliked')) {                              
             Toast.show("Unliked", {
                 duration: Toast.durations.SHORT,
@@ -103,7 +106,7 @@ const ArticleBottomTab = ({ newsTitle, id }) => {
 
     return (
         <Animated.View
-          style={{height: 120, backgroundColor: 'transparent', width: Dimensions.get('window').width, position: 'absolute', top: Dimensions.get('window').width + 200, left: 0}}
+          style={{height: 120, backgroundColor: 'transparent', width: Dimensions.get('window').width, position: 'absolute', top: Dimensions.get('window').width + 200, left: 0, opacity: loading ? 0 : 1}}
         >
             <View style={styles.tabBar}>
               <TouchableOpacity onPress={() => refRBSheet.current.open()}>
@@ -112,7 +115,7 @@ const ArticleBottomTab = ({ newsTitle, id }) => {
                       <Text style={styles.tabLabel}>Comment</Text>
                   </View>
               </TouchableOpacity>
-                <TouchableOpacity onPress={handleLike}>
+                <TouchableOpacity onPress={handleLike} >
                     <View style={styles.tab}>                        
                         <AntDesign name="like2" size={24} color={likeStatus ? Colors.secondary : '#050618'} />
                         <Text style={{ ...styles.tabLabel, color: likeStatus ? Colors.secondary : '#050618' }}>{likeStatus ? 'Liked' : 'Like' }</Text>
