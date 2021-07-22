@@ -31,8 +31,8 @@ const LoginScreen = ({navigation}) => {
     }
     return (       
         <ScrollView>
-            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : 'position'}
-            keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} style={{ flex: 1 }}>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : 'padding'}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 10} style={{ flex: 1 }}>
                  <View style={styles.container}>
                 <Text style={styles.heading}>Stay up to date with insightful news and trends</Text>
                 <Image style={styles.pana} source={require('../../assets/images/pana.png')} />

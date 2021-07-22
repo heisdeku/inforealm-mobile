@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { ScrollView, Alert, ActivityIndicator, TextInput, StyleSheet, Text, View, Image, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
+import { ScrollView, Alert, ActivityIndicator, TextInput, StyleSheet, Text, View, Image, TouchableOpacity, TouchableHighlight, Platform, KeyboardAvoidingView } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { FontAwesome } from '@expo/vector-icons';
 import Colors from '../colors/colors';
@@ -84,9 +84,8 @@ const LoginScreen = ({navigation}) => {
                         {errors.password && <Text style={{ color: Colors.secondary, fontSize: 14}}>You must fill in your password</Text>}
                     </View>                                                                                                                        
                     <View style={styles.footerView}>
-                        <Text style={styles.footerViewText}>Don't have an account? {`  `}
-                            <Text onPress={() => navigation.navigate('Register')} style={styles.footerLink}>Register
-                            </Text>
+                        <Text style={styles.footerViewText}>Don't have an account? {`  `}                        
+                            <Text style={styles.footerLink} onPress={() => navigation.navigate('Register')}>Register</Text>                                             
                         </Text>
                     </View>
                 </View>
@@ -121,7 +120,7 @@ const LoginScreen = ({navigation}) => {
                     style={{...styles.onboardButton, borderColor: '#F7F7F7'}}
                   >
                     <Text
-                      style={{...styles.buttonText, color: '#000', fontFamily: 'DMBold'}}
+                    style={{...styles.buttonText, color: '#000',  fontFamily: 'DMBold'}}
                     >
                       Skip for now
                       <FontAwesome name="chevron-right" size={12} color='#2B2D42' />
@@ -142,20 +141,20 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         paddingHorizontal: 35,
-        backgroundColor: '#F7F7F7'
+        //backgroundColor: '#F7F7F7'
     },
     heading: {
         fontSize: 22,
         fontFamily: 'DMBold',
         textAlign: 'center',
-        marginTop: 11,
+        marginTop: 40,
         width: '80%',
         textTransform: 'capitalize'
     },
     pana: {
         height: 159,
         resizeMode: 'contain',
-        marginVertical: 28
+        marginVertical: 30
     },
     input: {
         height: 48,
@@ -180,7 +179,7 @@ const styles = StyleSheet.create({
     footerLink: {             
         color: "#e33127",
         fontWeight: "bold",
-        fontSize: 16
+        fontSize: 18,        
     },
     onboardButton: {
         height: 50,
@@ -193,7 +192,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 14,
-        fontFamily: 'DMRegular'
+        fontFamily: 'DMRegular',        
     },
     footer: {
         marginTop: 65,
