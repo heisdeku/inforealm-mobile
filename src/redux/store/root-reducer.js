@@ -17,16 +17,18 @@ const rootPersistConfig = {
   blacklist: [    
     'interest',
     'search',    
-    'feed',    
-    'media', 
-    'user',   
+    'feed', 
+    'news',
+    'search', 
+    'medias',      
   ],
 }
 
 const persistConfig = {
   key: 'user',
   storage: AsyncStorage,
-  whitelist: [    
+  whitelist: [ 
+    'user',       
     'downloads'     
   ]
   
