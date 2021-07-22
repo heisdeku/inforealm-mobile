@@ -172,8 +172,7 @@ export const emailLogin = (dataToSend) => {
         dispatch(setUserSuccess(data.user)) 
         return data.user       
       } else {
-        dispatch(setUserFailed(data.message))
-        console.log(data.message)
+        dispatch(setUserFailed(data.message))        
         return {
           error: data.message
         }
@@ -190,8 +189,7 @@ export const emailLogin = (dataToSend) => {
 export const updateUserPicture = (dataToSend, userId) => {
   return async (dispatch) => {    
     try {
-      let response = await apiConnect.post(`/updateProfile`, dataToSend)  
-      console.log(response)    
+      let response = await apiConnect.post(`/updateProfile`, dataToSend)           
       let { data } = response
       if (data.status !== 'success') {
         return {
