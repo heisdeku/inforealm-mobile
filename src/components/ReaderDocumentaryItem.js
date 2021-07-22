@@ -78,7 +78,7 @@ const ReaderDocumentaryItem = ({ navigation, news }) => {
       <TouchableOpacity 
           onPress={() => 
             navigation.navigate('Article', {
-              screen: 'ArticleRead',
+              screen: 'ArticleWatch',
               params: {news_id: news.id},
             })
             

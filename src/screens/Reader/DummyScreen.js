@@ -5,6 +5,7 @@ import {
   ScrollView,
   ActivityIndicator,
   StyleSheet,
+  FlatList,
   View,
   Text,
   RefreshControl,
@@ -82,6 +83,17 @@ const DummyScreen = ({ navigation }) => {
               {!user?.user_id && <InterestContainer />}
               {user?.user_id && <ReaderTopContainer />}
               {
+                /*
+                <FlatList 
+                  data={feed} 
+                  renderItem={({item}) => {
+                    if (item.media.videos.length) {
+                      <ReaderDocumentaryItem news={item} navigation={navigation} />
+                    } else {
+                      <ReaderItem news={item} navigation={navigation} />
+                    }
+                  }} 
+                />*/                
                 feed.map((f,i) => {
                   if (f.media.videos.length) {
                     return <ReaderDocumentaryItem news={f} key={i} navigation={navigation} />  

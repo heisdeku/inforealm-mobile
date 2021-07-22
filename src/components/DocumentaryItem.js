@@ -22,8 +22,10 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
     const [downloadInProgressName, setDownloadInProgressName] = useState('');
     const [audioDownloadDoesntExist, setaudioDownloadDoesntExist] = useState(false);
     const [videoDownloadDoesntExist, setvideoDownloadDoesntExist] = useState(false);
+
     const navigation = useNavigation();
-    const refRBSheet = useRef();   
+    const refRBSheet = useRef();  
+
     const onShare = async () => {
         try {
             Share.share({
@@ -191,7 +193,7 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
         <View style={styles.item}>
             <View style={{borderRadius: 5, overflow: 'hidden'}}>
                 <ImageBackground 
-                source={require('../../assets/images/demo-documentary.png')}
+                source={{uri: news.media.thumbnail}}
                 style={styles.Image}
                 >
                     {
@@ -206,7 +208,7 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
             </View>
             <TouchableOpacity onPress={() => 
             navigation.navigate('Article', {
-              screen: 'ArticleRead',
+              screen: 'ArticleWatch',
               params: {news_id: news.id},
             })
             

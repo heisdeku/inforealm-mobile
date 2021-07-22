@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { StyleSheet, TouchableOpacity, Text, ScrollView, ActivityIndicator, View, Alert, ImageBackground, Dimensions } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, ScrollView, ActivityIndicator, View, Alert, ImageBackground, Dimensions, RefreshControl } from 'react-native';
 import { Feather, MaterialIcons, AntDesign, FontAwesome5  } from '@expo/vector-icons';
 import Colors from '../../colors/colors';
 import ArticleBottomTab from '../../components/ArticleBottomTab';
 import { getNewsData } from '../../redux/operations/news.op';
 import { hasError, isLoading, selectNews, selectNewsCaption, selectNewsTitle } from '../../redux/selectors/news.selector';
-
 import HTMLView from 'react-native-htmlview'
 
 const ArticleRead = ({ route }) => {
@@ -14,18 +13,23 @@ const ArticleRead = ({ route }) => {
     const loading = useSelector(isLoading)
     const error = useSelector(hasError)
     const news = useSelector(selectNews)
-    const title = useSelector(selectNewsTitle)
-    const caption = useSelector(selectNewsCaption)       
+    /*const title = useSelector(selectNewsTitle)
+    const caption = useSelector(selectNewsCaption) */      
     const { news_id } = route.params; 
-    const regex = /(<([^>]+)>)/ig;  
+    const [refreshing, setRefreshing] = useState(false) 
     
-    
+    const onRefresh = () => {
+        setRefreshing(true)
+        getNews()  
+        setRefreshing(false)    
+      } 
+        
     const getNews = async () => {
         try {
             const response = await dispatch(getNewsData(news_id))
             if (response.error) {
                 Alert.alert(response.err)
-            } else {
+            } else {                
                 return response.news
             }
         } catch (error) {
@@ -34,7 +38,8 @@ const ArticleRead = ({ route }) => {
     }
     useEffect(() => {
         getNews()
-    }, [])          
+    }, [news_id]) 
+
     return (
     <View style={{ position: 'relative', flex: 1}} >
         {
@@ -63,6 +68,14 @@ const ArticleRead = ({ route }) => {
         {
             !loading && news ? <ScrollView
             style={styles.news} 
+            refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  colors={[Colors.brand, Colors.secondary, Colors.caption]}
+                  tintColor={Colors.brand}
+                />
+              }
             >
             <View style={styles.imageContainer}>
                 <ImageBackground source={{uri: news.media.thumbnail}} style={styles.image} />
@@ -75,8 +88,8 @@ const ArticleRead = ({ route }) => {
             <View style={styles.newsDetails}>
                 <View style={styles.crumbs}>
                     <View>
-                        <Text style={styles.newsTitle}>{title}</Text>
-                        <Text style={styles.newsCaption}>{caption}</Text>
+                        <Text style={styles.newsTitle}>{news.title}</Text>
+                        <Text style={styles.newsCaption}>{news.caption}</Text>
                     </View>                    
                     <View style={styles.newsSummary}>
                         <View style={styles.newsSummaryItem}>
@@ -97,11 +110,12 @@ const ArticleRead = ({ route }) => {
                 <View>
                     <View style={{
                         marginTop: 25,
-                        marginBottom: 180,                        
+                        marginBottom: 180,  
+                        fontFamily: 'DMRegular',                       
                     }}>
                         <HTMLView
                             value={`${news.content}`}
-                            stylesheet={styling}
+                            stylesheet={styling}                            
                         />                        
                     </View>
                 </View>                        
@@ -110,7 +124,7 @@ const ArticleRead = ({ route }) => {
         : null
         }
         
-        <ArticleBottomTab newsTitle={title} id={news_id} />
+        <ArticleBottomTab newsTitle={news.title} id={news_id} />
     </View>        
     )
 }
@@ -234,6 +248,10 @@ const styles = StyleSheet.create({
 
 
 const styling = StyleSheet.create({
+    body: {
+        fontFamily: 'DMRegular',   
+        fontWeight: '400', 
+    },
     a: {
       fontWeight: '400',
       color: '#E33127',

@@ -1,11 +1,13 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import ArticleRead from '../screens/Article/ArticleRead';
+import ArticleWatch from '../screens/Article/ArticleWatch'
 import { ArticleNavigation } from '../components/ArticleNavigation';
 
 const Article = createStackNavigator()
 
 export const ArticleStack = ({ navigation }) => {  
+  
   const state = navigation.dangerouslyGetState();
   let actualRoute = state.routes[state.index];  
   while (actualRoute.state) {
@@ -26,9 +28,9 @@ export const ArticleStack = ({ navigation }) => {
                 }                                  
         }}
       />
-    {/*<Article.Screen 
+    <Article.Screen 
       name='ArticleWatch'
-      component={bookmarkCategories}
+      component={ArticleWatch}
       options={{
             header: ({ scene, previous, navigation }) => {
                 const { options } = scene.descriptor;
@@ -37,7 +39,7 @@ export const ArticleStack = ({ navigation }) => {
                 )
                 }                                  
         }}
-    />*/}
+    />
     </Article.Navigator>
   )
 }
