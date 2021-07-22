@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect'
 
 const news = (state) => state.news
+
 export const selectNewsId = createSelector(
   [news], 
   (news) => news.id
@@ -21,8 +22,8 @@ export const selectNewsCaption = createSelector(
 )
 
 export const selectNewsComments = createSelector(
-  [selectNews],
-  selectNews => selectNews?.comments
+  [news],
+  news => news.comments
 )
 
 export const selectNewsCategory = createSelector(

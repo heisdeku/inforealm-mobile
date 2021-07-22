@@ -4,23 +4,22 @@ import apiConnect from '../../api/apiConnect'
 
 
 export const getNewsData = (id) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(getNewsStart())
-    const response = apiConnect.get(`/getNews?id=${id}`)
-    return response
-      .then((res) => {
-        if (res.data.status === 'success') {
-          dispatch(getNews(id, res.data.news))                    
-          return {
-            news: res.data.news
-          }
+    try {
+      const response = await apiConnect.get(`/getNews?id=${id}`)
+      if (response.data.status === 'success') {
+        dispatch(getNews(id, response.data.news))                    
+        return {
+          news: response.data.news
         }
-      })
-      .catch((err) => {
-        dispatch(getNewsFailed(err.message))
+      } else {
+        dispatch(getNewsFailed("Sorry can't fetch News at the moment, Try Again."))
+      }
+    } catch (err) {      
         return {
           error: err
         }
-      })
+    }
   }
 }
