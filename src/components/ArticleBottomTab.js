@@ -98,15 +98,14 @@ const ArticleBottomTab = ({ newsTitle, id }) => {
         ]).start()
     }, [morePressed])
 
-    /*
     const componentHeight = mode.interpolate({
         inputRange: [0, 1],
         outputRange: [70, Dimensions.get('window').height]
-    })*/
+    })
 
     return (
         <Animated.View
-          style={{height: 120, backgroundColor: 'transparent', width: Dimensions.get('window').width, position: 'absolute', top: Dimensions.get('window').width + 200, left: 0, opacity: loading ? 0 : 1}}
+          style={{height: componentHeight, backgroundColor: 'transparent', width: Dimensions.get('window').width, position: 'absolute', bottom: 0, left: 0, opacity: loading ? 0 : 1}}
         >
             <View style={styles.tabBar}>
               <TouchableOpacity onPress={() => refRBSheet.current.open()}>
