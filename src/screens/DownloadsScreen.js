@@ -62,7 +62,7 @@ const BookmarksScreen = ({navigation, downloadedArticles}) => {
                 />
                 }
                 >
-                    <View style={{flex: 1}}>
+                    <View style={{flex: 1, paddingBottom: 25}}>
                         <View style={styles.body}>
                             <View style={styles.category}>
                                 <View style={styles.categoryItems}>

@@ -68,7 +68,7 @@ export const addDownload = (savedDownloads, fileName) => {
             dispatch(setDownload(savedDownloads))
             dispatch(endDownloadLoading())
         }else{
-            const newDownloads = savedDownloads.push(fileName);
+            const newDownloads = [...savedDownloads, fileName];
             dispatch(setDownload(newDownloads))
             dispatch(endDownloadLoading())
         }

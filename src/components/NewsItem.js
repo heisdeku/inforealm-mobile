@@ -11,9 +11,9 @@ import * as FileSystem from 'expo-file-system';
 import { Feather, MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { selectDownloadsArray, selectDownloadsArticles, selectDownloadsError, selectDownloadsLoading } from '../redux/selectors/downloads.selectors';
-import { addDownload, addDownloadArticle, deleteDownload, deleteDownloadArticle, setBookmarkStatus as setDownloadBookmarkStatus, setDownloadStatus } from '../redux/actions/downloads.actions';
+import { addDownload, addDownloadArticle, deleteDownload, deleteDownloadArticle } from '../redux/actions/downloads.actions';
 
-const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle, setDownloadStatus, setDownloadBookmarkStatus}) => {
+const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle}) => {
     const [bookmarksStatus, setBookmarkStatus] = useState(false);
     const [bookmarkError, setBookmarkError] = useState('');
     const [doBookmarkError, setDoBookmarkError] = useState('');
@@ -73,7 +73,6 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
                     position: Toast.positions.CENTER
                 })
                 getBookmarkStatus();
-                setDownloadBookmarkStatus(true)
             }else{
                 setDoBookmarkError(response.data.message);
                 Toast.show(doBookmarkError, {
@@ -111,7 +110,6 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
                 setDownloadProgress(0);
                 addDownload(downloadsArray, downloadUrl.substring(downloadUrl.lastIndexOf('/')+1));
                 addDownloadArticle(downloadArticles, news);
-                setDownloadBookmarkStatus(true);
             }
         };
 
@@ -174,7 +172,6 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
             for(let dvi=0; dvi<article.media.videos; dvi++){
                 removeDownload(article.media.videos[dvi].substring(article.media.videos[dvi].lastIndexOf('/')+1))
             }
-            setDownloadBookmarkStatus(true)
         } catch (error) {
             console.log(error);
         }
@@ -443,9 +440,7 @@ const mapDispatchToProps = dispatch => ({
     addDownload: (savedDownloads, fileName) => dispatch(addDownload(savedDownloads, fileName)),
     deleteDownload: (savedDownloads, fileName) => dispatch(deleteDownload(savedDownloads, fileName)),
     addDownloadArticle: (savedArticles, article) => dispatch(addDownloadArticle(savedArticles, article)),
-    deleteDownloadArticle: (savedArticles, article) => dispatch(deleteDownloadArticle(savedArticles, article)),
-    setDownloadBookmarkStatus: status => dispatch(setDownloadBookmarkStatus(status)),
-    setDownloadStatus: status => dispatch(setDownloadStatus(status))
+    deleteDownloadArticle: (savedArticles, article) => dispatch(deleteDownloadArticle(savedArticles, article))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewsItem);
