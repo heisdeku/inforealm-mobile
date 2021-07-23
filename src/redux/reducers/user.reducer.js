@@ -15,7 +15,7 @@ const userReducer = (state = DEFAULT_STATE, action) => {
           ...state,
           isLoading: true,
           error: null,
-          authMethod: 'social',
+          authMethod: action.method,
         }
     case userTypes.SIGN_UP_START:
     case userTypes.SIGN_IN_START:

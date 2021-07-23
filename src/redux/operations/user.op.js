@@ -1,9 +1,7 @@
-import axios from 'axios'
+import { Alert } from 'react-native'
 import * as GoogleSignIn from 'expo-google-sign-in';
 import * as Google from 'expo-google-app-auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { provider, auth, fbProvider } from '../../../firebase'
-//eslint-disable-next-line
+import * as Facebook from 'expo-facebook'
 import {
   googleSignInProcess,
   facebookSignInProcess,
@@ -91,6 +89,9 @@ export const googleSignIn = () => {
           }
         } catch (e) {
           dispatch(signInFailed(e))
+          return {
+            error: "Can't Get User Data, Please Try Again"
+          }
         } 
       } catch(error) {
         console.warn(error.message)
@@ -99,17 +100,28 @@ export const googleSignIn = () => {
   }
 }
 
-export const facebookSignIn = () => {
-  return (dispatch) => {
+export const facebookLogIn = () => {
+  return async (dispatch) => {
     dispatch(facebookSignInProcess())
-    auth
-      .signInWithPopup(fbProvider)
-      .then(async (result) => {
-        //set variables with data gotten
-        let user = result.user
+    try {
+      await Facebook.initializeAsync({
+        appId: '1955726464594447',
+      });
+      const {
+        type,
+        token,      
+        permissions,      
+      } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ['public_profile', 'email'],
+      });    
+      if (type === 'success') {      
+        const response = await fetch(`https://graph.facebook.com/me?fields=id%2Cname%2Cfirst_name%2Cmiddle_name%2Clast_name%2Cemail&access_token=${token}`);
+        const user = await response.json()
+        Alert.alert('Logged in!', `Hi ${user.name}!`); 
+        //set variables with data gotten        
         let email = user.email
-        let firstname = user.displayName.split(' ')[0]
-        let lastname = user.displayName.split(' ')[1]        
+        let firstname = user.first_name
+        let lastname = user.last_name
 
         let formData = new FormData()
         formData.append('firstname', firstname)
@@ -118,25 +130,37 @@ export const facebookSignIn = () => {
         formData.append('type', "firebase")
 
         try {
-          let response = await axios.post(`${BASE_URL}login`, formData)          
+          let response = await apiConnect.post(`/login`, formData)
           let { data } = response
           dispatch(setUserStart())
           if (response.status === 200 || data.status === 'success') {
-            dispatch(setUserSuccess(data.user))
-            window.location.replace('/')
+            dispatch(setUserSuccess(data.user))             
+            return data.user                  
           } else {
             dispatch(setUserFailed(response.message))
           }
         } catch (e) {
           dispatch(signInFailed(e))
+          return {
+            error: e
+          }
+        }        
+      } else {
+        dispatch(setUserFailed('Operation Cancelled by user'))
+        return {          
+          error: 'Operation Cancelled'
         }
-      })
-      .catch((error) => {
-        console.warn(error.message)
-        dispatch(signInFailed(error.message))
-      })
+      }
+    } catch ({ message }) {
+      console.log(message)      
+      alert(`Facebook Login Error: ${message}`);
+      return {
+        error: message
+      }
+    }
   }
 }
+
 
 export const emailSignUp = (dataToSend) => {
   return async (dispatch) => {
