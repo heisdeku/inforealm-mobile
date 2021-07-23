@@ -31,6 +31,7 @@ const BookmarkedDocumentariesScreen = ({navigation, user_id}) => {
                     setError(response.data.message);
                 }
             }else{
+                setIsLoading(false);
                 setError('You have to be logged in to view your bookmarks')
             }
         } catch (error) {

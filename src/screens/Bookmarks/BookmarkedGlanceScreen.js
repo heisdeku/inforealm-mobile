@@ -31,6 +31,7 @@ const BookmarkedGlanceScreen = ({user_id, navigation}) => {
                     setError(response.data.message);
                 }
             }else{
+                setIsloading(false);
                 setError('You have to be logged in to view your bookmarks');
             }
         } catch (error) {
