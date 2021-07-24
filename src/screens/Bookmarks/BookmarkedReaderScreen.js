@@ -37,6 +37,7 @@ const BookmarkedReaderScreen = ({navigation, user_id}) => {
         } catch (error) {
             console.log(error);
             setError('Something went wrong');
+            setIsLoading(false);
         }
     } 
 
@@ -79,7 +80,7 @@ const BookmarkedReaderScreen = ({navigation, user_id}) => {
                 null
             }
             {
-                !isLoading && news.length ?
+                !isLoading && news.length && !error ?
                 <ScrollView contentContainerStyle={{flex: 1, backgroundColor: '#E5E5E5'}}
                 refreshControl={
                     <RefreshControl
@@ -102,7 +103,7 @@ const BookmarkedReaderScreen = ({navigation, user_id}) => {
                 null
             }
             {
-                !news.length && !isLoading ?
+                !news.length && !isLoading && !error ?
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <View style={styles.emptyView}>
                         <Text style={styles.emptyText}>Here’s a little empty</Text>
