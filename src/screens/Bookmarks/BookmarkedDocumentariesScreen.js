@@ -37,6 +37,7 @@ const BookmarkedDocumentariesScreen = ({navigation, user_id}) => {
         } catch (error) {
             console.log(error);
             setError('Something went wrong');
+            setIsLoading(false);
         }
     } 
 
@@ -79,7 +80,7 @@ const BookmarkedDocumentariesScreen = ({navigation, user_id}) => {
                 null
             }
             {
-                !isLoading && news.length ?
+                !isLoading && news.length && !error ?
                 <View style={{flex: 1, backgroundColor: '#E5E5E5'}}>
                     <ScrollView contentContainerStyle={{flex: 1}}
                     refreshControl={
@@ -129,7 +130,7 @@ const BookmarkedDocumentariesScreen = ({navigation, user_id}) => {
                 null
             }
             {
-                !isLoading && !news.length ?
+                !isLoading && !news.length && !error ?
                 <ScrollView contentContainerStyle={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
                 refreshControl={
                     <RefreshControl
