@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { ScrollView, Alert, ActivityIndicator, TextInput, StyleSheet, Text, View, Image, TouchableOpacity, TouchableHighlight, Platform, KeyboardAvoidingView } from 'react-native';
+import { ScrollView, Alert, ActivityIndicator, TextInput, StyleSheet, Text, View, Image, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { FontAwesome } from '@expo/vector-icons';
 import Colors from '../colors/colors';
@@ -9,16 +9,17 @@ import { isLoading } from '../redux/selectors/user.selector';
 
 const LoginScreen = ({navigation}) => { 
     const dispatch = useDispatch()
-    const loading = useSelector(isLoading)
-    const { control, handleSubmit, formState: { errors } } = useForm();
+    const loading = useSelector(isLoading)    
+    const { control, handleSubmit, formState: { errors } } = useForm();    
     
     const handleLogin = async (data) => {                  
-        let userData = new FormData()
+        let userData = new FormData()        
         userData.append('email', data.email)
         userData.append('password', data.password)
-        const response = await dispatch(emailLogin(userData))        
+
+        const response = await dispatch(emailLogin(userData))          
         if (response.error) {            
-            Alert.alert(response.error)
+            Alert.alert('Log in Failed', response.error.message)
         }
         else if (response.user_id !== null) {
             navigation.navigate('MainStack');

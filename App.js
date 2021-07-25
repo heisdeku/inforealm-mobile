@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react'
-import { Provider, useSelector } from 'react-redux'
+import { Provider } from 'react-redux'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
 import { StatusBar } from 'react-native'
@@ -18,7 +18,6 @@ import { AccountStack } from './src/stacks/account.stacks';
 import { PersistGate } from 'redux-persist/integration/react';
 //toast
 import { RootSiblingParent } from 'react-native-root-siblings';
-import { selectUserId } from './src/redux/selectors/user.selector'
 
 const getFonts = () =>
   Font.loadAsync({
@@ -38,6 +37,7 @@ export default () => {
       setSplash(false);
     }, 3000);
   }, [])
+
 
   if (fontsLoaded) {  
     const state = store.getState()    
@@ -62,18 +62,10 @@ export default () => {
                 : null
               }
               {                 
-                state.user.user == null && !state.user.user?.user_id && <SwicthStack.Screen 
+                state.user.user === null ? <SwicthStack.Screen 
                 name='OnboardingStack' 
                 component={OnboardingStack}
-                />                
-              } 
-              {
-                /**
-                 * <SwicthStack.Screen 
-                name='OnboardingStack' 
-                component={OnboardingStack}
-                /> 
-                 */
+                /> : null           
               }                          
               <SwicthStack.Screen 
               name='MainStack' 

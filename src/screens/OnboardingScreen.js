@@ -14,8 +14,7 @@ const OnboardingScreen = ({navigation}) => {
     const loading = useSelector(isLoading)
     const authType = useSelector(checkAuthMethod
         )
-    const user = useSelector(getCurrentUser)
-    console.log(user)
+    const user = useSelector(getCurrentUser)    
     const handleGoogleSignIn = async () => {
        const response = await dispatch(googleSignIn())
         if (response.error) {            
@@ -52,6 +51,10 @@ const OnboardingScreen = ({navigation}) => {
             return;
         }
     }
+
+    const handleAppleSignIn = () => {
+        Alert.alert('Coming Soon', 'Kindly Relax as our Engineers are bringing this feature soon, Use our other authentication methods')
+    }
     return (        
             <SafeAreaView style={{flex: 1, backgroundColor: '#F7F7F7'}}>
                 <ScrollView style={{ flex: 1 }}>
@@ -86,8 +89,8 @@ const OnboardingScreen = ({navigation}) => {
                                 
                             </View>
                         </TouchableOpacity>
-                        { Platform.os === 'ios' && 
-                            <TouchableOpacity style={{width: '100%'}}>
+                        { Platform.OS === 'ios' &&  
+                            <TouchableOpacity onPress={handleAppleSignIn} style={{width: '100%'}}>
                                 <View style={{...styles.onboardButton}}>
                                     <Text style={{...styles.buttonText, color: '#000'}}><FontAwesome name="apple" size={16} color='#2B2D42' /> Continue with Apple</Text>
                                 </View>

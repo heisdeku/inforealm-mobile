@@ -5,6 +5,8 @@
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
+        "facebookDisplayName": "Inforealm",
+        "facebookScheme": "fb1955726464594447",
         "splash": {
             "image": "./assets/icon.png",
             "resizeMode": "contain",
@@ -18,7 +20,10 @@
             "assets/images/*"
         ],
         "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
+            "bundleIdentifier": "com.inforealm.main",
+            "buildNumber": "1.0.0"
+
         },
         "android": {
             "adaptiveIcon": {

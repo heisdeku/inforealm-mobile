@@ -1,4 +1,4 @@
-import { Alert } from 'react-native'
+import { Alert, Platform } from 'react-native'
 import * as GoogleSignIn from 'expo-google-sign-in';
 import * as Google from 'expo-google-app-auth';
 import * as Facebook from 'expo-facebook'
@@ -59,7 +59,7 @@ export const googleSignIn = () => {
     dispatch(googleSignInProcess())
       let googleResFb;
       const res = await Google.logInAsync({   
-        clientId: '781405863501-ebo8covjetmp5sdadd191krh23r158u1.apps.googleusercontent.com',                        
+        clientId: '781405863501-1i2ctff48ggmu884qouo4ulnvfi4fscd.apps.googleusercontent.com',                        
       });
 
         if (res.type === 'success') {          
@@ -115,10 +115,16 @@ export const facebookLogIn = () => {
         permissions: ['public_profile', 'email'],
       });    
       if (type === 'success') {      
-        const response = await fetch(`https://graph.facebook.com/me?fields=id%2Cname%2Cfirst_name%2Cmiddle_name%2Clast_name%2Cemail&access_token=${token}`);
-        const user = await response.json()
-        Alert.alert('Logged in!', `Hi ${user.name}!`); 
-        //set variables with data gotten        
+        const response = await fetch(`https://graph.facebook.com/me?fields=id%2Cname%2Cfirst_name%2Cmiddle_name%2Clast_name%2Cemail&access_token=${token}`);        
+        const user = await response.json()         
+        console.log(user)          
+        if (!user.email) {
+          Alert.alert('Error getting Details', 'No Email Address Returned')
+          dispatch(setUserFailed('No Email Address Returned'))
+          return {
+            error: 'Select Another Account'
+          }
+        }        
         let email = user.email
         let firstname = user.first_name
         let lastname = user.last_name
@@ -127,24 +133,10 @@ export const facebookLogIn = () => {
         formData.append('firstname', firstname)
         formData.append('lastname', lastname)
         formData.append('email', email)
-        formData.append('type', "firebase")
-
-        try {
-          let response = await apiConnect.post(`/login`, formData)
-          let { data } = response
-          dispatch(setUserStart())
-          if (response.status === 200 || data.status === 'success') {
-            dispatch(setUserSuccess(data.user))             
-            return data.user                  
-          } else {
-            dispatch(setUserFailed(response.message))
-          }
-        } catch (e) {
-          dispatch(signInFailed(e))
-          return {
-            error: e
-          }
-        }        
+        formData.append('type', "firebase")        
+        console.log('starting to login')
+        const output = Platform.OS === 'ios' ? iosFacebookLoginProcessComplete(dispatch, formData) : androidFacebookLoginProcessComplete(dispatch, formData)         
+        return output
       } else {
         dispatch(setUserFailed('Operation Cancelled by user'))
         return {          
@@ -161,6 +153,41 @@ export const facebookLogIn = () => {
   }
 }
 
+const iosFacebookLoginProcessComplete = async (dispatch, info) =>{
+  let response = await apiConnect.post(`/login`, info)  
+  let { data } = response
+  console.log(response)
+  console.log(data)  
+  dispatch(setUserStart())
+  if (response.status === 200 || data.status === 'success') {
+    dispatch(setUserSuccess(data.user))    
+    //Alert.alert('Logged in!', `Hi ${data.user.firstname}!`);          
+    return data.user                  
+  } else {
+    dispatch(setUserFailed(data.message))
+  }
+}
+
+const androidFacebookLoginProcessComplete = async (dispatch, info) => {
+  try {
+    let response = await apiConnect.post(`/login`, info)    
+    let { data } = response    
+    console.log(data)  
+    dispatch(setUserStart())
+    if (response.status === 200 || data.status === 'success') {
+      dispatch(setUserSuccess(data.user))    
+      Alert.alert('Logged in!', `Hi ${data.user.firstname}!`);          
+      return data.user                  
+    } else {
+      dispatch(setUserFailed(data.message))
+    }
+  } catch (e) {
+    dispatch(signInFailed(e))
+    return {
+      error: e
+    }
+  }
+}
 
 export const emailSignUp = (dataToSend) => {
   return async (dispatch) => {
@@ -190,21 +217,23 @@ export const emailLogin = (dataToSend) => {
     dispatch(signInStart())
     try {
       let response = await apiConnect.post(`/login`, dataToSend)
-      let { data } = response    
-      dispatch(setUserStart())      
+      let { data } = response          
+      dispatch(setUserStart())           
       if (response.status === 200 && data.status === 'success') {        
         dispatch(setUserSuccess(data.user)) 
         return data.user       
       } else {
-        dispatch(setUserFailed(data.message))        
+        dispatch(setUserFailed(data.message))                       
         return {
-          error: data.message
+          error: {
+            message: data.message
+          }
         }
       }
-    } catch (e) {
-      dispatch(signInFailed(e.response.data.message))
+    } catch (e) {      
+      dispatch(signInFailed(e.response.data))      
       return {
-        error: e
+        error: e.response.data
       }
     }
   }
@@ -282,4 +311,23 @@ export const updateUserPassword = (dataToSend) => {
       }      
     }
   }
+}
+
+
+export const updateUserInterests = async (dataToSend) => {    
+    try {
+      let response = await apiConnect.post(`/updateUserInterest`, dataToSend)          
+      let { data } = response      
+      if (data.status !== 'success') {
+        return {
+          error: 'Something Went wrong, Try Uploading Again'
+        }
+      }
+      return data.message;    
+    } catch (e) {     
+      console.log(e.response) 
+      return {
+        error: 'Something Went Wrong, Try Again'
+      }      
+    }  
 }
