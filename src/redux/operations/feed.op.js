@@ -12,15 +12,16 @@ import {
 
 import apiConnect from '../../api/apiConnect'
 
-export const getLatestFeed = () => {
+export const getLatestFeed = (id) => {
   return (dispatch) => {
     dispatch(getFeedStart())
-    const response = apiConnect.get('/getFeed')
+    const response = apiConnect.get(`/getFeed?user_id=${id}`)
     return response
       .then((res) => {
         if (res.data.status === 'success') {
           dispatch(getFeed(res.data.news))
-          return res.data.news
+          const data = res.data.news
+          return data
         }
       })
       .catch((err) => {
@@ -28,6 +29,24 @@ export const getLatestFeed = () => {
       })
   }
 }
+
+export const getLatestFeedByInterest = (data) => {
+  return async (dispatch) => {
+    dispatch(getFeedStart())
+    try {
+      const response = await apiConnect.post(`/getNewsByInterests`, data)           
+        if (response.data.status === 'success') {
+          dispatch(getFeed(response.data.news))
+          return response.data.news
+        }
+    } catch (err) {
+      dispatch(getFeedFailed(err))
+    }
+    
+      
+  }
+}
+
 
 export const getTrend = () => {
   return (dispatch) => {

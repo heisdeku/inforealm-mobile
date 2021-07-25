@@ -44,6 +44,9 @@ const ReaderScreen = ({ navigation }) => {
 
   useEffect(() => {
     getTrendingFeed()
+    return () => {
+      getTrendingFeed()
+    }
   }, [navigation])
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -101,10 +104,11 @@ const ReaderScreen = ({ navigation }) => {
                   All Curated Top News From The Past Week till Now
                 </Text>
               </View>
+              {/*
               <TouchableOpacity
                 onPress={() => navigation.navigate('TopNews')}
                 style={{ flexDirection: 'row' }}
-              >
+              >                
                 <Text style={{ fontSize: 14, color: Colors.secondary }}>
                   View all{' '}
                 </Text>
@@ -114,6 +118,7 @@ const ReaderScreen = ({ navigation }) => {
                   color={Colors.secondary}
                 />
               </TouchableOpacity>
+              */}
             </View>
             <View style={{ flex: 1 }}>
             {

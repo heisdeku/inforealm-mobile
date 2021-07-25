@@ -1,12 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import { getLatestFeed, getLatestFeedByInterest } from '../redux/operations/feed.op'
+import { getCurrentUser } from '../redux/selectors/user.selector'
 
-export const InterestItem = ({ name, state }) => {
-  const [selected, setSelected] = useState(state || false)
-  const setInterest = (id) => {
+export const InterestItem = ({ name, id, state }) => {
+  const user = useSelector(getCurrentUser)
+  const dispatch = useDispatch()
+  const [selected, setSelected] = useState(state || false)  
+  const setInterest = async () => {
     setSelected(!selected)
-  }
-  useEffect(() => {})
+    if (!selected) {
+      let idData = new FormData()
+      idData.append('interest_id', id)     
+      setTimeout(async() => {
+        await dispatch(getLatestFeedByInterest(idData))  
+      }, 2000) 
+    
+    } else {
+      await dispatch(getLatestFeed())
+    }
+
+  }  
   const styling = selected ? styles.interestSelected : styles.interestContainer
   const text = selected ? styles.interestTextSelected : styles.interestText
   return (

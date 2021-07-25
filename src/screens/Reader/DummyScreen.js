@@ -13,12 +13,13 @@ import {
 } from 'react-native'
 import ReaderItem from '../../components/ReaderItem'
 import ReaderDocumentaryItem from '../../components/ReaderDocumentaryItem'
-import { InterestContainer } from '../../components/InterestContainer'
+import InterestContainer from '../../components/InterestContainer'
 import Colors from '../../colors/colors'
-import { ReaderTopContainer } from '../../components/ReadeTopContainer'
+import ReaderTopContainer from '../../components/ReadeTopContainer'
 import { getLatestFeed } from '../../redux/operations/feed.op'
 import { error, isLoading, selectLatestFeed } from '../../redux/selectors/feed.selector'
 import { getCurrentUser } from '../../redux/selectors/user.selector'
+import useAsync from '../../hooks/useAsync'
 
 const DummyScreen = ({ navigation }) => {
   const loading = useSelector(isLoading)
@@ -30,17 +31,26 @@ const DummyScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false)
   const onRefresh = () => {
     setRefreshing(true)
-    dispatch(getLatestFeed())    
+    getFeed()
     setRefreshing(false)    
   }
 
   const getFeed = async () => {
-    dispatch(getLatestFeed())
+    const response = user?.user_id ? await dispatch(getLatestFeed(user?.user_id)) : await dispatch(getLatestFeed())
+    return response    
   }
 
-  useEffect(() => {
-    getFeed()
-  }, [])
+  useEffect(() => {    
+    let isMounted = true; 
+              // note mutable flag
+    if (isMounted) getFeed()
+    else console.log("aborted setState on unmounted component")    
+    return () => {         
+        isMounted = false                
+    };
+     // use cleanup to toggle value, if unmounted
+  }, [dispatch, setRefreshing]); 
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {

@@ -118,26 +118,31 @@ const styles = StyleSheet.create({
   newsTitle: {
     fontSize: 20,
     fontFamily: 'DMBold',
-    marginVertical: 15,
+    marginVertical: 8,
   },
   newsDetails: {
     flex: 1,
+    height: 150
   },
   newsCaption: {
     color: Colors.text2,
     fontSize: 14,
     fontFamily: 'DMRegular',
-    marginBottom: 15,
+    marginBottom: 5,
   },
   newsSummary: {        
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    position: 'absolute',
+    bottom: -10,
+    width: '100%',
   },
   newsSummaryText: {
     fontSize: 12,
     fontFamily: 'DMRegular',
     color: '#8E8D8D',
+    margin: 'auto'
   },
   newsSummaryItem: {
     flexDirection: 'row',

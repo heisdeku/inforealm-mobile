@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   TouchableOpacity,
   Dimensions,
 } from 'react-native'
@@ -11,67 +12,19 @@ import {
 SimpleLineIcons,
 AntDesign   
 } from '@expo/vector-icons'
-
+import { createStructuredSelector } from 'reselect';
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { ReaderInterestItem } from './Reader/ReaderInterestItem'
+import { selectInterests } from '../redux/selectors/interest.selectors';
+import { connect, useDispatch, useSelector } from 'react-redux'
+import { getLatestFeed } from '../redux/operations/feed.op';
+import { getCurrentUser } from '../redux/selectors/user.selector';
 
-const interests = [
-  {
-    interest: 'All News',
-    interest_id: '0',
-  },
-  {
-    interest: 'Politics',
-    interest_id: '1',
-  },
-  {
-    interest: 'Video',
-    interest_id: '2',
-  },
-  {
-    interest: "Eidtor's Pick",
-    interest_id: '3',
-  },
-  {
-    interest: 'History',
-    interest_id: '4',
-  },
-  {
-    interest: 'Science',
-    interest_id: '5',
-  },
-  {
-    interest: 'Trending',
-    interest_id: '6',
-  },
-  {
-    interest: 'Health',
-    interest_id: '7',
-  },
-  {
-    interest: 'Business',
-    interest_id: '9',
-  },
-  {
-    interest: 'Sport',
-    interest_id: '10',
-  },
-  {
-    interest: 'Exclusive',
-    interest_id: '11',
-  },
-  {
-    interest: 'Documentaries',
-    interest_id: '12',
-  },
-  {
-    interest: 'Investigation',
-    interest_id: '13',
-  },
-]
 
-export const ReaderTopContainer = () => {
+const ReaderTopContainer = ({ interests }) => {
   const refRBSheet = useRef()
+  const user = useSelector(getCurrentUser)
+  const dispatch = useDispatch()
   return (
     <View style={styles.container}>
       <View
@@ -142,14 +95,17 @@ export const ReaderTopContainer = () => {
               Select your interests to curate your news feed according to your favourites
             </Text>
           </View>
-          <View style={styles.interestOverlayInterests}>
+          <ScrollView contentContainerStyle={styles.interestOverlayInterests}>
             {interests.map((i) => {
               return (
-                <ReaderInterestItem name={i.interest} key={i.interest_id} />
+                <ReaderInterestItem name={i.interest} id={i.interest_id} key={i.interest_id} />
               )
             })}
-          </View>
-          <TouchableOpacity onPress={() => refRBSheet.current.close()}>
+          </ScrollView>
+          <TouchableOpacity onPress={() => {
+            refRBSheet.current.close()
+            dispatch(getLatestFeed(user.user_id))  
+          }}>
             <View style={styles.doneBtn}>
               <Text style={styles.doneBtnText}>Done</Text>
             </View>
@@ -159,6 +115,10 @@ export const ReaderTopContainer = () => {
     </View>
   )
 }
+
+const mapStateToProps = createStructuredSelector({
+  interests: selectInterests
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -213,8 +173,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 180,
-    marginTop: 15,
+    //marginTop: 15,
     borderRadius: 8,
+    marginBottom: 30,
   },
   doneBtnText: {
     fontFamily: 'DMBold',
@@ -227,3 +188,6 @@ const styles = StyleSheet.create({
     right: 9
   }
 })
+
+
+export default connect(mapStateToProps)(ReaderTopContainer)

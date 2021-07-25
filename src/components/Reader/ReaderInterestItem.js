@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateUserInterests } from '../../redux/operations/user.op'
+import { getCurrentUser } from '../../redux/selectors/user.selector'
 
-export const ReaderInterestItem = ({ name, state }) => {
+export const ReaderInterestItem = ({ name, id, state }) => {
+  const user = useSelector(getCurrentUser)
+  const dispatch = useDispatch()
   const [selected, setSelected] = useState(state || false)
-  const setInterest = (id) => {
+  const setInterest = async () => {
     setSelected(!selected)
+    let interestData = new FormData()
+    interestData.append('user_id', user.user_id)
+    interestData.append('interest_id', id)
+    const response = await updateUserInterests(interestData)
+    console.log(response)    
   }
   useEffect(() => {})
   const styling = selected ? styles.interestSelected : styles.interestContainer
