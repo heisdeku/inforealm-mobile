@@ -10,10 +10,15 @@ import { getSearchValue } from '../redux/selectors/search.selector';
 export const SearchNavigation = ({ goBackEvt }) => {
     const dispatch = useDispatch()   
     const value = useSelector(getSearchValue) 
-    const [ searchValue, setSearchValue ] = useState('')    
-    const handleNewsSearch = () => {
-        dispatch(getSearchData(searchValue))        
+    const [ searchValue, setSearchValue ] = useState(value) 
+
+    const handleNewsSearch = async () => {        
+        await dispatch(setValue(searchValue))
+        await dispatch(getSearchData(searchValue))
+        setSearchValue('')
+        await dispatch(setValue(''))           
     }       
+
     return (
         <View style={styles.container}>
             <TouchableOpacity
@@ -26,10 +31,7 @@ export const SearchNavigation = ({ goBackEvt }) => {
             <View style={styles.flexArea}>
                 <View style={styles.searchBox}>
                     <Ionicons style={styles.searchIcon} name="md-search" size={18} color="#8e8e93" />
-                    <TextInput onSubmitEditing={() => handleNewsSearch()} style={styles.searchInput} onChangeText={text => {
-                        dispatch(setValue(text))
-                        setSearchValue(text)                        
-                    }}
+                    <TextInput onSubmitEditing={() => handleNewsSearch()} style={styles.searchInput} onChangeText={text=> setSearchValue(text)}
                     defaultValue={searchValue} />
                 </View>
                 <TouchableOpacity onPress={() => {
