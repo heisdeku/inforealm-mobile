@@ -10,6 +10,7 @@ import feedReducer from '../reducers/feed.reducer.js'
 import { searchReducer } from '../reducers/search.reducer.js'
 import downloadsReducer from '../reducers/downloads.reducer';
 import newsReducer from '../reducers/news.reducer.js';
+import { notificationsReducer } from '../reducers/notifications.reducer.js';
 
 const rootPersistConfig = {
   key: 'root',
@@ -20,7 +21,8 @@ const rootPersistConfig = {
     'feed', 
     'news',
     'search', 
-    'medias',      
+    'medias',  
+    
   ],
 }
 
@@ -29,7 +31,8 @@ const persistConfig = {
   storage: AsyncStorage,
   whitelist: [ 
     'user',       
-    'downloads'     
+    'downloads',
+    'notifications'        
   ]
   
 }
@@ -41,7 +44,8 @@ export const rootReducer = combineReducers({
   search: searchReducer,
   medias: mediaReducer,
   news: newsReducer,
-  downloads: downloadsReducer
+  downloads: downloadsReducer,
+  notifications: notificationsReducer
 })
 
 export default persistReducer(rootPersistConfig, rootReducer)
