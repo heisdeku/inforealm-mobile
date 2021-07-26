@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, StyleSheet, Image, View, Text, Dimensions } from 'react-native'
+import { TouchableOpacity, StyleSheet, Image, Platform, View, Text, Dimensions } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 
 export const AccountNavigation = ({ goBackEvt, title, type }) => {    
@@ -7,7 +7,7 @@ export const AccountNavigation = ({ goBackEvt, title, type }) => {
         <View style={styles.container}>
             <TouchableOpacity
             onPress={goBackEvt}
-                style={{marginTop: 20, marginBottom: 15}}
+                style={{marginTop: Platform.OS === 'ios' ? 30 : 20, marginBottom: 15}}
             >
                 <AntDesign name='arrowleft' color='black' size={24} />
             </TouchableOpacity>
@@ -15,7 +15,7 @@ export const AccountNavigation = ({ goBackEvt, title, type }) => {
                 type === 'image' ? 
                 <Image
                     source={require('../../assets/images/inforealm-blue.png')}
-                    style={{ height: 24, marginLeft: 100, marginRight: 'auto', marginTop: 7 }}
+                    style={{ height: 44, marginLeft: 100, marginRight: 'auto', marginTop: 20 }}
                 />  : 
                 <Text style={styles.navigationHeader}>{title}</Text> 
             }                       

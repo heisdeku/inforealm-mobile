@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, RefreshControl, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, RefreshControl, ActivityIndicator, Dimensions, TouchableOpacity, Modal, Alert } from 'react-native';
 import ReaderItem from '../../components/ReaderItem'
 import ReaderDocumentaryItem from '../../components/ReaderDocumentaryItem'
 import Colors from '../../colors/colors';
 import { ClearSearchContainer } from './ClearSearchContainer';
 import { getSearchDatas, getSearchValue, hasError, isLoading } from '../../redux/selectors/search.selector';
 import { getSearchData } from '../../redux/operations/search.op';
+import { searchNews } from '../../redux/actions/search.action';
 
 const MainSearchScreen = ({ navigation }) => {
     const dispatch = useDispatch()
@@ -15,11 +16,11 @@ const MainSearchScreen = ({ navigation }) => {
     const loading = useSelector(isLoading)
     const error = useSelector(hasError)    
     const [refreshing, setRefreshing] = useState(false);
-    
+    const [ visible, setVisible ] = useState(false)
 
-    const onRefresh = () => {
+    const onRefresh = async () => {
         setRefreshing(true);
-        dispatch(getSearchData(searchValue))
+        await dispatch(getSearchData(searchValue))
         setRefreshing(false);
     }
 
@@ -35,6 +36,75 @@ const MainSearchScreen = ({ navigation }) => {
                 />
             }
             >
+                <Modal animationType="fade" transparent={true} visible={visible} onRequestClose={() => {
+                    Alert.alert('Modal has been closed')
+                }}>
+                    <View 
+                        style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 20,  
+                            backgroundColor: 'rgba(0, 0, 0, 0.35)',
+                            paddingHorizontal: 30,
+                        }}
+                    >
+                    <View style={{
+                        display: 'flex',
+                        paddingTop: 26,
+                        alignItems: 'center',
+                        backgroundColor: 'white',
+                        shadowOpacity: 0.25,
+                        shadowRadius: 3.84,
+                        width: Dimensions.get('window').width - 26,
+                        height: 350,
+                        borderRadius: 8,
+                        shadowOffset: {
+                            width: 0,
+                            height: 2
+                        }
+                    }}>
+                        <Text style={{
+                            fontFamily: 'DMBold',                    
+                            fontWeight: '700',
+                            fontSize: 20,
+                            lineHeight: 28,                    
+                            letterSpacing: 0.38,
+                            textAlign: 'center',
+                            width: '60%',
+                            color: '#2B2D42',                    
+                        }}>Are you sure you want to clear all your search history? </Text>
+                        <View style={{
+                            backgroundColor: '#F0F0F0',
+                            borderRadius: 8,
+                            marginBottom: 24,
+                            marginTop: 41, 
+                        }}>
+                            <Text 
+                            style={{                                                    
+                                fontSize: 14,
+                                lineHeight: 21,                    
+                                letterSpacing: -0.41,
+                                textAlign: 'center',
+                                paddingVertical: 21,
+                                paddingHorizontal: 24,                    
+                                color: '#343A40',                                      
+                            }}>Once it is done, It can't be reverted again.</Text>
+                        </View>
+                        
+                        <TouchableOpacity style={styles.clearBtn} onPress={() => {
+                            dispatch(searchNews([]))
+                            setVisible(!visible)
+                            }}>
+                            <Text style={styles.clearBtnText}>Clear All</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setVisible(!visible)}>
+                            <Text style={{ color: '#050618'}}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>          
+                    </View>
+
+                </Modal>
             {
                 loading ?
                 <View style={styles.loadingView}>
@@ -62,8 +132,8 @@ const MainSearchScreen = ({ navigation }) => {
             }
                         {
                 !loading && data.length ?                
-                    <View style={styles.container}>
-                        <ClearSearchContainer />
+                    <View style={styles.container}>         
+                        <ClearSearchContainer showModal={() => setVisible(true)} />                
                         {
                             data.map((d,i) => {
                             if (d.media.videos.length) {
@@ -79,7 +149,8 @@ const MainSearchScreen = ({ navigation }) => {
             }
             {
                 !data.length && !loading ?
-                <View style={styles.container}>                                    
+                <View style={styles.container}>       
+                            
                 </View>
                 :
                 null 
@@ -132,5 +203,20 @@ const styles = StyleSheet.create({
     emptyText: {
         fontSize: 20,
         fontFamily: 'DMBold'
-    }
+    },
+    clearBtn: {
+        height: 50,
+        backgroundColor: Colors.secondary,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 180,
+        //marginTop: 15,
+        borderRadius: 8,
+        marginBottom: 30,
+      },
+      clearBtnText: {
+        fontFamily: 'DMBold',
+        color: 'white',
+        fontSize: 16,
+      },
 });

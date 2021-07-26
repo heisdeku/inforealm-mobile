@@ -91,9 +91,13 @@ const ReaderDocumentaryItem = ({ navigation, news }) => {
         </Text>
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 5,
+            display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              //justifyContent: 'space-between',
+              position: 'absolute',
+              bottom: 0,
+              width: '100%',  
           }}
         >
           <View style={styles.date}>
@@ -112,11 +116,14 @@ const ReaderDocumentaryItem = ({ navigation, news }) => {
 
 const styles = StyleSheet.create({
   news: {
-    padding: 16,
+    paddingVertical: 12,
+    paddingLeft: 15,
+    paddingRight: 16,
     borderBottomWidth: 0.5,
     borderBottomColor: '#cdcccc',
     flexDirection: 'row',
     marginTop: 15,
+    position: 'relative'
   },
   Image: {
     height: 100,
@@ -124,12 +131,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingTop: 70,
     paddingLeft: 10,
+    shadowColor: 'rgba(0, 0, 0, 0.3)'
   },
   title: {
     fontSize: 20,
     fontFamily: 'DMBold',
     marginVertical: 3,
-    color: 'black',
+    color: '#2B2D42',
   },
   caption: {
     fontSize: 14,
@@ -144,7 +152,9 @@ const styles = StyleSheet.create({
   },
   date: {
     flexDirection: 'row',
-    marginBottom: 4,
+    alignItems: 'center',
+    minWidth: '45%', 
+    marginBottom: 8
   },
   rbIcon: {
     height: 32,

@@ -2,10 +2,12 @@ import { userTypes } from '../types/user.types'
 
 export const googleSignInProcess = () => ({
   type: userTypes.GOOGLE_SIGN_IN_START,
+  method: 'social-google'
 })
 
 export const facebookSignInProcess = () => ({
   type: userTypes.FACEBOOK_SIGN_IN_START,
+  method: 'social-facebook'
 })
 
 export const signInStart = () => ({

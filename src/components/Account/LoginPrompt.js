@@ -7,10 +7,17 @@ import { useNavigation } from '@react-navigation/native';
 export const LoginPrompt = () => {
     const navigation = useNavigation()
     return (     
-        <TouchableHighlight style={{ marginTop: 16, }} activeOpacity={0.8} onPress={() => 
+        <TouchableHighlight style={{ marginTop: 16, }} activeOpacity={0.8} onPress={() => {
+            navigation.reset({
+                index: 0,
+                routes: [{
+                    name: 'Splash'
+                }]
+            }) 
             navigation.navigate('OnboardingStack', {
-              screen: 'Onboarding',              
-            })            
+                screen: 'Onboarding',              
+              })               
+        }                                        
           }>
             <View style={styles.container}>
             <MaterialIcons name="info-outline" size={25} color="#f7f7f7" />

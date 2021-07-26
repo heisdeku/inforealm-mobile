@@ -1,5 +1,6 @@
 import { userTypes } from '../types/user.types'
 
+
 const DEFAULT_STATE = {
   user: null,  
   error: null,
@@ -15,7 +16,7 @@ const userReducer = (state = DEFAULT_STATE, action) => {
           ...state,
           isLoading: true,
           error: null,
-          authMethod: 'social',
+          authMethod: action.method,
         }
     case userTypes.SIGN_UP_START:
     case userTypes.SIGN_IN_START:
@@ -83,10 +84,3 @@ const userReducer = (state = DEFAULT_STATE, action) => {
 
 export default userReducer
 
-/*
-"user_id": "6b28997c6ebde4f030853b8769856dd8",
-        "firstname": "michael",
-        "lastname": "oluwa",
-        "email": "heyferanmi@gmail.com",
-        "user_role": "user"
-*/

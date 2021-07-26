@@ -2,17 +2,31 @@ import React, { useState } from 'react'
 import { StyleSheet, View, TouchableOpacity, Dimensions, Text, } from 'react-native'
 import { Switch } from 'react-native-switch';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getNotificationToken, productsNotificationsStatus, recomNotificationsStatus, topNotificationStatus } from '../../redux/selectors/notifications.selectors';
+import { manageProductNotification, manageRecommendationNotification, manageTopNewsNotification } from '../../redux/operations/notifications.op';
+import { getCurrentUser } from '../../redux/selectors/user.selector';
 
-export const NotificationSettingsContainer = ({ active }) => {
-    const [ topNewsCheck, setTopNewCheck ] = useState(active ||false)
-    const [ recommendationCheck, setRecommendationCheck ] = useState(active ||false)
-    const [ updateCheck, setUpdateCheck ] = useState(active ||false)
 
-    useEffect(() => {
-        setTopNewCheck(active)
-        setRecommendationCheck(active)
-        setUpdateCheck(active)
-    }, [active])
+export const NotificationSettingsContainer = () => {
+    const user = useSelector(getCurrentUser)
+    const token = useSelector(getNotificationToken)  
+    const dispatch = useDispatch()    
+    const topNews = useSelector(topNotificationStatus) 
+    const recommendations = useSelector(recomNotificationsStatus)
+    const products = useSelector(productsNotificationsStatus) 
+
+    const setTopNews = async (action) => {
+        await dispatch(manageTopNewsNotification(user.user_id, action, token))
+    }
+
+    const setRecommendation = async (action) => {        
+        await dispatch(manageRecommendationNotification(user.user_id, action, token))
+    }
+    const setProducts = async (action) => {
+        await dispatch(manageProductNotification(user.user_id, action, token))
+    }
+
     return (
         <View style={styles.container}>
            <Text style={styles.containerTitle}>Notification Settings</Text>
@@ -23,9 +37,11 @@ export const NotificationSettingsContainer = ({ active }) => {
                         <Text style={styles.settingTextDesc}>Get Top stories picked by the author</Text>
                     </View>   
                     <Switch
-                        value={topNewsCheck}
-                        onValueChange={(topNewsCheck) => setTopNewCheck(topNewsCheck)}
-                        disabled={false}
+                        value={topNews}
+                        onValueChange={(topNews) => {
+                            topNews ? setTopNews('add') : setTopNews('remove')
+                        }}
+                        disabled={user === null ? true : false}
                         activeText={'On'}
                         inActiveText={'Off'}
                         circleSize={15}                        
@@ -44,6 +60,7 @@ export const NotificationSettingsContainer = ({ active }) => {
                         switchBorderRadius={16}
                     />                                   
                 </View>
+                
                 <View style={{ borderBottomWidth: 0.5, borderBottomColor: '#cdcccc', ...styles.settings}}>
                     <View>
                         <Text style={styles.settingText}>Recommendations</Text>
@@ -51,9 +68,11 @@ export const NotificationSettingsContainer = ({ active }) => {
                     </View>   
                     <View style={{ marginLeft: -5}}>
                     <Switch
-                        value={recommendationCheck}
-                        onValueChange={(recommendationCheck) => setRecommendationCheck(recommendationCheck)}
-                        disabled={false}
+                        value={recommendations}
+                        onValueChange={(recommendations) => {
+                            recommendations ? setRecommendation('add') : setRecommendation('remove')
+                        }}
+                        disabled={user === null ? true : false}
                         activeText={'On'}
                         inActiveText={'Off'}
                         circleSize={15}                        
@@ -72,7 +91,7 @@ export const NotificationSettingsContainer = ({ active }) => {
                         switchBorderRadius={16}
                     />     
                     </View>                                     
-                </View>
+                </View>                
                     <View style={styles.settings}>
                         <View>
                             <Text style={styles.settingText}>Product Updates</Text>
@@ -80,9 +99,11 @@ export const NotificationSettingsContainer = ({ active }) => {
                         </View>
                         <View style={{ marginLeft: -35}}>
                         <Switch
-                        value={updateCheck}
-                        onValueChange={(updateCheck) => setUpdateCheck(updateCheck)}
-                        disabled={false}
+                        value={products}
+                        onValueChange={(products) => {
+                            products ? setProducts('add') : setProducts('remove')
+                        }}
+                        disabled={user === null ? true : false}
                         activeText={'On'}
                         inActiveText={'Off'}
                         circleSize={15}                        
@@ -101,7 +122,7 @@ export const NotificationSettingsContainer = ({ active }) => {
                         switchBorderRadius={16}
                     />    
                         </View>                     
-                </View>                                          
+                </View>                                                       
            </View>
         </View>
     )

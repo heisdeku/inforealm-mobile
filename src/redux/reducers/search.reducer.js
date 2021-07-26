@@ -1,7 +1,7 @@
 import { searchTypes } from '../types/search.types';
 
 const DEFAULT_STATE = {
-  value: null,
+  value: '',
   data: [],
   category: [],
   error: null,

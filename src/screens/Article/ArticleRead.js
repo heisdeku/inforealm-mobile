@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { StyleSheet, TouchableOpacity, Text, ScrollView, ActivityIndicator, View, Alert, ImageBackground, Dimensions, RefreshControl } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, ScrollView, Platform, ActivityIndicator, View, Alert, ImageBackground, Dimensions, RefreshControl } from 'react-native';
 import { Feather, MaterialIcons, AntDesign, FontAwesome5  } from '@expo/vector-icons';
 import Colors from '../../colors/colors';
 import ArticleBottomTab from '../../components/ArticleBottomTab';
@@ -12,10 +12,8 @@ const ArticleRead = ({ route }) => {
     const dispatch = useDispatch()
     const loading = useSelector(isLoading)
     const error = useSelector(hasError)
-    const news = useSelector(selectNews)
-    /*const title = useSelector(selectNewsTitle)
-    const caption = useSelector(selectNewsCaption) */      
-    const { news_id } = route.params; 
+    const news = useSelector(selectNews)        
+    const { news_id } = route?.params; 
     const [refreshing, setRefreshing] = useState(false) 
     
     const onRefresh = () => {
@@ -25,6 +23,7 @@ const ArticleRead = ({ route }) => {
       } 
         
     const getNews = async () => {
+        console.log('dispatching')
         try {
             const response = await dispatch(getNewsData(news_id))
             if (response.error) {
@@ -172,11 +171,12 @@ const styles = StyleSheet.create({
     news: {        
         flex: 1,
         paddingTop: 16,
-        paddingHorizontal: 20,            
+        paddingHorizontal: 15,            
         width: Dimensions.get('window').width,
     },
     imageContainer: {
-        width: Dimensions.get('window').width,                
+        flex: 1,
+        width: Platform.OS === 'ios' ? Dimensions.get('window').width /1.09 : Dimensions.get('window').width,                
     },
     image: {
         height: 170,        

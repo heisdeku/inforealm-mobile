@@ -1,7 +1,9 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import { Feather, MaterialIcons } from '@expo/vector-icons'
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native'
+import { Feather, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import Colors from '../colors/colors'
+import SwipeableContainer from './SwipeableContainer';
+
 
 const ReaderItem = ({ navigation, news }) => { 
   if(!news){
@@ -38,8 +40,10 @@ const ReaderItem = ({ navigation, news }) => {
         "user_id": null,
       }
 } 
+
   return (
-    <View style={styles.news}>
+    <SwipeableContainer>
+      <View style={styles.news}>
       <View style={styles.imageContainer}>
         <Image
           source={{uri: news.media.thumbnail}}
@@ -47,10 +51,9 @@ const ReaderItem = ({ navigation, news }) => {
         />
       </View>
       <View style={styles.newsDetails}>
-        <View style={styles.crumbs}>
-          <Text style={styles.crumbText}>News </Text>
-          <Feather name='chevron-right' size={14} color={Colors.text2} />
-          <Text style={styles.crumbText}>{news.interests.map(interest => interest.interest).join(', ')}</Text>
+        <View style={styles.crumbs}> 
+        <Text style={styles.crumbText}>{news.interests[0].interest}</Text>         
+          {/*<Text style={styles.crumbText}>{news.interests.map(interest => interest.interest).join(', ')}</Text>*/}
         </View>
         <TouchableOpacity activeOpacity={0.1}
           onPress={() => 
@@ -71,7 +74,7 @@ const ReaderItem = ({ navigation, news }) => {
         <View style={styles.newsSummary}>
           <View style={styles.newsSummaryItem}>
             <Feather size={14} color={Colors.text1} name='clock' />
-            <Text style={styles.newsSummaryText}> {news.date}</Text>
+            <Text style={{...styles.newsSummaryText, marginLeft: 5}}> {news.date}</Text>
           </View>
           <View style={styles.newsSummaryItem}>
             <MaterialIcons
@@ -79,11 +82,31 @@ const ReaderItem = ({ navigation, news }) => {
               color={Colors.text1}
               name='library-books'
             />
-            <Text style={styles.newsSummaryText}> {news.time_to_read} min read</Text>
+            <Text style={{...styles.newsSummaryText, marginLeft: 5}}> {news.time_to_read} min read</Text>
+          </View>
+          <View style={styles.newsSummaryItem}>
+            <Text style={{...styles.newsSummaryText, marginRight: 4}}>By</Text>
+            {
+              !news?.profile_picture && <View style={{                
+                    width: 36,
+                    height: 26,        
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                <MaterialCommunityIcons name="account" size={18} color="#6C757D" style={{ marginRight: 2}} />
+            </View>
+            }                    
+            {
+              news?.profile_picture &&
+              <Image resizeMode="cover" source={{ uri: news?.profile_picture }} style={{ width: 16, height: 16, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
+            } 
+            
+            <Text style={styles.newsSummaryText}>{news.author}</Text>
           </View>
         </View>
       </View>
     </View>
+    </SwipeableContainer>         
   )
 }
 
@@ -91,55 +114,68 @@ export default ReaderItem
 
 const styles = StyleSheet.create({
   news: {
-    padding: 16,
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#cdcccc',
+    paddingVertical: 12,
+    paddingLeft: 15,
+    //paddingRight: 16,        
     flexDirection: 'row',
-    marginTop: 15,
+    paddingTop: 15,
+    backgroundColor: '#E5E5E5',
     position: 'relative'
   },
   imageContainer: {
     width: 120,
     marginRight: 19,
+    borderRadius: 8
   },
   image: {
-    height: 160,
+    height: 180,
     width: 116,
+    borderRadius: 8,
     resizeMode: 'cover',
   },
   crumbs: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row',       
   },
   crumbText: {
-    fontFamily: 'DMRegular',
+    fontFamily: 'DMBold',
     fontWeight: '500',
+    color: '#343A40'
   },
   newsTitle: {
     fontSize: 20,
     fontFamily: 'DMBold',
-    marginVertical: 15,
+    marginVertical: 8,
+    color: '#2B2D42',
   },
   newsDetails: {
-    flex: 1,
+    flex: 1,        
   },
   newsCaption: {
     color: Colors.text2,
     fontSize: 14,
     fontFamily: 'DMRegular',
-    marginBottom: 15,
+    marginBottom: 5,
   },
   newsSummary: {        
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    //justifyContent: 'space-between',
+    position: 'absolute',
+    bottom: 0,
+    marginTop: 'auto',
+    width: 210, 
   },
   newsSummaryText: {
     fontSize: 12,
     fontFamily: 'DMRegular',
-    color: '#8E8D8D',
+    color: '#8E8D8D',    
+    //margin: 'auto'
   },
   newsSummaryItem: {
     flexDirection: 'row',
+    alignItems: 'center',
+    minWidth: '45%', 
+    marginTop: 8
   },
 })

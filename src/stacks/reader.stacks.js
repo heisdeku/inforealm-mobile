@@ -22,6 +22,9 @@ const MainNewsStack = () => {
       indicatorStyle: {
         backgroundColor: Colors.secondary,
         height: 2,
+        minWidth: 90,
+        width: 110,
+        marginLeft: 10,
       },
       style: {
         backgroundColor: '#fff',
@@ -30,8 +33,12 @@ const MainNewsStack = () => {
       labelStyle: {
         fontSize: 16,
         fontFamily: 'DMRegular',
-        textTransform: 'capitalize'
+        textTransform: 'capitalize',
+        textAlign: 'left'
       },
+      tabStyle: {        
+        width: 122
+      }
     }}
     >
       <MainNews.Screen 

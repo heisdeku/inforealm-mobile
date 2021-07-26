@@ -1,14 +1,21 @@
 import React from 'react'
-
-import { StyleSheet, View, TouchableOpacity, Dimensions, Text, } from 'react-native'
+import { useSelector } from 'react-redux'
+import { StyleSheet, View, TouchableOpacity, Alert, Dimensions, Text, } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
+import { getCurrentUser } from '../../redux/selectors/user.selector';
+getCurrentUser
 
 export const AccountSettings = ({ navigation }) => {
+    const user = useSelector(getCurrentUser)
+
+    const notSignedIn = () => {
+        Alert.alert('Not Signed in', 'You need to be logged in to make account changes')
+    }
     return (
         <View style={styles.container}>
            <Text style={styles.containerTitle}>Account Settings</Text>
            <View style={styles.settingsBox}>
-               <TouchableOpacity onPress={() => navigation.navigate('AccountEmailUpdate')}>
+               <TouchableOpacity onPress={!user?.user_id ? notSignedIn :() => navigation.navigate('AccountEmailUpdate')}>
                 <View style={{ borderBottomWidth: 0.5, borderBottomColor: '#cdcccc', ...styles.settings}}>
                     <Text style={styles.settingText}>Update email address</Text>
                     <TouchableOpacity>
@@ -16,7 +23,7 @@ export const AccountSettings = ({ navigation }) => {
                         </TouchableOpacity>
                 </View>
                 </TouchableOpacity>  
-                <TouchableOpacity onPress={() => navigation.navigate('AccountPasswordUpdate')}>
+                <TouchableOpacity onPress={!user?.user_id ? notSignedIn :() => navigation.navigate('AccountPasswordUpdate')}>
                     <View style={styles.settings}>
                     <Text style={styles.settingText}>Change Password</Text>
                     <TouchableOpacity>

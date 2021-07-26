@@ -4,10 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SafeAreaView, ActivityIndicator, ScrollView, StyleSheet, Text, View, Image, TouchableOpacity, Alert, Platform } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import Colors from '../colors/colors';
-import * as Google from 'expo-google-app-auth';
 
-import { facebookSignIn, googleSignIn } from '../redux/operations/user.op';
-import { checkAuthMethod, isLoading } from '../redux/selectors/user.selector';
+import { facebookLogIn, googleSignIn } from '../redux/operations/user.op';
+import { checkAuthMethod, getCurrentUser, isLoading } from '../redux/selectors/user.selector';
 
 
 const OnboardingScreen = ({navigation}) => {    
@@ -15,9 +14,9 @@ const OnboardingScreen = ({navigation}) => {
     const loading = useSelector(isLoading)
     const authType = useSelector(checkAuthMethod
         )
+    const user = useSelector(getCurrentUser)    
     const handleGoogleSignIn = async () => {
        const response = await dispatch(googleSignIn())
-
         if (response.error) {            
             Alert.alert(response.error)
         } 
@@ -34,8 +33,27 @@ const OnboardingScreen = ({navigation}) => {
         }
     }
 
-    const handleFacebookSignIn = () => {
-        dispatch(facebookSignIn())
+    const handleFacebookSignIn = async () => {
+        const response = await dispatch(facebookLogIn())
+        
+        if (response.error) {            
+            Alert.alert(response.error)
+        } 
+        else if (response.user_id !== null) {
+            navigation.navigate('MainStack');
+            navigation.reset({
+                index: 0,
+                routes: [{
+                    name: 'MainStack'
+                }]
+            })
+        } else {
+            return;
+        }
+    }
+
+    const handleAppleSignIn = () => {
+        Alert.alert('Coming Soon', 'Kindly Relax as our Engineers are bringing this feature soon, Use our other authentication methods')
     }
     return (        
             <SafeAreaView style={{flex: 1, backgroundColor: '#F7F7F7'}}>
@@ -55,13 +73,15 @@ const OnboardingScreen = ({navigation}) => {
                         </TouchableOpacity>
                         <TouchableOpacity onPress={handleFacebookSignIn} style={{width: '100%'}}>
                             <View style={{...styles.onboardButton, borderColor: '#3B5999', backgroundColor: '#3B5999'}}>
-                                <Text style={{...styles.buttonText, color: '#fff'}}><FontAwesome name="facebook-square" size={16} color='#fff' /> Continue with Facebook</Text>
+                                {
+                                    loading && authType === 'social-facebook' ? <ActivityIndicator size="large" color="#fff" /> : <Text style={{...styles.buttonText, color: '#fff'}}><FontAwesome name="facebook-square" size={16} color='#fff' /> Continue with Facebook</Text>
+                                }                                
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={handleGoogleSignIn} style={{width: '100%'}}>
                             <View style={{...styles.onboardButton}}>
                                 {
-                                    loading && authType === 'social' ?<ActivityIndicator size="large" color="#000" /> : 
+                                    loading && authType === 'social-google' ?<ActivityIndicator size="large" color="#000" /> : 
                                     <Text style={{...styles.buttonText, color: '#000'}}>
                                         <FontAwesome name="google" size={16} color='#000' /> Continue with Google
                                     </Text>
@@ -69,8 +89,8 @@ const OnboardingScreen = ({navigation}) => {
                                 
                             </View>
                         </TouchableOpacity>
-                        { Platform.os === 'ios' && 
-                            <TouchableOpacity style={{width: '100%'}}>
+                        { Platform.OS === 'ios' &&  
+                            <TouchableOpacity onPress={handleAppleSignIn} style={{width: '100%'}}>
                                 <View style={{...styles.onboardButton}}>
                                     <Text style={{...styles.buttonText, color: '#000'}}><FontAwesome name="apple" size={16} color='#2B2D42' /> Continue with Apple</Text>
                                 </View>

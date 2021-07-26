@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TouchableOpacity, StyleSheet, View, Text, TextInput, Dimensions } from 'react-native'
+import { TouchableOpacity, StyleSheet, Platform, View, Text, TextInput, Dimensions } from 'react-native'
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { getSearchData } from '../redux/operations/search.op';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,15 +10,20 @@ import { getSearchValue } from '../redux/selectors/search.selector';
 export const SearchNavigation = ({ goBackEvt }) => {
     const dispatch = useDispatch()   
     const value = useSelector(getSearchValue) 
-    const [ searchValue, setSearchValue ] = useState('')    
-    const handleNewsSearch = () => {
-        dispatch(getSearchData(searchValue))        
+    const [ searchValue, setSearchValue ] = useState(value) 
+
+    const handleNewsSearch = async () => {        
+        await dispatch(setValue(searchValue))
+        await dispatch(getSearchData(searchValue))
+        setSearchValue('')
+        await dispatch(setValue(''))           
     }       
+
     return (
         <View style={styles.container}>
             <TouchableOpacity
             onPress={goBackEvt}
-                style={{marginTop: 20, marginBottom: 15}}
+                style={{marginTop: Platform.OS === 'ios' ? 40 : 20, marginBottom: 15}}
             >
                 <AntDesign name='arrowleft' color='black' size={24} />
             </TouchableOpacity>
@@ -26,10 +31,7 @@ export const SearchNavigation = ({ goBackEvt }) => {
             <View style={styles.flexArea}>
                 <View style={styles.searchBox}>
                     <Ionicons style={styles.searchIcon} name="md-search" size={18} color="#8e8e93" />
-                    <TextInput onSubmitEditing={() => handleNewsSearch()} style={styles.searchInput} onChangeText={text => {
-                        dispatch(setValue(text))
-                        setSearchValue(text)                        
-                    }}
+                    <TextInput onSubmitEditing={() => handleNewsSearch()} style={styles.searchInput} onChangeText={text=> setSearchValue(text)}
                     defaultValue={searchValue} />
                 </View>
                 <TouchableOpacity onPress={() => {
@@ -64,8 +66,8 @@ const styles = StyleSheet.create({
     searchBox: {height: 50, width: '80%', marginRight: 14, backgroundColor: 'rgba(118, 118, 128, 0.12)',  borderRadius: 10, paddingLeft: 16},
     searchIcon: {
         position: 'absolute',
-        top: 15,
-        left: 10,       
+        top: 20,
+        left: 10,         
     },
     searchInput: {
         height: '100%',

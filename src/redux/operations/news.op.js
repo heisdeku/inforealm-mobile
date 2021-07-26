@@ -16,7 +16,8 @@ export const getNewsData = (id) => {
       } else {
         dispatch(getNewsFailed("Sorry can't fetch News at the moment, Try Again."))
       }
-    } catch (err) {      
+    } catch (err) {  
+      console.log(err)    
         return {
           error: err
         }

@@ -1,14 +1,20 @@
 import React from 'react'
-
-import { StyleSheet, View, TouchableOpacity, Dimensions, Text, } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Dimensions, Text, Alert } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
+import { getCurrentUser } from '../../redux/selectors/user.selector';
 
 export const ManageNotifications = ({ navigation }) => {
+    const user = useSelector(getCurrentUser)
+
+    const notSignedIn = () => {
+        Alert.alert('Not Signed in', 'You need to be logged in to make account changes')
+    }
     return (
         <View style={styles.container}>
            <Text style={styles.containerTitle}>Notification Settings</Text>
            <View style={styles.settingsBox}> 
-                <TouchableOpacity onPress={() => navigation.navigate('AccountNotification')}>
+                <TouchableOpacity onPress={!user?.user_id ? notSignedIn : () => navigation.navigate('AccountNotification')}>
                     <View style={styles.settings}>
                     <Text style={styles.settingText}>Manage Notifications</Text>
                     <TouchableOpacity>

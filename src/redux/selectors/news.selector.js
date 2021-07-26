@@ -36,9 +36,12 @@ export const isLoading = createSelector(
   (news) => news.loading
   )
 
-
-
 export const hasError = createSelector(
   [news],
   news => news.error
+)
+
+export const newsState = createSelector(
+  [news],
+  news => news.active
 )

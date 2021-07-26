@@ -1,45 +1,12 @@
 import React from 'react'
+
 import { ScrollView, StyleSheet } from 'react-native'
+import { connect } from 'react-redux'
+import { createStructuredSelector } from 'reselect'
+import { selectInterests } from '../redux/selectors/interest.selectors'
 import { InterestItem } from './InterestItem'
-const interests = [
-  {
-    interest: 'All',
-    interest_id: '0',
-  },
-  {
-    interest: 'News',
-    interest_id: '1',
-  },
-  {
-    interest: 'Business',
-    interest_id: '2',
-  },
-  {
-    interest: 'Sport',
-    interest_id: '3',
-  },
-  {
-    interest: 'Health',
-    interest_id: '4',
-  },
-  {
-    interest: 'Investigation',
-    interest_id: '5',
-  },
-  {
-    interest: 'Politics',
-    interest_id: '6',
-  },
-  {
-    interest: 'Documentary',
-    interest_id: '7',
-  },
-  {
-    interest: 'Video',
-    interest_id: '8',
-  },
-]
-export const InterestContainer = () => {
+
+const InterestContainer = ({ interests }) => {
   return (
     <ScrollView
       horizontal={true}
@@ -47,11 +14,15 @@ export const InterestContainer = () => {
       showsHorizontalScrollIndicator={false}
     >
       {interests.map((i) => {
-        return <InterestItem name={i.interest} key={i.interest_id} />
+        return <InterestItem name={i.interest} id={i.interest_id} key={i.interest_id} />
       })}
     </ScrollView>
   )
 }
+
+const mapStateToProps = createStructuredSelector({
+  interests: selectInterests
+})
 
 const styles = StyleSheet.create({
   interests: {
@@ -61,3 +32,5 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 })
+
+export default connect(mapStateToProps)(InterestContainer)

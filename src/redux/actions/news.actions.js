@@ -23,3 +23,7 @@ export const addNewsComment = (comment) => ({
     comment: comment
   }
 })
+
+export const clearNews = () => ({
+  type: newsTypes.CLEAR_NEWS
+})

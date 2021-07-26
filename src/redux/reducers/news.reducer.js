@@ -3,11 +3,10 @@ import { newsTypes } from "../types/news.types"
 const DEFAULT_STATE = {
   id: '',
   news: {},
-  isLiked: false,
-  isBookmarked: false,
   loading: true,
   error: null,
-  comments: []  
+  comments: [],
+  active: false,  
 }
 
 const newsReducer = (state = DEFAULT_STATE, action) => {
@@ -26,6 +25,7 @@ const newsReducer = (state = DEFAULT_STATE, action) => {
         loading: false,
         id: action.payload.id,
         news: action.payload.news,
+        active: true
       }
     case newsTypes.GET_COMMENTS:
         return {
@@ -42,6 +42,11 @@ const newsReducer = (state = DEFAULT_STATE, action) => {
             }            
           ]
         }
+    case newsTypes.CLEAR_NEWS:
+      return {
+        ...state,
+        active: false
+      }
     case newsTypes.FETCH_NEWS_FAILED:
       return {
         ...state,
