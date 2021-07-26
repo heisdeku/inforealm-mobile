@@ -9,7 +9,9 @@ import { selectUserId } from '../redux/selectors/user.selector';
 import { selectNewsId } from '../redux/selectors/news.selector';
 import { newsTypes } from '../redux/types/news.types';
 import { getNews } from '../redux/actions/news.actions';
-selectNewsId
+import LikeActive from '../svgs/likeIcon';
+import DisLikeActive from '../svgs/dislikeActiveIcon';
+import DisLikeIcon from '../svgs/dislikeIcon';
 
 
 const ArticleCommentContainer = ({ comment }) => { 
@@ -24,10 +26,6 @@ const ArticleCommentContainer = ({ comment }) => {
 
   const handleLike = async () => {      
       if (!userId) {
-          Toast.show("You can't like as you're not signed in", {
-              duration: Toast.durations.SHORT,
-              position: Toast.positions.CENTER
-          });
           return
       }
       if (!hasLiked) {
@@ -60,6 +58,9 @@ const ArticleCommentContainer = ({ comment }) => {
       }               
   }          
   const handleDisLike = async () => {
+      if (!userId) {
+        return
+      }
       setHasLiked(false)
       if (!hasDisliked) {
           if(!actionStatus || actionStatus === 'like') {
@@ -152,25 +153,30 @@ const ArticleCommentContainer = ({ comment }) => {
           </View>
           <View style={styles.commentMain}>
               <View style={styles.commentMainHeader}>
-                  <Text>{comment.user}</Text>
+                  <Text style={{ textTransform: 'capitalize', fontWeight: '700', fontFamily: 'DMBold'}}>{comment.user}</Text>                  
                   <View style={styles.commentDate}>
-                      <Feather size={14} color={Colors.text1} name='clock' />
+                      {/*<Feather size={14} color={Colors.text1} name='clock' />*/}
                       <Text style={styles.commentDateText}>{comment.date}</Text>
-                  </View>
-              </View>
+                  </View>                  
+              </View>              
               <View style={styles.commentBox}>
                   <Text style={styles.comment}>{comment.comment}</Text>
               </View>
               <View style={styles.commentDecisions}>
                   <TouchableOpacity onPress={handleLike}>
                       <View style={styles.commentDecision}>
-                          <AntDesign name="like2" size={24} color={actionStatus !== 'like' ? "black" : Colors.secondary} />
+                        {
+                          actionStatus !== 'like' ? <AntDesign name="like2" size={24} color={'black'} /> : <LikeActive />
+                        }                          
+                          
                           <Text style={styles.commentDecisionText}>Like({comment.likes})</Text>
                       </View>    
                   </TouchableOpacity>                    
                   <TouchableOpacity onPress={handleDisLike}>
-                      <View style={styles.commentDecision}>                        
-                          <AntDesign style={styles.commentDislike} name="dislike2" size={24} color={actionStatus !== 'dislike' ? "black" : Colors.secondary} />
+                      <View style={styles.commentDecision}>
+                      {
+                          actionStatus !== 'dislike' ? <DisLikeIcon /> : <DisLikeActive />
+                        }                 
                           <Text style={styles.commentDecisionText}>Dislike({comment.dislikes})</Text>
                       </View>
                   </TouchableOpacity>                                        
@@ -190,7 +196,8 @@ const styles = StyleSheet.create({
       borderBottomWidth: 0.5,
       borderBottomColor: '#cdcccc',
       paddingBottom: 18,  
-      paddingTop: 24,      
+      paddingTop: 24,  
+      minHeight: 162,    
   },
   commentatorContainer: {
       width: 50,          
@@ -222,28 +229,31 @@ const styles = StyleSheet.create({
   },
   commentBox: {
       marginTop: 7,
-      marginBottom: 12,
+      marginBottom: 'auto',
   },
-  commentDecisions: {
-      flexDirection: 'row',
+  commentDecisions: {    
+      flexDirection: 'row',      
       marginTop: 5,
       width: Dimensions.get('window').width / 2, 
       justifyContent: 'space-between'
   },
   comment: {
+      fontFamily: 'DMRegular',
       fontSize: 14,
-      lineHeight: 21,
+      lineHeight: 16,
       letterSpacing: -0.4,
       color: '#343A40',
       width: Dimensions.get('window').width / 1.4,  
   },
 commentDecision: {
+  marginTop: 'auto',
   flexDirection: 'row',
-  alignItems: 'baseline'
+  //alignItems: 'baseline'
 },
 commentDecisionText: {
   color: '#868D8D',
-  marginLeft: 8
+  marginLeft: 8,
+  alignSelf: 'center'
 },
 commentDislike: {
   

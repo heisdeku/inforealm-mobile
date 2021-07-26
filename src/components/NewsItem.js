@@ -190,7 +190,8 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
                 <Image source={{uri: news.media.thumbnail}} style={styles.image} />
             </View>
             <View style={styles.newsDetails}>
-                <View style={styles.crumbs}><Text style={styles.crumbText}>News </Text><Feather name='chevron-right' size={14} color={Colors.text2} /><Text style={styles.crumbText}> {news.interests.map(interest => interest.interest).join(', ')}</Text></View>
+                <View style={styles.crumbs}>
+                    <Text style={styles.crumbText}> {news.interests.map(interest => interest.interest).join(', ')}</Text></View>
                 <TouchableOpacity onLongPress={() => {
                     Vibration.vibrate(50, false);
                     refRBSheet.current.open();
@@ -203,8 +204,26 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
                   }><Text style={styles.newsTitle}>{news.title}</Text></TouchableOpacity>
                 <Text style={styles.newsCaption}>{news.caption}</Text>
                 <View style={styles.newsSummary}>
-                    <View style={styles.newsSummaryItem}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.newsSummaryText}> {news.date}</Text></View>
-                    <View style={styles.newsSummaryItem}><MaterialIcons size={14} color={Colors.text1} name='library-books' /><Text style={styles.newsSummaryText}> {news.time_to_read} min read</Text></View>
+                    <View style={styles.newsSummaryItem}><Feather size={14} color={Colors.text1} name='clock' /><Text style={{...styles.newsSummaryText, marginLeft: 5}}> {news.date}</Text></View>
+                    <View style={styles.newsSummaryItem}>
+            <Text style={{...styles.newsSummaryText, marginRight: 5}}>By</Text>
+            {
+              !news?.profile_picture && <View style={{                
+                    width: 36,
+                    height: 26,        
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                <MaterialCommunityIcons name="account" size={18} color="#6C757D" style={{ marginRight: 2}} />
+            </View>
+            }                    
+            {
+              news?.profile_picture &&
+              <Image resizeMode="cover" source={{ uri: news?.profile_picture }} style={{ width: 16, height: 16, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
+            } 
+            
+            <Text style={styles.newsSummaryText}>{news.author}</Text>
+          </View>
                 </View>
                 {
                     downloadProgress ?
@@ -337,21 +356,24 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
 
 const styles = StyleSheet.create({
     news: {
-        padding: 16,
-        borderTopWidth: 0.5,
-        borderTopColor: '#cdcccc',
+        paddingVertical: 12,
+        paddingLeft: 15,
+        paddingRight: 16,
         borderBottomWidth: 0.5,
         borderBottomColor: '#cdcccc',
         flexDirection: 'row',
-        marginTop: 15,        
+        marginTop: 15,
+        position: 'relative'       
     },
     imageContainer: {
         width: 120,
-        marginRight: 19
+        marginRight: 19,
+        borderRadius: 8
     },
     image: {
         height: 160,
         width: 116,
+        borderRadius: 8,
         resizeMode: 'cover'
     },
     crumbs: {
@@ -359,17 +381,18 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     crumbText: {
-        fontFamily: 'DMRegular',
-        fontWeight: '500'
+        fontFamily: 'DMBold',
+        fontWeight: '500',
+        color: '#343A40'
     },
     newsTitle: {
         fontSize: 20,
         fontFamily: 'DMBold',
-        marginVertical: 5,
+        marginVertical: 8,
+        color: '#2B2D42',
     },
     newsDetails: {
-        flex: 1,
-        height: 150
+        flex: 1,        
     },
     newsCaption: {
         color: Colors.text2,
@@ -380,19 +403,22 @@ const styles = StyleSheet.create({
     newsSummary: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        //justifyContent: 'space-between',
         position: 'absolute',
-        bottom: -10,
-        width: '100%'
+        marginTop: 'auto',
+        bottom: 0,    
+        width: 210, 
     },
     newsSummaryText: {
         fontSize: 12,
         fontFamily: 'DMRegular',
-        color: '#8E8D8D',
-        margin: 'auto'
+        color: '#8E8D8D',        
     },
     newsSummaryItem: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center',
+        minWidth: '45%', 
+        marginTop: 8
     },
     rbIcon: {
         height: 32, 

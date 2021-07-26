@@ -7,6 +7,7 @@ import Colors from '../../colors/colors';
 import { ClearSearchContainer } from './ClearSearchContainer';
 import { getSearchDatas, getSearchValue, hasError, isLoading } from '../../redux/selectors/search.selector';
 import { getSearchData } from '../../redux/operations/search.op';
+import { searchNews } from '../../redux/actions/search.action';
 
 const MainSearchScreen = ({ navigation }) => {
     const dispatch = useDispatch()
@@ -91,7 +92,10 @@ const MainSearchScreen = ({ navigation }) => {
                             }}>Once it is done, It can't be reverted again.</Text>
                         </View>
                         
-                        <TouchableOpacity style={styles.clearBtn} onPress={() => setVisible(!visible)}>
+                        <TouchableOpacity style={styles.clearBtn} onPress={() => {
+                            dispatch(searchNews([]))
+                            setVisible(!visible)
+                            }}>
                             <Text style={styles.clearBtnText}>Clear All</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setVisible(!visible)}>
@@ -133,7 +137,7 @@ const MainSearchScreen = ({ navigation }) => {
                         {
                             data.map((d,i) => {
                             if (d.media.videos.length) {
-                                return <ReaderDocumentaryItem news={d} key={i} navigatioSn={navigation} />  
+                                return <ReaderDocumentaryItem news={d} key={i} navigation={navigation} />  
                             }
                                 return <ReaderItem news={d} key={i} navigation={navigation} />
                                 

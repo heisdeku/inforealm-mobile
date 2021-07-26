@@ -70,7 +70,7 @@ const ReaderScreen = ({ navigation }) => {
         {
           !loading && hasError ?
           <View style={styles.errorView}>
-              <Text>{hasError}</Text>
+              <Text>{hasError.includes('Request failed with status code 500') ? 'Issues currently from our server, Our Engineers would fix this sooon. Thanks' : hasError}</Text>
               <TouchableOpacity style={{width: '100%'}} onPress={() => getTrend()}>
                   <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
                       <Text
@@ -138,7 +138,7 @@ const ReaderScreen = ({ navigation }) => {
       }                     
         </View>
         {
-        !trend.length && !topNews.length && !loading ?
+        !hasError && !trend.length && !topNews.length && !loading ?
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <View style={styles.emptyView}>
                 <Text style={styles.emptyText}>Here’s a little empty</Text>

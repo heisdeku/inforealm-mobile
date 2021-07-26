@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Dimensions, Animated, TouchableOpacity } from 'react-native';
 import { FontAwesome5, FontAwesome, Feather } from '@expo/vector-icons';
 import Colors from '../colors/colors';
+import NewsIcon from '../svgs/newsIcon'
+import DocumentariesIcon from '../svgs/documentariesIcon'
 
 const BottomTab = (props) => {
     const [morePressed, setMorePressed] = useState(false)
@@ -87,7 +89,7 @@ const BottomTab = (props) => {
 
     return (
         <Animated.View
-          style={{height: componentHeight, backgroundColor: 'transparent'}}
+          style={{height: componentHeight, backgroundColor: 'rgba(255, 255, 255, 0.9)'}}
         >
           <View style={{flex: 1}}>
             {/* <TouchableOpacity><Text>Some very long text so it seems that there's something here</Text></TouchableOpacity> */}
@@ -138,13 +140,13 @@ const BottomTab = (props) => {
               </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('Documentaries')}>
                     <View style={styles.tab}>
-                        <FontAwesome name='video-camera'  color={state.index === 1 && !morePressed ? Colors.secondary : '#B3B3B3'} size={20} />
+                        <DocumentariesIcon color={state.index === 1 && !morePressed ? Colors.secondary : '#B3B3B3'} opacity={state.index ===2 && morePressed && 1} />                        
                         <Text style={{...styles.tabLabel, color: state.index === 1 && !morePressed ? Colors.secondary : '#B3B3B3'}}>Documentaries</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('News')}>
                     <View style={styles.tab}>
-                        <FontAwesome name='newspaper-o'  color={state.index === 2 && !morePressed ? Colors.secondary : '#B3B3B3'} size={20} />
+                        <NewsIcon color={state.index === 2 && !morePressed ? Colors.secondary : '#B3B3B3'} opacity={state.index ===2 && morePressed && 1} />                        
                         <Text style={{...styles.tabLabel, color: state.index === 2 && !morePressed ? Colors.secondary : '#B3B3B3'}}>News</Text>
                     </View>
                 </TouchableOpacity>

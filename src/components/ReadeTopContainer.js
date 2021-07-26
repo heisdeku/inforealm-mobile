@@ -32,10 +32,10 @@ const ReaderTopContainer = ({ interests }) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginTop: 17,  
+          paddingTop: 19,  
           borderBottomColor: '#cdcccc',
           borderBottomWidth: 0.5,
-          paddingBottom: 21       
+          paddingBottom: 23
         }}
       >
         <View style={styles.editorContainer}>
@@ -121,8 +121,7 @@ const mapStateToProps = createStructuredSelector({
 })
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  container: {    
     alignItems: 'center',
   },
   editorContainer: {
@@ -149,14 +148,15 @@ const styles = StyleSheet.create({
   interestOverlayContainer: {
     flex: 1,
     alignItems: 'center',
-    position: 'relative'
+    position: 'relative',    
   },
   interestOverlayHeading: {
     marginTop: 37,
-    marginBottom: 1,
+    marginBottom: 34,
   },
   interestOverlayInterests: {
     flexDirection: 'row',
+    paddingHorizontal: 6,
     flexWrap: 'wrap',
     justifyContent: 'space-around'
   },

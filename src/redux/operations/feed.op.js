@@ -25,6 +25,7 @@ export const getLatestFeed = (id) => {
         }
       })
       .catch((err) => {
+        console.log(err.response)
         dispatch(getFeedFailed(err.message))
       })
   }
@@ -32,7 +33,6 @@ export const getLatestFeed = (id) => {
 
 export const getLatestFeedByInterest = (data) => {
   return async (dispatch) => {
-    dispatch(getFeedStart())
     try {
       const response = await apiConnect.post(`/getNewsByInterests`, data)           
         if (response.data.status === 'success') {

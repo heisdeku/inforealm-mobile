@@ -1,18 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native'
+
 import Colors from '../../colors/colors'
 import {
     EvilIcons   
 } from '@expo/vector-icons'
 
-export const ClearSearchContainer = () => {
+export const ClearSearchContainer = ({ showModal }) => {  
   return (
-    <View style={styles.container}>
+    <View style={styles.container}>      
       <View
         style={{
           flexDirection: 'row',
@@ -25,7 +26,7 @@ export const ClearSearchContainer = () => {
           <Text style={styles.editorText}>Search History</Text>
         </View>
         <View>
-          <TouchableOpacity style={{ width: 70, flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end'}}>
+          <TouchableOpacity onPress={showModal} style={{ width: 70, flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end'}}>
             <View style={styles.organize}>
               <Text style={styles.organizeText}>Clear all</Text>
               <EvilIcons name="close"  style={styles.equalizer} size={20} color={Colors.secondary} />                     

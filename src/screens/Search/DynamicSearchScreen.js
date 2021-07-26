@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, RefreshControl, ActivityIndicator, Dimensions, TouchableOpacity, Modal, Alert } from 'react-native';
 import ReaderDocumentaryItem from '../../components/ReaderDocumentaryItem'
 import ReaderItem from '../../components/ReaderItem';
@@ -10,7 +12,8 @@ import { getSearchValue } from '../../redux/selectors/search.selector';
 import apiConnect from '../../api/apiConnect';
 
 
-const DynamicSearchScreen = ({ id, navigation }) => {
+const DynamicSearchScreen = ({ id }) => {
+    const navigation = useNavigation();
     const dispatch = useDispatch()
     const searchValue = useSelector(getSearchValue)
      const [loading, setLoading] = useState(false);
@@ -125,7 +128,10 @@ const DynamicSearchScreen = ({ id, navigation }) => {
                             }}>Once it is done, It can't be reverted again.</Text>
                         </View>
                         
-                        <TouchableOpacity style={styles.clearBtn} onPress={() => setVisible(!visible)}>
+                        <TouchableOpacity style={styles.clearBtn} onPress={async () =>{
+                            await setNews(null)
+                            setVisible(!visible)                            
+                        } }>
                             <Text style={styles.clearBtnText}>Clear All</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setVisible(!visible)}>
@@ -168,13 +174,13 @@ const DynamicSearchScreen = ({ id, navigation }) => {
                 null
             }
                         {
-                !loading && news.length ?                
+                !loading && news?.length ?                
                     <View style={styles.container}>
                         <ClearSearchContainer showModal={() => setVisible(true)} />
                         {
                             news.map((d,i) => {
                             if (d.media.videos.length) {
-                                return <ReaderDocumentaryItem news={d} key={i} navigatioSn={navigation} />  
+                                return <ReaderDocumentaryItem news={d} key={i} navigation={navigation} />  
                             }
                                 return <ReaderItem news={d} key={i} navigation={navigation} />
                                 

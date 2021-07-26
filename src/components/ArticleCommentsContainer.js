@@ -34,7 +34,7 @@ const ArticleCommentsContainer = () => {
 
     return (        
     <View style={styles.container}>
-        <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={10} >                        
+        <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={60} style={{ flex: 1}}>                        
             {   
                 !comments.length ?
                 <View style={{flex: 1, justifyContent: 'center', marginBottom: 150,  alignItems: 'center'}}>
@@ -48,6 +48,7 @@ const ArticleCommentsContainer = () => {
             {
                 comments.length > 0 ?
                     <FlatList
+                    style={{ position: 'absolute' }}
                     scrollToOverflowEnabled={true}
                         ref={articles}
                         style={{ marginBottom: 100,}}

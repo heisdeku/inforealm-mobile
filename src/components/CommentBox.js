@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { View, Dimensions, StyleSheet, KeyboardAvoidingView, TextInput } from 'react-native'
+import { View, Dimensions, Alert,  StyleSheet, TouchableOpacity, TextInput, Pressable } from 'react-native'
 import { addNewsComment, getNews } from '../redux/actions/news.actions'
 import { selectNewsComments, selectNewsId } from '../redux/selectors/news.selector'
 import { getCurrentUser } from '../redux/selectors/user.selector'
 import moment from 'moment'
+
 import apiConnect from '../api/apiConnect'
 import { newsTypes } from '../redux/types/news.types'
+import Send from '../svgs/sendIcon'
+import Colors from '../colors/colors'
 
 export const CommentBox = () => {
     const dispatch = useDispatch()    
@@ -15,8 +18,12 @@ export const CommentBox = () => {
     const newsId = useSelector(selectNewsId)
 
     const [ comment, setComment ] = useState('')
-    const handleCommentAdd = async () => {
 
+    const handleCommentAdd = async () => {
+        if (!comment) {
+            Alert.alert('Error', 'comment box is empty')
+            return;
+        }
         let data = new FormData()
         data.append('user_id', user.user_id)
         data.append('news_id', newsId)
@@ -55,15 +62,25 @@ export const CommentBox = () => {
 
     return (
         <View style={styles.container}>
-            <TextInput
-                style={{height: 50, backgroundColor: 'rgba(118, 118, 128, 0.12)',  borderRadius: 10, paddingLeft: 16}}
-                onSubmitEditing={handleCommentAdd}
-                placeholder="Add a comment..."
-                onChangeText={comment => setComment(comment)}
-                defaultValue={comment}
-                multiline={false}
-                editable={user !== null ? true : false}
-            />
+            <View style={styles.commentBox}>                
+                <TextInput
+                    style={{ height: 50, width: '85%'}}                    
+                    placeholder="Add a comment..."
+                    onChangeText={comment => setComment(comment)}
+                    defaultValue={comment}
+                    multiline={true}
+                    editable={user !== null ? true : false}
+                />  
+                <Pressable android_ripple={
+                    {
+                        color: Colors.secondary,
+                        radius: 40,
+                        borderless: true
+                    }
+                } style={{ marginLeft: 8, width: 30, height: 50, display: 'flex', alignItems: 'center', justifyContent: 'center'}} hitSlop={2} pressRetentionOffset={{ left: 10, bottom:10, top: 10}} onPressOut={handleCommentAdd}>
+                    <Send />      
+                </Pressable>                
+            </View>            
         </View>
     )
 }
@@ -81,6 +98,14 @@ const styles = StyleSheet.create({
         bottom: 0,
         backgroundColor: '#F7F7F7',
         borderTopLeftRadius: 24,
-        borderTopRightRadius: 24,        
+        borderTopRightRadius: 24,           
+    },
+    commentBox: {
+        minHeight: 50, 
+        backgroundColor: 'rgba(118, 118, 128, 0.12)',  
+        borderRadius: 10, 
+        paddingLeft: 32, 
+        display: 'flex', 
+        flex: 1, flexDirection: 'row', alignItems: 'center'     
     }
 });

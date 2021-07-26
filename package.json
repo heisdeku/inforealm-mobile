@@ -47,6 +47,7 @@
     "react-native-safe-area-context": "3.2.0",
     "react-native-safe-area-view": "^1.1.1",
     "react-native-screens": "~3.0.0",
+    "react-native-svg": "^12.1.1",
     "react-native-swiper-flatlist": "^3.0.14",
     "react-native-switch": "^2.0.0",
     "react-native-tab-view": "^2.16.0",

@@ -9,7 +9,9 @@ import Toast from 'react-native-root-toast';
 import apiConnect from '../api/apiConnect';
 import { selectUserId } from '../redux/selectors/user.selector';
 import { isLoading } from '../redux/selectors/news.selector';
-
+import Comment from '../svgs/commentIcon';
+import MainLikeIcon from '../svgs/mainLikeIcon'
+import ShareIcon from '../svgs/shareIcon'
 
 const ArticleBottomTab = ({ newsTitle, id }) => {    
     const refRBSheet = useRef()
@@ -110,19 +112,19 @@ const ArticleBottomTab = ({ newsTitle, id }) => {
             <View style={styles.tabBar}>
               <TouchableOpacity onPress={() => refRBSheet.current.open()}>
                   <View style={styles.tab}>
-                    <EvilIcons name="comment" size={28} color="#050618" />
+                      <Comment />                    
                       <Text style={styles.tabLabel}>Comment</Text>
                   </View>
               </TouchableOpacity>
                 <TouchableOpacity onPress={handleLike} >
-                    <View style={styles.tab}>                        
-                        <AntDesign name="like2" size={24} color={likeStatus ? Colors.secondary : '#050618'} />
+                    <View style={styles.tab}>                   
+                        <MainLikeIcon color={likeStatus ? Colors.secondary : '#050618'} />                             
                         <Text style={{ ...styles.tabLabel, color: likeStatus ? Colors.secondary : '#050618' }}>{likeStatus ? 'Liked' : 'Like' }</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleShare}>
                     <View style={styles.tab}>
-                        <Feather name="share" size={20} color="#050618" />
+                        <ShareIcon />
                         <Text style={styles.tabLabel}>Share</Text>
                     </View>
                 </TouchableOpacity>
@@ -136,17 +138,22 @@ const ArticleBottomTab = ({ newsTitle, id }) => {
             <RBSheet
                 ref={refRBSheet}
                 closeOnDragDown={true}
-                closeOnPressMask={false}                
+                animationType='slide'
+                closeOnPressMask={true}  
+                closeOnPressBack={true}  
+                height={(Dimensions.get('window').height) / 1.13}   
+                dragFromTopOnly={true}          
                 customStyles={{
                 wrapper: {                
                     backgroundColor: 'rgba(0, 0, 0, 0.2)',
                 },
                 draggableIcon: {
                     backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                    width: 140,                    
+                    width: 140, 
+                    marginVertical: 16                   
                 },
                 container: {
-                    height: Dimensions.get('window').height / 1.12,                    
+                    //height: Dimensions.get('window').height / 1.12,                    
                     borderTopRightRadius: 32,
                     borderTopLeftRadius: 32,   
                     backgroundColor: '#F7F7F7',                 
@@ -180,7 +187,7 @@ const styles = StyleSheet.create({
     tab: {
         width:( Dimensions.get('window').width)/ 4,        
         flexDirection: 'row',
-        alignItems: 'baseline',
+        //alignItems: 'baseline',
         justifyContent: 'center'
     },
     tabLabel: {

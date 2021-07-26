@@ -6,6 +6,7 @@ import Colors from '../../colors/colors';
 import ArticleBottomTab from '../../components/ArticleBottomTab';
 import { getNewsData } from '../../redux/operations/news.op';
 import { hasError, isLoading, selectNews, selectNewsCaption, selectNewsTitle } from '../../redux/selectors/news.selector';
+import HTMLView from 'react-native-htmlview'
 import { Video } from 'expo-av';
 import VideoPlayer from 'expo-video-player'
 import { FontAwesome } from '@expo/vector-icons';
@@ -106,8 +107,8 @@ const ArticleWatch = ({ route, navigation }) => {
                               uri: news.media.thumbnail
                           },
                           posterStyle: {
-                              width: fullScreen ? Dimensions.get('window').height + 355: Dimensions.get('window').width - 30 , 
-                              height: fullScreen ? Dimensions.get('window').width - 350 : 200,
+                              width: fullScreen ? Dimensions.get('window').width: Dimensions.get('window').width - 30 , 
+                              height: fullScreen ? Dimensions.get('window').height - 71: 200,
                               resizeMode: 'cover'
                           },
                           usePoster: true,    
@@ -119,7 +120,7 @@ const ArticleWatch = ({ route, navigation }) => {
                           enterFullscreen: async () => {
                               setStatusBarHidden(true, 'fade')
                               setFullscreen(true)
-                              await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT)  
+                              await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_DOWN)  
                               navigation.setOptions({headerShown: false});          
                               video.current.setStatusAsync({
                                   shouldPlay: true,
@@ -155,8 +156,8 @@ const ArticleWatch = ({ route, navigation }) => {
                           }}
                       style={{
                           ...styles.image,                            
-                          height: fullScreen ? Dimensions.get('window').width - 350 : 200,
-                          width: fullScreen  ? Dimensions.get('window').height + 355: Dimensions.get('window').width - 30 ,                            
+                          height: fullScreen ? Dimensions.get('window').height - 71: 200,
+                          width: fullScreen  ? Dimensions.get('window').width: Dimensions.get('window').width - 30 ,                            
                           marginBottom: 20,
                           resizeMode: 'cover'
                       }}
@@ -187,13 +188,17 @@ const ArticleWatch = ({ route, navigation }) => {
                               <Text style={styles.newsSummaryText}> {news.author}</Text>
                           </View>                            
                       </View>
-                  </View>
-                  {/*
-                  <View>
-                      <Text style={styles.articleWriteUp}>
-                          {news.content}
-                      </Text>
-                  </View>    */}                    
+                  </View>                  
+                  <View style={{
+                        marginTop: 25,
+                        marginBottom: 180,  
+                        fontFamily: 'DMRegular',                       
+                    }}>
+                        <HTMLView
+                            value={`${news.content}`}
+                            stylesheet={styling}                            
+                        />                        
+                    </View>                  
               </View>            
           </ScrollView>
           : null
@@ -326,3 +331,27 @@ const styles = StyleSheet.create({
   marginBottom: 100
   }
 });
+
+
+const styling = StyleSheet.create({
+    body: {
+        fontFamily: 'DMRegular',   
+        fontWeight: '400', 
+    },
+    a: {
+      fontWeight: '400',
+      color: '#E33127',
+    },
+    p: {         
+        fontFamily: 'DMRegular',   
+        fontWeight: '400',        
+        fontSize: 17,
+        lineHeight: 30,
+        letterSpacing: -0.408,
+        color: '#343A40',        
+    },
+    h1: {
+        fontSize: 25,
+        fontWeight: '700',
+    }
+  });
