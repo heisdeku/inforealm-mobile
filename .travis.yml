@@ -8,14 +8,19 @@ cache:
     - ~/.npm
     - .jest
 before_script:
-  - npm install -g npm@latest
+    - npm install -g yarn
 script:
-  - npm install  
+  - yarn install  
+cache:
+  yarn: true
+  directories:
+    - node_modules
 jobs:
   include:
     - stage: deploy
       node_js: lts/*
       script:
-        - npm ci
+        - yarn ci
         - npx expo login -u heisdeku -p Ayanfeoluwa21+
         - npx expo publish --non-interactive
+        - npx expo build:android
