@@ -18,8 +18,8 @@ jobs:
   include:
     - stage: deploy
       node_js: lts/*
-      script:
-        - yarn ci
+      script:        
         - npx expo login -u heisdeku -p Ayanfeoluwa21+
         - npx expo publish --non-interactive
-        - npx expo build:android
+        - npx expo build:android -t apk
+        - npx expo build:android -t app-bundle
