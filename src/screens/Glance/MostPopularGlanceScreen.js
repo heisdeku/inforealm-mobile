@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView, RefreshControl, ActivityIndicator, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, SafeAreaView, FlatList, RefreshControl, ActivityIndicator, TouchableOpacity, Text } from 'react-native';
 import Colors from '../../colors/colors';
 import GlanceItem from '../../components/GlanceItem';
 import apiConnect from '../../api/apiConnect';
@@ -9,7 +9,29 @@ const LatestGlanceScreen = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [news, setNews] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMoreData, setHasMoreData] = useState(false);
     const category_id = 4;
+
+    const loadMoreMostPopularNewsByCategory = async () => {
+        try {
+            const bodyForm = new FormData();
+            bodyForm.append('category_id', category_id)
+            bodyForm.append('page', page)
+            const response = await apiConnect.post('/getMostPopularNewsByCategory', bodyForm);
+            if(response.data.status === 'success'){
+                setNews([...news, ...response.data.news]);
+                setPage(page => page+1);
+                if(response.data.news.length >= 25){
+                    setHasMoreData(true);
+                }else{
+                    setHasMoreData(false);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     
     const getMostPopularNewsByCategory = async () => {
         setError('');
@@ -70,32 +92,38 @@ const LatestGlanceScreen = () => {
             }
             {
                 !isLoading && news.length ?
-                <ScrollView style={{flex: 1, backgroundColor: '#E5E5E5',}}
-                refreshControl={
-                <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                colors={[Colors.brand, Colors.secondary, Colors.caption]}
-                tintColor={Colors.brand}
-                />
-                }
+                <View style={{flex: 1, backgroundColor: '#E5E5E5',}}
                 >
                     <View style={{flex: 1}}>
                         <View style={styles.body}>
                             <View style={styles.category}>
                                 <View style={styles.categoryItems}>
-                                    {
-                                        news.map((news, i) => {
-                                            return (
-                                                <GlanceItem key={i} news={news} />
-                                            )
-                                        })
+                                    <FlatList
+                                    contentContainerStyle={{flex: 1}}
+                                    data={news}
+                                    keyExtractor={item => `GlanceMostPopular-${category_id}-${item.id.toString()}-${Math.floor(Math.random() * 10000)}`}
+                                    renderItem={({item}) => {
+                                        return(
+                                            <GlanceItem news={item} />
+                                        )
+                                    }}
+                                    refreshControl={
+                                        <RefreshControl
+                                        refreshing={refreshing}
+                                        onRefresh={onRefresh}
+                                        colors={[Colors.brand, Colors.secondary, Colors.caption]}
+                                        tintColor={Colors.brand}
+                                        />
                                     }
+                                    onEndReached={() => loadMoreMostPopularNewsByCategory()}
+                                    onEndReachedThreshold={0.7}
+                                    ListFooterComponent={!hasMoreData ? <Text style={{fontSize: 16, fontFamily: 'DMBold', textAlign: 'center', paddingVertical: 20}}>We guess you've seen it all</Text> : null}
+                                    />
                                 </View>
                             </View>
                         </View>
                     </View>
-            </ScrollView>
+            </View>
             :
             null
             }

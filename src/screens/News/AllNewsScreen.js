@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, RefreshControl, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, RefreshControl, ActivityIndicator, TouchableOpacity, FlatList } from 'react-native';
 import NewsItem from '../../components/NewsItem';
 import Colors from '../../colors/colors';
 import apiConnect from '../../api/apiConnect';
@@ -9,6 +9,27 @@ const AllNewsScreen = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [news, setNews] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMoreData, setHasMoreData] = useState(false);
+
+    const loadMoreNews = async () => {
+        try {
+            const bodyForm = new FormData();
+            bodyForm.append('page', page+1);
+            const response = await apiConnect.post('/getLatestNews', bodyForm);
+            if(response.data.status == 'success'){
+                setNews([...news, ...response.data.news])
+                setPage(page => page+1);
+                if(response.data.news.length >= 25){
+                    setHasMoreData(true);
+                }else{
+                    setHasMoreData(false)
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     
     const getLatestNews = async () => {
         setError('');
@@ -67,24 +88,30 @@ const AllNewsScreen = () => {
             }
             {
                 !isLoading && news.length ?
-                <ScrollView style={{flex: 1, backgroundColor: '#E5E5E5'}}
-                refreshControl={
-                    <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                    colors={[Colors.brand, Colors.secondary, Colors.caption]}
-                    tintColor={Colors.brand}
+                <View                
+                style={{flex: 1, backgroundColor: '#E5E5E5'}}
+                >
+                    <FlatList
+                    data={news}
+                    keyExtractor={item => `allnews-${item.id.toString()}-${Math.floor(Math.random() * 1000)}`}
+                    renderItem={({item}) => {
+                        return(
+                            <NewsItem news={item} />
+                        )
+                    }}
+                    refreshControl={
+                        <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        colors={[Colors.brand, Colors.secondary, Colors.caption]}
+                        tintColor={Colors.brand}
+                        />
+                    }
+                    onEndReached={() => loadMoreNews()}
+                    onEndReachedThreshold={0.7}
+                    ListFooterComponent={!hasMoreData ? <Text style={{fontSize: 16, fontFamily: 'DMBold', textAlign: 'center', paddingVertical: 20}}>We guess you've seen it all</Text> : null}
                     />
-                }
-                >                  
-                    <View style={styles.container}>
-                        {
-                            news.map((news,i) => {
-                                return <NewsItem news={news} key={i} />
-                            })
-                        }
-                    </View>
-            </ScrollView>
+                </View>
                 :
                 null
             }

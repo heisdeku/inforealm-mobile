@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, RefreshControl, ActivityIndicator, FlatList } from 'react-native';
 import Colors from '../../colors/colors';
 import DocumentaryItem from '../../components/DocumentaryItem';
 import apiConnect from '../../api/apiConnect';
@@ -13,7 +13,29 @@ const DocumentariesScreen = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [news, setNews] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMoreData, setHasMoreData] = useState(false);
     const category_id = 2;
+
+    const loadMoreNewsByCategory = async () => {
+        try {
+            const bodyForm = new FormData();
+            bodyForm.append('category_id', category_id)
+            bodyForm.append('page', page)
+            const response = await apiConnect.post('/getNewsByCategory', bodyForm);
+            if(response.data.status === 'success'){
+                setNews([...news, ...response.data.news]);
+                setPage(page => page+1);
+                if(response.data.news.length >= 25){
+                    setHasMoreData(true);
+                }else{
+                    setHasMoreData(false);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     
     const getNewsByCategory = async () => {
         setError('');
@@ -74,15 +96,7 @@ const DocumentariesScreen = () => {
             }
             {
                 !isLoading && news.length ?
-                <ScrollView style={{flex: 1}}
-                refreshControl={
-                    <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                    colors={[Colors.brand, Colors.secondary, Colors.caption]}
-                    tintColor={Colors.brand}
-                    />
-                }
+                <View style={{flex: 1}}
                 >
                     <View style={styles.container}>
                         <View style={styles.heading}>
@@ -91,32 +105,34 @@ const DocumentariesScreen = () => {
                         </View>
                         <View style={styles.body}>
                             <View style={styles.category}>
-                                {/* <View style={styles.categoryHeadView}>
-                                    <View style={{width: '50%'}}>
-                                        <Text style={styles.categoryHead}>
-                                            Category
-                                        </Text>
-                                        <Text style={styles.categoryCaption}>
-                                            Breaking news for all of the latest updates about the category.
-                                        </Text>
-                                    </View>
-                                    <TouchableOpacity onPress={() => navigation.navigate('DocCategory')} style={{flexDirection: 'row'}}>
-                                        <Text style={{fontSize: 14, color: Colors.secondary}}>View all </Text><Feather size={18} name='chevron-right' color={Colors.secondary} />
-                                    </TouchableOpacity>
-                                </View> */}
                                 <View style={styles.categoryItems}>
-                                    {
-                                        news.map((news, i) => {
-                                            return(
-                                                <DocumentaryItem key={i} news={news} />
-                                            )
-                                        })
+                                    <FlatList
+                                    numColumns={2}
+                                    horizontal={false}
+                                    data={news}
+                                    keyExtractor={item => `Documentaries-${category_id}-${item.id.toString()}-${Math.floor(Math.random() * 10000)}`}
+                                    renderItem={({item}) => {
+                                        return(
+                                            <DocumentaryItem news={item} />
+                                        )
+                                    }}
+                                    refreshControl={
+                                        <RefreshControl
+                                        refreshing={refreshing}
+                                        onRefresh={onRefresh}
+                                        colors={[Colors.brand, Colors.secondary, Colors.caption]}
+                                        tintColor={Colors.brand}
+                                        />
                                     }
+                                    onEndReached={() => loadMoreNewsByCategory()}
+                                    onEndReachedThreshold={0.7}
+                                    ListFooterComponent={!hasMoreData ? <Text style={{fontSize: 16, fontFamily: 'DMBold', textAlign: 'center', paddingVertical: 20}}>We guess you've seen it all</Text> : null}
+                                    />
                                 </View>
                             </View>
                         </View>
                     </View>
-                </ScrollView>
+                </View>
                 :
                 null
             }
@@ -155,7 +171,7 @@ const styles = StyleSheet.create({
         paddingVertical: 15
     },
     category: {
-        marginBottom: 30,
+        marginBottom: 0,
         borderBottomColor: '#CDCCCC',
         borderBottomWidth: 0.5,
         // paddingHorizontal: 15
