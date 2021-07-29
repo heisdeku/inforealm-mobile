@@ -1,7 +1,11 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Dimensions, TouchableOpacity, Share, ScrollView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react'
+import {StyleSheet, TouchableOpacity, Text, ScrollView, Vibration, View, Dimensions, ImageBackground } from 'react-native'
+import { Video } from 'expo-av';
+import VideoPlayer from 'expo-video-player'
+import { FontAwesome, Feather, FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { setStatusBarHidden } from 'expo-status-bar'
+import * as ScreenOrientation from 'expo-screen-orientation'
 import Colors from '../colors/colors';
-import { Feather, MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { useNavigation } from '@react-navigation/native';
 import { createStructuredSelector } from 'reselect'
@@ -13,7 +17,10 @@ import * as FileSystem from 'expo-file-system';
 import { selectDownloadsArray, selectDownloadsArticles, selectDownloadsError, selectDownloadsLoading } from '../redux/selectors/downloads.selectors';
 import { addDownload, addDownloadArticle, deleteDownload, deleteDownloadArticle, setBookmarkStatus as setDownloadBookmarkStatus, setDownloadStatus } from '../redux/actions/downloads.actions';
 
-const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle, setDownloadStatus, setDownloadBookmarkStatus}) => {
+const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle, setDownloadStatus, setDownloadBookmarkStatus}) => {   
+    const viewRef = useRef(null)
+    const video = useRef(null);
+    const [fullScreen, setFullscreen] = useState(false);
     const [bookmarksStatus, setBookmarkStatus] = useState(false);
     const [bookmarkError, setBookmarkError] = useState('');
     const [doBookmarkError, setDoBookmarkError] = useState('');
@@ -190,41 +197,100 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
     }, [])
 
     return (
-        <View style={styles.item}>
-            <View style={{borderRadius: 5, overflow: 'hidden'}}>
-                <ImageBackground 
-                source={{uri: news.media.thumbnail}}
-                style={styles.Image}
-                >
-                    {
-                        news.media.videos.length > 0 ?
-                        <TouchableOpacity style={{flexDirection: 'row'}}>
-                        <View style={{backgroundColor: '#fff', height: 23, width: 23, justifyContent: 'center', alignItems: 'center', borderRadius: 11.5}}><Ionicons name='md-play-circle' size={24} color='#000' /></View>
-                        </TouchableOpacity>
-                        :
-                        null
-                    }
-                </ImageBackground>
+        <View style={styles.container}>
+            <View style={styles.imageContainer}>
+                {
+                    news.media.videos.length > 0?
+                    <VideoPlayer
+                      videoProps={{
+                          shouldPlay: false,
+                          resizeMode: Video.RESIZE_MODE_COVER , 
+                          posterSource: {
+                              uri: news.media.thumbnail
+                          },
+                          posterStyle: {
+                              width: fullScreen ? Dimensions.get('window').width: Dimensions.get('window').width - 30 , 
+                              height: fullScreen ? Dimensions.get('window').height - 71: 170,
+                              resizeMode: 'cover'
+                          },
+                          usePoster: true,    
+                          source: {uri: news.media.videos[0]},
+                          ref: video,
+                      }}
+                      fullscreen={{
+                          inFullscreen: fullScreen,
+                          enterFullscreen: async () => {
+                              setStatusBarHidden(true, 'fade')
+                              setFullscreen(true)
+                              await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_DOWN)  
+                              navigation.setOptions({headerShown: false});          
+                              video.current.setStatusAsync({
+                                  shouldPlay: true,
+                              })
+                          },
+                          
+                          exitFullscreen: async () => {
+                              setStatusBarHidden(false, 'fade')
+                              setFullscreen(false)
+                              await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT)
+                              /*video.current.setStatusAsync({
+                                  shouldPlay: false,
+                              })*/
+                          },                            
+                      }}                                                   
+                      slider={{
+                          visible: true,
+                          minimumTrackTintColor: '#F7F7F7',
+                          maximumTrackTintColor: 'rgba(247, 247, 247, 0.6)',
+                          thumbTintColor: '#F7F7F7',
+                          style: {
+                              borderRadius: 8,
+                              height: 10,                                
+                          }
+                      }}
+                      icon={{
+                          play: <View style={{ height: 48, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 48, backgroundColor: 'white', borderRadius: 50, paddingLeft: 5, marginLeft: -10, }}>
+                              <FontAwesome name="play" size={22} color="black" />
+                          </View>,  
+                          pause: <View style={{ height: 48, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 48, backgroundColor: 'white', borderRadius: 50, marginLeft: -10, }}>
+                          <FontAwesome name="pause" size={20} color="black" />
+                      </View>,                          
+                          }}
+                      style={{
+                          ...styles.image,                            
+                          height: fullScreen ? Dimensions.get('window').height - 71: 170,
+                          width: fullScreen  ? Dimensions.get('window').width: Dimensions.get('window').width - 30 ,                            
+                          marginBottom: 20,
+                          resizeMode: 'cover'
+                      }}
+                      />    
+                      :
+                      <ImageBackground source={{uri: news.media.thumbnail}} style={styles.thumb} />
+                }                
             </View>
-            <TouchableOpacity onPress={() => 
-            navigation.navigate('Article', {
-              screen: 'ArticleWatch',
-              params: {news_id: news.id},
-            })
-            
-          }><Text style={styles.title}>{news.title}</Text></TouchableOpacity>
-            <Text style={styles.caption}>{news.caption}</Text>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 5}}>
-                <View>
-                    <View style={styles.date}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.dateText}> {news.date}</Text></View>
-                    <View style={styles.date}><MaterialIcons size={14} color={Colors.text1} name='library-books' /><Text style={styles.dateText}> {news.time_to_read} min read</Text></View>
-                </View>
-                <View>
-                    <TouchableOpacity onPress={() => refRBSheet.current.open()}><MaterialCommunityIcons name='dots-vertical' size={28} color='#09121F' /></TouchableOpacity>
-                </View>
+            <View style={styles.crumbs}>
+                <Text style={styles.crumbText}>News <Feather name='chevron-right' size={12} /> {news.interests.map(interest => interest.interest).join(', ')}</Text>
             </View>
+            <TouchableOpacity onLongPress={() => {
+                Vibration.vibrate(50, false);
+                refRBSheet.current.open();
+            }}>
+                <View style={styles.titleContainer}><Text style={styles.titleText}>{news.title}</Text></View>
+            </TouchableOpacity>
+            <View style={styles.captionContainer}><Text style={styles.captionText}>{news.caption}</Text></View>
             <View style={{...styles.dowloadProgressHolder, opacity: downloadInProgress ? 1 : 0}}>
                 <View style={{...styles.downloadProgress, width: `${downloadProgress}%`}}></View>
+            </View>
+            <View style={styles.detailsContainer}>
+                <View style={styles.detailsItem}>
+                    <Text style={styles.detailsText}><Feather size={14} color={Colors.text1} name='clock' /> {news.date}</Text>
+                </View>
+                <View style={styles.detailsItem}>
+                    <Text style={styles.detailsText}><Ionicons size={14} color={Colors.text1} name='md-play-circle' /> {news.time_to_read ? `${news.time_to_read} min read` : '1+ min read'}</Text>
+                </View>
+                <View style={styles.detailsItem}>
+                    <Text style={styles.detailsText}><FontAwesome5 size={12} color={Colors.text1} name='user-alt' /> {news.author}</Text>
+                </View>
             </View>
             <RBSheet
                 ref={refRBSheet}
@@ -346,45 +412,70 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
 }
 
 const styles = StyleSheet.create({
-    item: {
-        width: (Dimensions.get('window').width - 20) /2,
-        borderRightColor: '#cdcccc',
-        borderRightWidth: 0.5,
-        paddingBottom: 20,
-        paddingRight: 19,
-        paddingLeft: 15,
-        borderBottomColor: '#CDCCCC',
+    container: {
+        flex: 1,
+        backgroundColor: '#E5E5E5',
+        marginHorizontal: 16,
+        borderBottomColor: '#cdcccc',
         borderBottomWidth: 0.5,
-        paddingTop: 29
+        marginBottom: 16,
+        paddingBottom: 26
     },
-    Image: {
-        height: 92,
-        resizeMode: 'contain',
+    imageContainer: {
+        height: 170,
+        marginBottom: 24,
         borderRadius: 4,
-        paddingTop: 60,
-        paddingLeft: 15
+        overflow: 'hidden'
     },
-    title: {
-        fontSize: 18,
-        fontFamily: 'DMBold',
-        marginBottom: 9,
-        marginTop: 12,
-        color: Colors.text1
+    thumb: {
+        height: '100%',
+        width: '100%',
+        resizeMode: 'cover'
     },
-    caption: {
-        fontSize: 14,
-        fontFamily: 'DMRegular',
-        marginBottom: 11,
-        color: Colors.text2
-    },
-    dateText: {
+    crumbText: {
+        fontSize: 12,
         color: Colors.text2,
+        fontFamily: 'DMRegular',
+        fontWeight: '500'
+    },
+    titleContainer: {
+        marginTop: 20
+    },
+    titleText: {
+        fontSize: 20,
+        fontFamily: 'DMSerif',
+        lineHeight: 32,
+    },
+    captionContainer: {
+        marginBottom: 20,
+        marginTop: 7
+    },
+    captionText: {
         fontSize: 12,
         fontFamily: 'DMRegular'
     },
-    date: {
-        flexDirection: 'row',
-        marginBottom: 4
+    detailsContainer: {
+        flexDirection: 'row'
+    },
+    detailsItem: {
+        marginRight: 15
+    },
+    detailsText: {
+        fontSize: 11,
+        color: '#8E8D8D',
+        fontFamily: 'DMRegular',
+        lineHeight: 18
+    },
+    dowloadProgressHolder: {
+        height: 7,
+        backgroundColor: '#000',
+        width: '100%',
+        justifyContent: 'center',
+        marginTop: 7
+    },
+    downloadProgress: {
+        height: 5,
+        backgroundColor: Colors.secondary
     },
     rbIcon: {
         height: 32, 
@@ -413,17 +504,6 @@ const styles = StyleSheet.create({
         color: Colors.text2,
         fontSize: 16
     },
-    dowloadProgressHolder: {
-        height: 7,
-        backgroundColor: '#000',
-        width: '100%',
-        justifyContent: 'center',
-        marginTop: 7
-    },
-    downloadProgress: {
-        height: 5,
-        backgroundColor: Colors.secondary
-    }
 })
 
 const mapStateToProps = createStructuredSelector({
@@ -443,4 +523,4 @@ const mapDispatchToProps = dispatch => ({
     setDownloadStatus: status => dispatch(setDownloadStatus(status))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentaryItem);
+export default connect(mapStateToProps, mapDispatchToProps)(NewDocumentariesItem)

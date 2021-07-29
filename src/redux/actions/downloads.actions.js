@@ -93,7 +93,7 @@ export const setDownloadStatus = (status) => ({
 })
 
 
-export const setBookmarkStatus = (sttaus) => ({
+export const setBookmarkStatus = (status) => ({
     type: DownloadTypes.SET_BOOKMARK_STATUS,
     payload: status
 })
