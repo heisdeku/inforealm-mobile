@@ -197,7 +197,7 @@ const DocumentaryItem = ({news, user_id, downloadsArray, addDownload, deleteDown
                 style={styles.Image}
                 >
                     {
-                        news.media.videos.length ?
+                        news.media.videos.length > 0 ?
                         <TouchableOpacity style={{flexDirection: 'row'}}>
                         <View style={{backgroundColor: '#fff', height: 23, width: 23, justifyContent: 'center', alignItems: 'center', borderRadius: 11.5}}><Ionicons name='md-play-circle' size={24} color='#000' /></View>
                         </TouchableOpacity>
