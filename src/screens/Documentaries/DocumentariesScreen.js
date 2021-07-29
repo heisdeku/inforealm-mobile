@@ -5,6 +5,7 @@ import Colors from '../../colors/colors';
 import DocumentaryItem from '../../components/DocumentaryItem';
 import apiConnect from '../../api/apiConnect';
 import { getCurrentUser, selectUserId } from '../../redux/selectors/user.selector'
+import NewDocumentariesItem from '../../components/NewDocumentariesItem';
 
 const DocumentariesScreen = () => {
     const userId = useSelector(selectUserId)
@@ -107,13 +108,13 @@ const DocumentariesScreen = () => {
                             <View style={styles.category}>
                                 <View style={styles.categoryItems}>
                                     <FlatList
-                                    numColumns={2}
-                                    horizontal={false}
+                                    // numColumns={2}
+                                    // horizontal={false}
                                     data={news}
                                     keyExtractor={item => `Documentaries-${category_id}-${item.id.toString()}-${Math.floor(Math.random() * 10000)}`}
                                     renderItem={({item}) => {
                                         return(
-                                            <DocumentaryItem news={item} />
+                                            <NewDocumentariesItem news={item} />
                                         )
                                     }}
                                     refreshControl={
