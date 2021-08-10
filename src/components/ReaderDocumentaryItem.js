@@ -7,7 +7,9 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import Colors from '../colors/colors'
-import { Feather, MaterialIcons, Ionicons } from '@expo/vector-icons'
+import { Feather, Ionicons } from '@expo/vector-icons'
+
+import { truncate } from '../helpers/utils';
 
 const ReaderDocumentaryItem = ({ navigation, news }) => {
   if(!news){
@@ -87,7 +89,7 @@ const ReaderDocumentaryItem = ({ navigation, news }) => {
           <Text style={styles.title}>{news.title}</Text>
         </TouchableOpacity>
         <Text style={styles.caption}>
-          {news.caption}
+          {truncate(news.caption, 65)}
         </Text>
         <View
           style={{
@@ -116,7 +118,7 @@ const ReaderDocumentaryItem = ({ navigation, news }) => {
 
 const styles = StyleSheet.create({
   news: {
-    paddingVertical: 12,
+    paddingVertical: 11,
     paddingLeft: 15,
     paddingRight: 16,
     borderBottomWidth: 0.5,
@@ -134,13 +136,15 @@ const styles = StyleSheet.create({
     shadowColor: 'rgba(0, 0, 0, 0.3)'
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'DMBold',
     marginVertical: 3,
     color: '#2B2D42',
+    lineHeight: 24,
+    letterSpacing: 0.38
   },
   caption: {
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: 'DMRegular',
     marginBottom: 11,
     color: Colors.text2,

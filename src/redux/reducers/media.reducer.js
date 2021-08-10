@@ -7,7 +7,7 @@ const DEFAULT_STATE = {
     all: []
   },
   glance: [],
-  loading: false,
+  loading: true,
   error: null
 }
 

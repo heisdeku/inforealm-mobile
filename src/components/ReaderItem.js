@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'rea
 import { Feather, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import Colors from '../colors/colors'
 import SwipeableContainer from './SwipeableContainer';
+import { truncate } from '../helpers/utils';
 
 
 const ReaderItem = ({ navigation, news }) => { 
@@ -69,7 +70,7 @@ const ReaderItem = ({ navigation, news }) => {
           </Text>
         </TouchableOpacity>
         <Text style={styles.newsCaption}>
-          {news.caption}
+          {truncate(news.caption, 65)}
         </Text>
         <View style={styles.newsSummary}>
           <View style={styles.newsSummaryItem}>
@@ -98,7 +99,7 @@ const ReaderItem = ({ navigation, news }) => {
             }                    
             {
               news?.profile_picture &&
-              <Image resizeMode="cover" source={{ uri: news?.profile_picture }} style={{ width: 16, height: 16, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
+              <Image resizeMode="cover" source={{ uri: news?.profile_picture }} style={{ width: 16, height: 16, borderRadius: 100, justifyContent: 'center', alignItems: 'center', marginRight: 2 }} />
             } 
             
             <Text style={styles.newsSummaryText}>{news.author}</Text>
@@ -114,13 +115,14 @@ export default ReaderItem
 
 const styles = StyleSheet.create({
   news: {
-    paddingVertical: 12,
-    paddingLeft: 15,
-    //paddingRight: 16,        
+    paddingVertical: 11,
+    paddingLeft: 15,           
     flexDirection: 'row',
     paddingTop: 15,
-    backgroundColor: '#E5E5E5',
-    position: 'relative'
+    backgroundColor: '#F7F7F7',
+    position: 'relative',
+    borderBottomColor: '#cdcccc',
+    borderBottomWidth: 1
   },
   imageContainer: {
     width: 120,
@@ -128,8 +130,8 @@ const styles = StyleSheet.create({
     borderRadius: 8
   },
   image: {
-    height: 180,
-    width: 116,
+    height: 170,
+    width: 112,
     borderRadius: 8,
     resizeMode: 'cover',
   },
@@ -142,26 +144,26 @@ const styles = StyleSheet.create({
     color: '#343A40'
   },
   newsTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'DMBold',
-    marginVertical: 8,
+    marginBottom: 8,
     color: '#2B2D42',
+    lineHeight: 24,
+    letterSpacing: 0.38
   },
   newsDetails: {
     flex: 1,        
   },
   newsCaption: {
     color: Colors.text2,
-    fontSize: 14,
+    fontSize: 14,    
     fontFamily: 'DMRegular',
     marginBottom: 5,
   },
   newsSummary: {        
     display: 'flex',
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    //justifyContent: 'space-between',
-    position: 'absolute',
+    flexWrap: 'wrap',    
     bottom: 0,
     marginTop: 'auto',
     width: 210, 
@@ -169,13 +171,13 @@ const styles = StyleSheet.create({
   newsSummaryText: {
     fontSize: 12,
     fontFamily: 'DMRegular',
-    color: '#8E8D8D',    
-    //margin: 'auto'
+    color: '#8E8D8D', 
+    textTransform: 'capitalize'       
   },
   newsSummaryItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    minWidth: '45%', 
-    marginTop: 8
+    minWidth: '40%', 
+    marginBottom: 8
   },
 })

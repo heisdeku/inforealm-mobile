@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+import { getFeedStart } from '../redux/actions/feed.action'
 import { getLatestFeed, getLatestFeedByInterest } from '../redux/operations/feed.op'
 import { getCurrentUser } from '../redux/selectors/user.selector'
+
 
 export const InterestItem = ({ name, id, state }) => {
   const user = useSelector(getCurrentUser)
@@ -12,10 +14,9 @@ export const InterestItem = ({ name, id, state }) => {
     setSelected(!selected)
     if (!selected) {
       let idData = new FormData()
-      idData.append('interest_id', id)     
-      setTimeout(async() => {
-        await dispatch(getLatestFeedByInterest(idData))  
-      }, 2000) 
+      idData.append('interest_id', id) 
+      //await dispatch(getFeedStart())          
+      await dispatch(getLatestFeedByInterest(idData))        
     
     } else {
       await dispatch(getLatestFeed())

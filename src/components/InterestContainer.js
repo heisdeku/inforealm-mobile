@@ -12,6 +12,9 @@ const InterestContainer = ({ interests }) => {
       horizontal={true}
       style={styles.interests}
       showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{ alignItems: 'center', marginTop: 10,    
+      flexDirection: 'row',
+      marginBottom: 10,}}
     >
       {interests.map((i) => {
         return <InterestItem name={i.interest} id={i.interest_id} key={i.interest_id} />
@@ -25,11 +28,9 @@ const mapStateToProps = createStructuredSelector({
 })
 
 const styles = StyleSheet.create({
-  interests: {
-    flex: 1,
-    marginTop: 20,
-    flexDirection: 'row',
-    marginBottom: 10,
+  interests: {       
+      maxHeight: 80,
+      backgroundColor: '#F7F7F7'
   },
 })
 

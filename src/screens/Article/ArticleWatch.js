@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef  } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { StyleSheet, TouchableOpacity, Text, ScrollView, RefreshControl, ActivityIndicator, View, Alert, Dimensions } from 'react-native';
-import { Feather, MaterialIcons, AntDesign, FontAwesome5  } from '@expo/vector-icons';
+import { Feather, MaterialIcons, AntDesign, FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import Colors from '../../colors/colors';
 import ArticleBottomTab from '../../components/ArticleBottomTab';
 import { getNewsData } from '../../redux/operations/news.op';
@@ -9,7 +9,6 @@ import { hasError, isLoading, selectNews, selectNewsCaption, selectNewsTitle } f
 import HTMLView from 'react-native-htmlview'
 import { Video } from 'expo-av';
 import VideoPlayer from 'expo-video-player'
-import { FontAwesome } from '@expo/vector-icons';
 import { setStatusBarHidden } from 'expo-status-bar'
 import * as ScreenOrientation from 'expo-screen-orientation'
 
@@ -31,8 +30,9 @@ const ArticleWatch = ({ route, navigation }) => {
   const viewRef = useRef(null)
   const video = useRef(null);
 
-  const [fullScreen, setFullscreen] = useState(false);
-  console.log(fullScreen)
+  //states
+  const [videoStatus, setVideoStatus] = useState(false);
+  const [fullScreen, setFullscreen] = useState(false);  
   const [refreshing, setRefreshing] = useState(false) 
   const onRefresh = () => {
       setRefreshing(true)
@@ -114,6 +114,7 @@ const ArticleWatch = ({ route, navigation }) => {
                           usePoster: true,    
                           source: {uri: news.media.videos[0]},
                           ref: video,
+                          activityIndicator: false
                       }}
                       fullscreen={{
                           inFullscreen: fullScreen,
@@ -125,8 +126,7 @@ const ArticleWatch = ({ route, navigation }) => {
                               video.current.setStatusAsync({
                                   shouldPlay: true,
                               })
-                          },
-                          
+                          },                          
                           exitFullscreen: async () => {
                               setStatusBarHidden(false, 'fade')
                               setFullscreen(false)
@@ -161,7 +161,32 @@ const ArticleWatch = ({ route, navigation }) => {
                           marginBottom: 20,
                           resizeMode: 'cover'
                       }}
-                      />               
+                      activityIndicator={false}
+                      />   
+                      {
+                        news.media.videos.length > 0 && !videoStatus &&
+                        <View 
+                            style={{
+                                position: 'absolute',
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                height: 170,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                                zIndex: 10
+                        }}
+                        >
+                            <TouchableOpacity onPress={() => {
+                                setVideoStatus(true)
+                                console.log(videoStatus)
+                                }} style={{ height: 48, display: 'flex',    justifyContent: 'center', alignItems: 'center', width: 48, backgroundColor: 'white', borderRadius: 50, paddingLeft: 5, marginLeft: -10, }}>
+                                <FontAwesome name="play" size={22} color="black" />
+                            </TouchableOpacity>                        
+                        </View>
+                    }             
               </View>           
               <View style={{...styles.articleCategoryContainer, display: fullScreen ? 'none': 'flex' }}>
                   <Text style={styles.articleCategoryText}>Business</Text>
@@ -255,6 +280,7 @@ const styles = StyleSheet.create({
       width: Dimensions.get('window').width,
   },
   imageContainer: {
+      position: 'relative',
       flex: 1,
       width: Dimensions.get('window').width,
   },

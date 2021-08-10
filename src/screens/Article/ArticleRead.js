@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { StyleSheet, TouchableOpacity, Text, ScrollView, Platform, ActivityIndicator, View, Alert, ImageBackground, Dimensions, RefreshControl } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, ScrollView, Platform, ActivityIndicator, View, Alert, ImageBackground, Image, Dimensions, RefreshControl } from 'react-native';
 import { Feather, MaterialIcons, AntDesign, FontAwesome5  } from '@expo/vector-icons';
 import Colors from '../../colors/colors';
 import ArticleBottomTab from '../../components/ArticleBottomTab';
@@ -100,7 +100,23 @@ const ArticleRead = ({ route }) => {
                             <Text style={styles.newsSummaryText}> {news.time_to_read} min read</Text>
                         </View>
                         <View style={styles.newsSummaryItem}>
-                        <FontAwesome5 name="user-alt" size={14} color={Colors.text1} />                            
+                            {
+                                !news?.profile_picture && 
+                                <View 
+                                    style={{                
+                                        width: 36,
+                                        height: 26,        
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <FontAwesome5 name="user-alt" size={14} color={Colors.text1} /> 
+                                </View>
+                            }                    
+                            {
+                                news?.profile_picture &&
+                                <Image resizeMode="cover" source={{ uri: news?.profile_picture }} style={{ width: 18, height: 18, borderRadius: 100, justifyContent: 'center', alignItems: 'center', marginRight: 1 }} />
+                            }  
                             <Text style={styles.newsSummaryText}> {news.author}</Text>
                         </View>
                         
@@ -224,7 +240,8 @@ const styles = StyleSheet.create({
         fontFamily: 'DMRegular',
         color: '#8E8D8D',
         lineHeight: 18,
-        marginLeft: 6
+        marginLeft: 6,
+        textTransform: 'capitalize'
     },
     newsSummaryItem: {
         flexDirection: 'row',

@@ -108,8 +108,6 @@ const DocumentariesScreen = () => {
                             <View style={styles.category}>
                                 <View style={styles.categoryItems}>
                                     <FlatList
-                                    // numColumns={2}
-                                    // horizontal={false}
                                     data={news}
                                     keyExtractor={item => `Documentaries-${category_id}-${item.id.toString()}-${Math.floor(Math.random() * 10000)}`}
                                     renderItem={({item}) => {
