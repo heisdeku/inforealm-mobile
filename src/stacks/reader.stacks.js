@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import ReaderScreen from '../screens/Reader/ReaderScreen'
 import DummyScreen from '../screens/Reader/DummyScreen'
 import Colors from '../colors/colors'
@@ -37,8 +37,8 @@ const MainNewsStack = () => {
         textAlign: 'left'
       },
       tabStyle: {        
-        width: 122
-      }
+        width: 132
+      }      
     }}
     >
       <MainNews.Screen 
@@ -52,7 +52,8 @@ const MainNewsStack = () => {
       name='ReaderTrending'
       component={ReaderScreen}
       options={{
-        title: 'Now Trending'
+        title: 'Now Trending',
+        lazy: true
       }}
       />
     </MainNews.Navigator>

@@ -108,14 +108,14 @@ const OnboardingScreen = ({navigation}) => {
                             }}
                         >
                         <View
-                            style={{...styles.onboardButton, borderColor: '#F7F7F7'}}
+                            style={{...styles.onboardButton, borderColor: '#F7F7F7', display: 'flex', flexDirection: 'row', alignItems: 'center'}}
                         >
                             <Text
                             style={{...styles.buttonText, color: '#000', fontFamily: 'DMBold'}}
                             >
-                            Skip for now
-                            <FontAwesome name="chevron-right" size={12} color='#2B2D42' />
+                            Skip for now                           
                             </Text>
+                            <FontAwesome style={{ marginLeft: 5}} name="chevron-right" size={12} color='#2B2D42' />
                         </View>
                         </TouchableOpacity>
                         <View style={styles.footer}>
@@ -138,8 +138,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        paddingHorizontal: 35,
-        backgroundColor: '#F7F7F7'
+        paddingHorizontal: 35,        
     },
     logo: {
         height: 61,

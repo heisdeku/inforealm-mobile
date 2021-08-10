@@ -12,6 +12,7 @@ import { Feather, MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/
 import RBSheet from "react-native-raw-bottom-sheet";
 import { selectDownloadsArray, selectDownloadsArticles, selectDownloadsError, selectDownloadsLoading } from '../redux/selectors/downloads.selectors';
 import { addDownload, addDownloadArticle, deleteDownload, deleteDownloadArticle } from '../redux/actions/downloads.actions';
+import { truncate } from '../helpers/utils';
 
 const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle}) => {
     const [bookmarksStatus, setBookmarkStatus] = useState(false);
@@ -202,7 +203,7 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
                     })
                     
                   }><Text style={styles.newsTitle}>{news.title}</Text></TouchableOpacity>
-                <Text style={styles.newsCaption}>{news.caption}</Text>
+                <Text style={styles.newsCaption}>{truncate(news.caption, 50)}</Text>
                 <View style={styles.newsSummary}>
                     <View style={styles.newsSummaryItem}><Feather size={14} color={Colors.text1} name='clock' /><Text style={{...styles.newsSummaryText, marginLeft: 5}}> {news.date}</Text></View>
                     <View style={styles.newsSummaryItem}>
@@ -219,7 +220,7 @@ const NewsItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, d
             }                    
             {
               news?.profile_picture &&
-              <Image resizeMode="cover" source={{ uri: news?.profile_picture }} style={{ width: 16, height: 16, borderRadius: 100, justifyContent: 'center', alignItems: 'center' }} />
+              <Image resizeMode="cover" source={{ uri: news?.profile_picture }} style={{ width: 16, height: 16, borderRadius: 100, marginRight: 2, justifyContent: 'center', alignItems: 'center' }} />
             } 
             
             <Text style={styles.newsSummaryText}>{news.author}</Text>
@@ -371,7 +372,7 @@ const styles = StyleSheet.create({
         borderRadius: 8
     },
     image: {
-        height: 160,
+        height: 200,
         width: 116,
         borderRadius: 8,
         resizeMode: 'cover'
@@ -388,7 +389,7 @@ const styles = StyleSheet.create({
     newsTitle: {
         fontSize: 20,
         fontFamily: 'DMBold',
-        marginVertical: 8,
+        marginBottom: 8,
         color: '#2B2D42',
     },
     newsDetails: {
@@ -398,13 +399,13 @@ const styles = StyleSheet.create({
         color: Colors.text2,
     fontSize: 14,
     fontFamily: 'DMRegular',
-    marginBottom: 5,
+    //marginBottom: 5,
     },
     newsSummary: {
         display: 'flex',
         flexDirection: 'row',
         //justifyContent: 'space-between',
-        position: 'absolute',
+        //position: 'absolute',
         marginTop: 'auto',
         bottom: 0,    
         width: 210, 
@@ -412,12 +413,13 @@ const styles = StyleSheet.create({
     newsSummaryText: {
         fontSize: 12,
         fontFamily: 'DMRegular',
-        color: '#8E8D8D',        
+        color: '#8E8D8D', 
+        textTransform: 'capitalize'       
     },
     newsSummaryItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        minWidth: '45%', 
+        minWidth: '40%', 
         marginTop: 8
     },
     rbIcon: {

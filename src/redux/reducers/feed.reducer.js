@@ -5,7 +5,7 @@ const DEFAULT_STATE = {
   trending: [],    
   top: [],  
   error: null,
-  loading: false
+  loading: true
 }
 
 const feedReducer = (state = DEFAULT_STATE, action) => {

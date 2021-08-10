@@ -19,7 +19,7 @@ import ReaderTopContainer from '../../components/ReadeTopContainer'
 import { getLatestFeed } from '../../redux/operations/feed.op'
 import { error, isLoading, selectLatestFeed } from '../../redux/selectors/feed.selector'
 import { getCurrentUser } from '../../redux/selectors/user.selector'
-import useAsync from '../../hooks/useAsync'
+//import useAsync from '../../hooks/useAsync'
 import { selectNews, newsState } from '../../redux/selectors/news.selector'
 import CurrentNewsContainer from '../../components/CurrentNewsContainer'
 
@@ -43,18 +43,16 @@ const DummyScreen = ({ navigation }) => {
   const getFeed = async () => {
     const response = user?.user_id ? await dispatch(getLatestFeed(user?.user_id)) : await dispatch(getLatestFeed())
     return response    
-  }
-
+  }  
   useEffect(() => {    
-    let isMounted = true; 
-              // note mutable flag
+    let isMounted = true;  // note mutable flag
     if (isMounted) getFeed()
     else console.log("aborted setState on unmounted component")    
     return () => {         
         isMounted = false                
     };
      // use cleanup to toggle value, if unmounted
-  }, [dispatch, setRefreshing]); 
+  }, [dispatch, setRefreshing]);   
 
   return (
     <SafeAreaView style={{ flex: 1, position: 'relative' }}>
@@ -67,7 +65,10 @@ const DummyScreen = ({ navigation }) => {
       {
         !loading && hasError ?
         <View style={styles.errorView}>
-            <Text>{hasError.includes('Request failed with status code 500') ? 'Issues currently from our server, Our Engineers would fix this sooon. Thanks' : hasError}</Text>
+            <Text>
+              {
+                hasError.includes('Request failed with status code 500') ? 'Issues currently from our server, Our Engineers would fix this sooon. Thanks' : hasError
+              }</Text>
             <TouchableOpacity style={{width: '100%'}} onPress={() => getFeed()}>
                 <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
                     <Text
@@ -87,7 +88,7 @@ const DummyScreen = ({ navigation }) => {
               {!user?.user_id && <InterestContainer />}
               {user?.user_id && <ReaderTopContainer />}   
               <FlatList 
-                style={{ flex: 1, position:   'relative' }}
+                style={{ flex: 1, position: 'relative' }}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}
                 refreshControl={
                   <RefreshControl
@@ -110,13 +111,14 @@ const DummyScreen = ({ navigation }) => {
                     )                  
                   }
                 }} 
+                onEndReachedThreshold={0.7}
               />
           </View>          
           :
           null
       }   
       {
-        !hasError && !feed.length && !loading ?
+        !loading && !hasError && !feed.length ?
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <View style={styles.emptyView}>
                 <Text style={styles.emptyText}>Here’s a little empty</Text>

@@ -99,11 +99,11 @@ const ReaderScreen = ({ navigation }) => {
           <View style={styles.category}>
             <View style={styles.categoryHeadView}>
               <View style={{ width: '50%' }}>
-                <Text style={styles.categoryHead}>Top News</Text>
-                <Text style={styles.categoryCaption}>
-                  All Curated Top News From The Past Week till Now
-                </Text>
+                <Text style={styles.categoryHead}>Top News</Text>                
               </View>
+              <Text style={styles.categoryCaption}>
+                  All Curated Top News From The Past Week till Now
+              </Text>
               {/*
               <TouchableOpacity
                 onPress={() => navigation.navigate('TopNews')}
@@ -208,10 +208,6 @@ const styles = StyleSheet.create({
     fontFamily: 'DMBold',
     paddingHorizontal: 15,
   },
-  categoryHeadView: {
-    borderBottomColor: '#cdcccc',
-    borderBottomWidth: 0.5,
-  },
   categoryItems: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -219,12 +215,16 @@ const styles = StyleSheet.create({
   categoryHeadView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingRight: 15,
+    paddingRight: 15,    
+    borderBottomColor: '#cdcccc',
+    borderBottomWidth: 0.5,
+    paddingBottom: 20
   },
   categoryCaption: {
-    fontSize: 12,
+    fontSize: 14,
     color: Colors.text2,
-    paddingLeft: 15,
+    paddingRight: 15,
+    width: '60%',    
   },
 })
 

@@ -117,16 +117,16 @@ const LoginScreen = ({navigation}) => {
                     })
                     }}
                 >
-                  <View
-                    style={{...styles.onboardButton, borderColor: '#F7F7F7'}}
-                  >
+                 <View
+                    style={{...styles.onboardButton, borderColor: '#F7F7F7', display: 'flex', flexDirection: 'row', alignItems: 'center'}}
+                >
                     <Text
-                    style={{...styles.buttonText, color: '#000',  fontFamily: 'DMBold'}}
+                    style={{...styles.buttonText, color: '#000', fontFamily: 'DMBold'}}
                     >
-                      Skip for now
-                      <FontAwesome name="chevron-right" size={12} color='#2B2D42' />
+                    Skip for now                           
                     </Text>
-                  </View>
+                    <FontAwesome style={{ marginLeft: 5}} name="chevron-right" size={12} color='#2B2D42' />
+                </View>
                 </TouchableOpacity>
             </View>
            
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     footerLink: {             
         color: "#e33127",
         fontWeight: "bold",
-        fontSize: 18,        
+        fontSize: 16,        
     },
     onboardButton: {
         height: 50,

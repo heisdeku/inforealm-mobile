@@ -61,7 +61,7 @@ const ReaderSliderNewsItem = ({ news }) => {
           <View style={styles.crumbs}>
             <Text style={styles.crumbText}>News </Text>
             <Feather name='chevron-right' size={14} color={'white'} />
-            <Text style={styles.crumbText}> {news.interests[0].interest}</Text>
+            <Text style={styles.crumbText}>{news.interests[0].interest}</Text>
           </View>
           <Text style={styles.newsTitle}>
             {news.title}
@@ -104,7 +104,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 5,
     paddingHorizontal: 7,
-    width: 110,
+    minWidth: 120,
+    maxWidth: 140,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     borderRadius: 16,
   },

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import {StyleSheet, TouchableOpacity, Text, ScrollView, Vibration, View, Dimensions, ImageBackground } from 'react-native'
+
+import {StyleSheet, TouchableOpacity, Text, ScrollView, Vibration, View, Dimensions, ImageBackground, Image } from 'react-native'
 import { Video } from 'expo-av';
 import VideoPlayer from 'expo-video-player'
 import { FontAwesome, Feather, FontAwesome5, Ionicons } from '@expo/vector-icons';
@@ -16,10 +17,11 @@ import Toast from 'react-native-root-toast';
 import * as FileSystem from 'expo-file-system';
 import { selectDownloadsArray, selectDownloadsArticles, selectDownloadsError, selectDownloadsLoading } from '../redux/selectors/downloads.selectors';
 import { addDownload, addDownloadArticle, deleteDownload, deleteDownloadArticle, setBookmarkStatus as setDownloadBookmarkStatus, setDownloadStatus } from '../redux/actions/downloads.actions';
+import { truncate } from '../helpers/utils';
 
 const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle, setDownloadStatus, setDownloadBookmarkStatus}) => {   
-    const viewRef = useRef(null)
     const video = useRef(null);
+    const [shouldPlay, setVideoStatus] = useState(false);
     const [fullScreen, setFullscreen] = useState(false);
     const [bookmarksStatus, setBookmarkStatus] = useState(false);
     const [bookmarkError, setBookmarkError] = useState('');
@@ -203,20 +205,17 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
                     news.media.videos.length > 0?
                     <VideoPlayer
                       videoProps={{
-                          shouldPlay: false,
+                          shouldPlay,
                           resizeMode: Video.RESIZE_MODE_COVER , 
-                          posterSource: {
-                              uri: news.media.thumbnail
-                          },
                           posterStyle: {
                               width: fullScreen ? Dimensions.get('window').width: Dimensions.get('window').width - 30 , 
                               height: fullScreen ? Dimensions.get('window').height - 71: 170,
                               resizeMode: 'cover'
-                          },
-                          usePoster: true,    
+                          },                             
                           source: {uri: news.media.videos[0]},
                           ref: video,
-                      }}
+                          activityIndicator: false
+                      }}                      
                       fullscreen={{
                           inFullscreen: fullScreen,
                           enterFullscreen: async () => {
@@ -263,10 +262,56 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
                           marginBottom: 20,
                           resizeMode: 'cover'
                       }}
+                      //activityIndicator={false}
                       />    
                       :
                       <ImageBackground source={{uri: news.media.thumbnail}} style={styles.thumb} />
-                }                
+                }{
+                    news.media.videos.length > 0 && !shouldPlay &&
+                    <TouchableOpacity 
+                        onPress={async () => {                            
+                            console.log('start')
+                            await setVideoStatus(true)
+                            await video.current.setStatusAsync({
+                                shouldPlay: true,
+                            })                            
+                        }}
+                        style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            height: 170,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: "rgba(0, 0, 0, 0.5)",
+                            //zIndex: 10
+                      }}
+                    >
+                          <TouchableOpacity 
+                            onPress={async () => {
+                                console.log('start')
+                                await video.current.setStatusAsync({
+                                    shouldPlay: true,
+                                  })
+                                await setVideoStatus(true)
+                            }} 
+                            style={
+                                { height: 48, 
+                                display: 'flex',
+                                justifyContent: 'center', 
+                                alignItems: 'center', 
+                                width: 48, 
+                                backgroundColor: 'white', 
+                                borderRadius: 50, 
+                                paddingLeft: 5, 
+                                marginLeft: -10, 
+                            }}>
+                              <FontAwesome name="play" size={22} color="black" />
+                          </TouchableOpacity>                        
+                    </TouchableOpacity>
+                }               
             </View>
             <View style={styles.crumbs}>
                 <Text style={styles.crumbText}>News <Feather name='chevron-right' size={12} /> {news.interests.map(interest => interest.interest).join(', ')}</Text>
@@ -277,7 +322,7 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
             }}>
                 <View style={styles.titleContainer}><Text style={styles.titleText}>{news.title}</Text></View>
             </TouchableOpacity>
-            <View style={styles.captionContainer}><Text style={styles.captionText}>{news.caption}</Text></View>
+            <View style={styles.captionContainer}><Text style={styles.captionText}>{truncate(news.caption, 65)}</Text></View>
             <View style={{...styles.dowloadProgressHolder, opacity: downloadInProgress ? 1 : 0}}>
                 <View style={{...styles.downloadProgress, width: `${downloadProgress}%`}}></View>
             </View>
@@ -288,8 +333,18 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
                 <View style={styles.detailsItem}>
                     <Text style={styles.detailsText}><Ionicons size={14} color={Colors.text1} name='md-play-circle' /> {news.time_to_read ? `${news.time_to_read} min read` : '1+ min read'}</Text>
                 </View>
-                <View style={styles.detailsItem}>
-                    <Text style={styles.detailsText}><FontAwesome5 size={12} color={Colors.text1} name='user-alt' /> {news.author}</Text>
+                <View style={{...styles.detailsItem, display: 'flex', flexDirection: 'row'}}>
+                    {
+                        !news?.profile_picture &&
+                            <FontAwesome5 size={12} color={Colors.text1} name='user-alt' /> 
+                        }                    
+                        {
+                        news?.profile_picture &&
+                        <Image resizeMode="cover" source={{ uri: news?.profile_picture }} style={{ width: 18, height: 18, borderRadius: 100, justifyContent: 'center', alignItems: 'center', marginRight: 2 }} />
+                    } 
+                    <Text style={styles.detailsText}>                                            
+                        {news.author}
+                    </Text>
                 </View>
             </View>
             <RBSheet
@@ -422,6 +477,7 @@ const styles = StyleSheet.create({
         paddingBottom: 26
     },
     imageContainer: {
+        position: 'relative',
         height: 170,
         marginBottom: 24,
         borderRadius: 4,
@@ -464,7 +520,8 @@ const styles = StyleSheet.create({
         fontSize: 11,
         color: '#8E8D8D',
         fontFamily: 'DMRegular',
-        lineHeight: 18
+        lineHeight: 18,
+        textTransform: 'capitalize'
     },
     dowloadProgressHolder: {
         height: 7,

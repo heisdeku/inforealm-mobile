@@ -6,6 +6,9 @@ import { selectNews } from '../redux/selectors/news.selector';
 import { useNavigation } from '@react-navigation/native';
 import CloseIcon from '../svgs/closeIcons';
 import { clearNews } from '../redux/actions/news.actions';
+import { truncate } from '../helpers/utils';
+
+
 
 const CurrentNewsContainer = () => { 
     const dispatch = useDispatch() 
@@ -33,8 +36,18 @@ const CurrentNewsContainer = () => {
                             params: {news_id: news.id},              
                         })}
                     >
-                        <Text style={{ fontWeight: '700', fontFamily: 'DMBold', fontSize: 16, lineHeight: 21, color: '#2B2D42'}}>Continue Reading</Text>
-                        <Text style={{ fontSize: 13, color: '#343A40', lineHeight: 18}}>{news && news.title !== undefined &&  news?.title.slice(0, 50) + '...'}</Text>
+                        <Text 
+                            style={{ fontWeight: '700', fontFamily: 'DMBold', fontSize: 16, lineHeight: 21, color: '#2B2D42'}}
+                        >
+                            Continue Reading
+                        </Text>
+                        <Text 
+                            style={{ fontSize: 13, color: '#343A40', lineHeight: 18}}
+                        >
+                            {
+                                news && news.title !== undefined &&  truncate(news?.title, 41)
+                            }
+                        </Text>
                     </TouchableOpacity>
                 </View>
                 <View>
