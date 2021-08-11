@@ -16,7 +16,7 @@ const DynamicNewsScreen = ({interest_id}) => {
         try {
             const bodyForm = new FormData();
             bodyForm.append('interest_id', interest_id)
-            bodyForm.append('page', page);
+            bodyForm.append('page', page+1);
             const response = await apiConnect.post('/getNewsByInterest', bodyForm);
             if(response.data.status === 'success'){
                 setNews([...news, ...response.data.news]);

@@ -18,7 +18,8 @@ const AllNewsScreen = () => {
             bodyForm.append('page', page+1);
             const response = await apiConnect.post('/getLatestNews', bodyForm);
             if(response.data.status == 'success'){
-                setNews([...news, ...response.data.news])
+                const newNews = [...news, ...response.data.news];
+                setNews(newNews);
                 setPage(page => page+1);
                 if(response.data.news.length >= 25){
                     setHasMoreData(true);
@@ -107,7 +108,7 @@ const AllNewsScreen = () => {
                         tintColor={Colors.brand}
                         />
                     }
-                    onEndReached={() => loadMoreNews()}
+                    onEndReached={loadMoreNews}
                     onEndReachedThreshold={0.7}
                     ListFooterComponent={!hasMoreData ? <Text style={{fontSize: 16, fontFamily: 'DMBold', textAlign: 'center', paddingVertical: 20}}>We guess you've seen it all</Text> : null}
                     />
