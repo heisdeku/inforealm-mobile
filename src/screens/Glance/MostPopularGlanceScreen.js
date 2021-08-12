@@ -17,7 +17,7 @@ const LatestGlanceScreen = () => {
         try {
             const bodyForm = new FormData();
             bodyForm.append('category_id', category_id)
-            bodyForm.append('page', page)
+            bodyForm.append('page', page+1)
             const response = await apiConnect.post('/getMostPopularNewsByCategory', bodyForm);
             if(response.data.status === 'success'){
                 setNews([...news, ...response.data.news]);
