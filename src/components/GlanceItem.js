@@ -29,7 +29,7 @@ const GlanceItem = ({news}) => {
     const getAudioLength = async () => {
         const soundObject = new Audio.Sound();
         try {
-            await soundObject.loadAsync({uri: news.media.audios[0]});
+            await soundObject.loadAsync({uri: news.media.audios[0]}, {}, false);
             const audioStatus = await soundObject.getStatusAsync();
             setDuration(millisToMinutesAndSeconds(audioStatus.durationMillis));
         } catch (error) {
@@ -60,7 +60,7 @@ const GlanceItem = ({news}) => {
                         }><Text style={styles.glanceItemTitle}>{news.title}</Text></TouchableOpacity>                        
                         <View style={{flexDirection: 'row'}}>
                             <View style={styles.date}><Feather size={14} color={Colors.text1} name='clock' /><Text style={styles.dateText}> {news.date}</Text></View>
-                            {duration ? <View style={styles.date}><Feather size={14} color={Colors.text1} name='headphones' /><Text style={styles.dateText}> {duration}</Text></View> : null}
+                            {duration ? <View style={styles.date}><Feather size={14} color={Colors.text1} name='headphones' /><Text style={styles.dateText}> {duration}</Text></View> : <Text style={styles.detailsText}><Ionicons size={14} color={Colors.text1} name='md-play-circle' /> {news.time_to_read ? `${news.time_to_read} min read` : '1+ min read'}</Text>}
                         </View>
                     </View>
                     <View style={{height: 22, width: 22, justifyContent: 'center', alignItems: 'center'}}>

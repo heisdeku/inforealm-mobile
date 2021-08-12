@@ -191,10 +191,18 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
         }
     }
 
+    const getDuration = async () => {
+        const videoStatus = video.getStatusAsync();
+        console.log(videoStatus);
+    }
 
     useEffect(() => {
         if(user_id){
             getBookmarkStatus();
+        }
+
+        if(news.media.videos.length > 0){
+            getDuration();
         }
     }, [])
 
