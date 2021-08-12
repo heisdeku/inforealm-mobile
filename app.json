@@ -23,7 +23,6 @@
             "supportsTablet": true,
             "bundleIdentifier": "com.inforealm.main",
             "buildNumber": "1.0.0"
-
         },
         "android": {
             "adaptiveIcon": {

@@ -206,7 +206,7 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
                     <VideoPlayer
                       videoProps={{
                           shouldPlay,
-                          resizeMode: Video.RESIZE_MODE_COVER , 
+                          resizeMode: Video.RESIZE_MODE_CONTAIN , 
                           posterStyle: {
                               width: fullScreen ? Dimensions.get('window').width: Dimensions.get('window').width - 30 , 
                               height: fullScreen ? Dimensions.get('window').height - 71: 170,

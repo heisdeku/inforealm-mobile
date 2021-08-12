@@ -20,18 +20,25 @@ const DocumentariesScreen = () => {
 
     const loadMoreNewsByCategory = async () => {
         try {
+            console.log('fetching more news');
             const bodyForm = new FormData();
             bodyForm.append('category_id', category_id)
             bodyForm.append('page', page)
+            console.log('pulling api');
             const response = await apiConnect.post('/getNewsByCategory', bodyForm);
             if(response.data.status === 'success'){
+                console.log('setting news')
                 setNews([...news, ...response.data.news]);
                 setPage(page => page+1);
                 if(response.data.news.length >= 25){
+                    console.log('has more data');
                     setHasMoreData(true);
                 }else{
+                    console.log('has no more data')
                     setHasMoreData(false);
                 }
+            }else{
+                console.log('no success message');
             }
         } catch (error) {
             console.log(error);
@@ -173,6 +180,7 @@ const styles = StyleSheet.create({
         marginBottom: 0,
         borderBottomColor: '#CDCCCC',
         borderBottomWidth: 0.5,
+        flex: 1
         // paddingHorizontal: 15
     },
     categoryHead: {
@@ -181,8 +189,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15
     },
     categoryItems: {
-        flexDirection: 'row',
-        flexWrap: 'wrap'
+        flex: 1
     },
     categoryHeadView: {
         flexDirection: 'row',
