@@ -51,15 +51,15 @@ export const GoogleAuthWrapper = {
   }
 }
 */
-// 781405863501-ebo8covjetmp5sdadd191krh23r158u1.apps.googleusercontent.com
+// prod - 781405863501-ebo8covjetmp5sdadd191krh23r158u1.apps.googleusercontent.com
 
-// 781405863501-1i2ctff48ggmu884qouo4ulnvfi4fscd.apps.googleusercontent.com
+// dev - 781405863501-1i2ctff48ggmu884qouo4ulnvfi4fscd.apps.googleusercontent.com
 export const googleSignIn = () => {
   return async (dispatch) => {
     dispatch(googleSignInProcess())
       let googleResFb;
       const res = await Google.logInAsync({   
-        clientId: '781405863501-1i2ctff48ggmu884qouo4ulnvfi4fscd.apps.googleusercontent.com',                        
+        clientId: '781405863501-ebo8covjetmp5sdadd191krh23r158u1.apps.googleusercontent.com',                        
       });
 
         if (res.type === 'success') {          

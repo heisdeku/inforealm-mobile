@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export default axios.create({
-    baseURL: 'https://aledoyhost.com/inforealm/web-api'
+    baseURL: 'https://theinforealm.com/server_api/web-api/'
 })
