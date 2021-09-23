@@ -207,20 +207,23 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
     }, [news])
     return (
         <View style={styles.container}>
-            <View style={styles.imageContainer}>
+            
             { 
                 youtubeId ? (
                 <WebView
                     source={{ uri: "https://www.youtube.com/embed/"+youtubeId}}
                     startInLoadingState={true} 
                     allowsFullscreenVideo={true}
+                    useWebKit 
+                    allowUniversalAccessFromFileURLs 
+                    originWhitelist = {['*']} 
                     renderLoading={() => <ActivityIndicator color={Colors.secondary} size='large' />}
                     renderError={(errorName) => <View style={styles.errorView}>
                         <Text>{errorName} Occurred, Reload Page</Text>
                         <TouchableOpacity style={{width: '100%'}} onPress={() => getFeed()}>
                             <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
                                 <Text
-                                style={{...styles.buttonText, color: '#fff'}}
+                                style={{...styles.buttonText, color: '#000'}}
                                 >
                                 Try Again
                                 </Text>
@@ -229,17 +232,19 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
                     </View>
                     }
                     style={{
-                        minHeight: 100,
+                        minHeight: 250,
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
                         width: Dimensions.get('window').width - 16
                     }}
                 />
-                ) : <ImageBackground source={{uri: news.media.thumbnail}} style={styles.thumb} />
+                ) : <View style={styles.imageContainer}>
+                <ImageBackground source={{uri: news.media.thumbnail}} style={styles.thumb} />
+                </View>
             }
                             
-            </View>
+           
             <View style={styles.crumbs}>
                 <Text style={styles.crumbText}>News <Feather name='chevron-right' size={12} /> {news.interests[0].interest}</Text>
             </View>
@@ -404,7 +409,27 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         paddingBottom: 26
     },
+    errorView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 25
+    },
+    onboardButton: {
+        height: 50,
+        width: '100%',
+        borderRadius: 4,
+        borderWidth: 0.7,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 8
+      },
+      buttonText: {
+          fontSize: 14,
+          fontFamily: 'DMRegular'
+      },
     imageContainer: {
+        flex: 1,
         position: 'relative',
         height: 280,
         marginBottom: 24,
