@@ -13,21 +13,21 @@ import {
 import apiConnect from '../../api/apiConnect'
 
 export const getLatestFeed = (id) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(getFeedStart())
-    const response = apiConnect.get(`/getFeed?user_id=${id}`)
-    return response
-      .then((res) => {
-        if (res.data.status === 'success') {
-          dispatch(getFeed(res.data.news))
-          const data = res.data.news
-          return data
-        }
-      })
-      .catch((err) => {
-        console.log(err.response)
-        dispatch(getFeedFailed(err.message))
-      })
+    try {
+      const response = await apiConnect.get(`/getFeed?user_id=${id}`)
+      if (response.data.status === 'success') {
+        dispatch(getFeed(response.data.news))
+        const data = response.data.news
+        return data
+      } else {
+        dispatch(getFeedFailed(response.data.status))
+      }
+    } catch(err) {
+      console.log(e)
+      dispatch(getFeedFailed(err.message))
+    }
   }
 }
 

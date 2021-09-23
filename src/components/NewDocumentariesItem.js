@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-import {StyleSheet, TouchableOpacity, Text, ScrollView, Vibration, View, Dimensions, ImageBackground, Image } from 'react-native'
-import { Video } from 'expo-av';
-import VideoPlayer from 'expo-video-player'
-import { FontAwesome, Feather, FontAwesome5, Ionicons } from '@expo/vector-icons';
-import { setStatusBarHidden } from 'expo-status-bar'
-import * as ScreenOrientation from 'expo-screen-orientation'
+import {StyleSheet, TouchableOpacity, Text, ScrollView, Vibration, View, Dimensions, ActivityIndicator, ImageBackground, Image } from 'react-native'
+import {  Feather, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import Colors from '../colors/colors';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { useNavigation } from '@react-navigation/native';
@@ -18,11 +14,10 @@ import * as FileSystem from 'expo-file-system';
 import { selectDownloadsArray, selectDownloadsArticles, selectDownloadsError, selectDownloadsLoading } from '../redux/selectors/downloads.selectors';
 import { addDownload, addDownloadArticle, deleteDownload, deleteDownloadArticle, setBookmarkStatus as setDownloadBookmarkStatus, setDownloadStatus } from '../redux/actions/downloads.actions';
 import { truncate } from '../helpers/utils';
+import { WebView } from 'react-native-webview';
+
 
 const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, deleteDownload, downloadsError, downloadsLoading, downloadArticles, addDownloadArticle, deleteDownloadArticle, setDownloadStatus, setDownloadBookmarkStatus}) => {   
-    const video = useRef(null);
-    const [shouldPlay, setVideoStatus] = useState(false);
-    const [fullScreen, setFullscreen] = useState(false);
     const [bookmarksStatus, setBookmarkStatus] = useState(false);
     const [bookmarkError, setBookmarkError] = useState('');
     const [doBookmarkError, setDoBookmarkError] = useState('');
@@ -31,8 +26,8 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
     const [downloadInProgressName, setDownloadInProgressName] = useState('');
     const [audioDownloadDoesntExist, setaudioDownloadDoesntExist] = useState(false);
     const [videoDownloadDoesntExist, setvideoDownloadDoesntExist] = useState(false);
+    const [ youtubeId, setYoutubeId ] = useState(null)
 
-    const navigation = useNavigation();
     const refRBSheet = useRef();  
 
     const onShare = async () => {
@@ -43,6 +38,13 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
         } catch (error) {  
             console.log(error);
         }
+    }
+
+    const getStringInBetweenItems = (str, item1, item2) => {
+        let newValue;
+        let value = str.substring(str.indexOf(item1) + 1)
+        newValue = value
+        return newValue
     }
 
     const getBookmarkStatus = async () => {
@@ -191,138 +193,55 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
         }
     }
 
-    const getDuration = async () => {
-        const videoStatus = video.getStatusAsync();
-        console.log(videoStatus);
-    }
-
     useEffect(() => {
         if(user_id){
             getBookmarkStatus();
         }
-
-        if(news.media.videos.length > 0){
-            getDuration();
-        }
     }, [])
 
+    useEffect(() => {
+        if (news.embedPresent) {
+            const value = getStringInBetweenItems(news.embedLink, '=')
+            setYoutubeId(value)
+        }
+    }, [news])
     return (
         <View style={styles.container}>
             <View style={styles.imageContainer}>
-                {
-                    news.media.videos.length > 0?
-                    <VideoPlayer
-                      videoProps={{
-                          shouldPlay,
-                          resizeMode: Video.RESIZE_MODE_CONTAIN , 
-                          posterStyle: {
-                              width: fullScreen ? Dimensions.get('window').width: Dimensions.get('window').width - 30 , 
-                              height: fullScreen ? Dimensions.get('window').height - 71: 170,
-                              resizeMode: 'cover'
-                          },                             
-                          source: {uri: news.media.videos[0]},
-                          ref: video,
-                          activityIndicator: false
-                      }}                      
-                      fullscreen={{
-                          inFullscreen: fullScreen,
-                          enterFullscreen: async () => {
-                              setStatusBarHidden(true, 'fade')
-                              setFullscreen(true)
-                              await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_DOWN)  
-                              navigation.setOptions({headerShown: false});          
-                              video.current.setStatusAsync({
-                                  shouldPlay: true,
-                              })
-                          },
-                          
-                          exitFullscreen: async () => {
-                              setStatusBarHidden(false, 'fade')
-                              setFullscreen(false)
-                              await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT)
-                              /*video.current.setStatusAsync({
-                                  shouldPlay: false,
-                              })*/
-                          },                            
-                      }}                                                   
-                      slider={{
-                          visible: true,
-                          minimumTrackTintColor: '#F7F7F7',
-                          maximumTrackTintColor: 'rgba(247, 247, 247, 0.6)',
-                          thumbTintColor: '#F7F7F7',
-                          style: {
-                              borderRadius: 8,
-                              height: 10,                                
-                          }
-                      }}
-                      icon={{
-                          play: <View style={{ height: 48, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 48, backgroundColor: 'white', borderRadius: 50, paddingLeft: 5, marginLeft: -10, }}>
-                              <FontAwesome name="play" size={22} color="black" />
-                          </View>,  
-                          pause: <View style={{ height: 48, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 48, backgroundColor: 'white', borderRadius: 50, marginLeft: -10, }}>
-                          <FontAwesome name="pause" size={20} color="black" />
-                      </View>,                          
-                          }}
-                      style={{
-                          ...styles.image,                            
-                          height: fullScreen ? Dimensions.get('window').height - 71: 170,
-                          width: fullScreen  ? Dimensions.get('window').width: Dimensions.get('window').width - 30 ,                            
-                          marginBottom: 20,
-                          resizeMode: 'cover'
-                      }}
-                      //activityIndicator={false}
-                      />    
-                      :
-                      <ImageBackground source={{uri: news.media.thumbnail}} style={styles.thumb} />
-                }{
-                    news.media.videos.length > 0 && !shouldPlay &&
-                    <TouchableOpacity 
-                        onPress={async () => {                            
-                            console.log('start')
-                            await setVideoStatus(true)
-                            await video.current.setStatusAsync({
-                                shouldPlay: true,
-                            })                            
-                        }}
-                        style={{
-                            position: 'absolute',
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            height: 170,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: "rgba(0, 0, 0, 0.5)",
-                            //zIndex: 10
-                      }}
-                    >
-                          <TouchableOpacity 
-                            onPress={async () => {
-                                console.log('start')
-                                await video.current.setStatusAsync({
-                                    shouldPlay: true,
-                                  })
-                                await setVideoStatus(true)
-                            }} 
-                            style={
-                                { height: 48, 
-                                display: 'flex',
-                                justifyContent: 'center', 
-                                alignItems: 'center', 
-                                width: 48, 
-                                backgroundColor: 'white', 
-                                borderRadius: 50, 
-                                paddingLeft: 5, 
-                                marginLeft: -10, 
-                            }}>
-                              <FontAwesome name="play" size={22} color="black" />
-                          </TouchableOpacity>                        
-                    </TouchableOpacity>
-                }               
+            { 
+                youtubeId ? (
+                <WebView
+                    source={{ uri: "https://www.youtube.com/embed/"+youtubeId}}
+                    startInLoadingState={true} 
+                    allowsFullscreenVideo={true}
+                    renderLoading={() => <ActivityIndicator color={Colors.secondary} size='large' />}
+                    renderError={(errorName) => <View style={styles.errorView}>
+                        <Text>{errorName} Occurred, Reload Page</Text>
+                        <TouchableOpacity style={{width: '100%'}} onPress={() => getFeed()}>
+                            <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
+                                <Text
+                                style={{...styles.buttonText, color: '#fff'}}
+                                >
+                                Try Again
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    }
+                    style={{
+                        minHeight: 100,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: Dimensions.get('window').width - 16
+                    }}
+                />
+                ) : <ImageBackground source={{uri: news.media.thumbnail}} style={styles.thumb} />
+            }
+                            
             </View>
             <View style={styles.crumbs}>
-                <Text style={styles.crumbText}>News <Feather name='chevron-right' size={12} /> {news.interests.map(interest => interest.interest).join(', ')}</Text>
+                <Text style={styles.crumbText}>News <Feather name='chevron-right' size={12} /> {news.interests[0].interest}</Text>
             </View>
             <TouchableOpacity onLongPress={() => {
                 Vibration.vibrate(50, false);
@@ -414,7 +333,7 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
                                 }
                             })                            
                             }
-                            {
+                            {/*
                                 news.media.videos.map((video, i) => {
                                     if(checkIfDownloadExists(downloadsArray, video.substring(video.lastIndexOf('/')+1))){
                                         return(
@@ -436,6 +355,7 @@ const NewDocumentariesItem = ({news, user_id, downloadsArray, addDownload, delet
                                         )
                                     }
                                 })
+                                */
                             }
                         </View>
                         :
@@ -486,7 +406,7 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         position: 'relative',
-        height: 170,
+        height: 280,
         marginBottom: 24,
         borderRadius: 4,
         overflow: 'hidden'
@@ -589,3 +509,5 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewDocumentariesItem)
+
+

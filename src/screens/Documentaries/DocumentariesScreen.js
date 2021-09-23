@@ -28,6 +28,7 @@ const DocumentariesScreen = () => {
             const response = await apiConnect.post('/getNewsByCategory', bodyForm);
             if(response.data.status === 'success'){
                 console.log('setting news')
+                console.log(response.data.news)
                 setNews([...news, ...response.data.news]);
                 setPage(page => page+1);
                 if(response.data.news.length >= 25){

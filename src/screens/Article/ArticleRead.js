@@ -7,6 +7,10 @@ import ArticleBottomTab from '../../components/ArticleBottomTab';
 import { getNewsData } from '../../redux/operations/news.op';
 import { hasError, isLoading, selectNews, selectNewsCaption, selectNewsTitle } from '../../redux/selectors/news.selector';
 import HTMLView from 'react-native-htmlview'
+import { WebView } from 'react-native-webview';
+//import RenderHtml from 'react-native-render-html';
+
+
 
 const ArticleRead = ({ route }) => {
     const dispatch = useDispatch()
@@ -15,15 +19,46 @@ const ArticleRead = ({ route }) => {
     const news = useSelector(selectNews)        
     const { news_id } = route?.params; 
     const [refreshing, setRefreshing] = useState(false) 
+    const [ youtubeId, setYoutubeId ] = useState(null)
+
+    const getStringInBetweenItems = (str, item1, item2) => {
+        let newValue;
+        let value = str.substring(str.indexOf(item1) + 1)
+        //let indexOfItem2 = value.indexOf(item2)
+        newValue = value
+        return newValue
+    }
+
+    const renderNode = (node, index, siblings, parent, defaultRenderer) => {
+        if (node.name == 'img') {
+            const a = node.attribs;
+            return (
+                <View style={styles.imageContainer}>
+                    <Image 
+                        resizeMode="cover" 
+                        source={{ uri: a.src}} 
+                        style={{ width: Dimensions.get('window').width - 10, height: 450, justifyContent: 'center', resizeMode: 'contain', alignItems: 'center', }} 
+                    />
+                </View>
+                
+            )
+        }
+        if (node.name === 'oembed') {
+            const value = getStringInBetweenItems(node.attribs.url, '=')
+            console.log('value', value)
+            setYoutubeId(value)
+        }  
+    }
     
     const onRefresh = () => {
         setRefreshing(true)
         getNews()  
         setRefreshing(false)    
       } 
+
+    
         
     const getNews = async () => {
-        console.log('dispatching')
         try {
             const response = await dispatch(getNewsData(news_id))
             if (response.error) {
@@ -38,7 +73,10 @@ const ArticleRead = ({ route }) => {
     useEffect(() => {
         getNews()
     }, [news_id]) 
-
+    
+    useEffect(()=> {
+        console.log(youtubeId)
+    }, [youtubeId])
     return (
     <View style={{ position: 'relative', flex: 1}} >
         {
@@ -76,9 +114,42 @@ const ArticleRead = ({ route }) => {
                 />
               }
             >
-            <View style={styles.imageContainer}>
-                <ImageBackground source={{uri: news.media.thumbnail}} style={styles.image} />
-            </View>
+            { 
+                youtubeId ? (
+                <WebView
+                    source={{ uri: "https://www.youtube.com/embed/"+youtubeId}}
+                    startInLoadingState={true} 
+                    allowsFullscreenVideo={true}
+                    renderLoading={() => <ActivityIndicator color={Colors.secondary} size='large' />}
+                    renderError={(errorName) => <View style={styles.errorView}>
+                        <Text>{errorName} Occurred, Reload Page</Text>
+                        <TouchableOpacity style={{width: '100%'}} onPress={() => getFeed()}>
+                            <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
+                                <Text
+                                style={{...styles.buttonText, color: '#fff'}}
+                                >
+                                Try Again
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    }
+                    style={{
+                        minHeight: 250,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: Dimensions.get('window').width
+                    }}
+                />
+                ) : null
+            }
+            {
+                !youtubeId ? 
+                <View style={styles.imageContainer}>
+                    <ImageBackground source={{uri: news.media.thumbnail}} style={styles.image} />
+                </View> : null
+            }
             <View style={styles.articleCategoryContainer}>
                 <Text style={styles.articleCategoryText}>Business</Text>
                 <AntDesign name="right" size={12} color="black" />
@@ -130,7 +201,8 @@ const ArticleRead = ({ route }) => {
                     }}>
                         <HTMLView
                             value={`${news.content}`}
-                            stylesheet={styling}                            
+                            stylesheet={styling}  
+                            renderNode={renderNode}                          
                         />                        
                     </View>
                 </View>                        
