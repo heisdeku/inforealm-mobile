@@ -21,8 +21,8 @@ const feedReducer = (state = DEFAULT_STATE, action) => {
     case feedTypes.FETCH_LATEST_SUCCESS:
       return {
         ...state,
-        loading: false,
         latest: action.payload,
+        loading: false,
       }
     case feedTypes.FETCH_TRENDING_SUCCESS:
       return {

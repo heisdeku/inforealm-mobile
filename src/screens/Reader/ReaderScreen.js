@@ -50,41 +50,43 @@ const ReaderScreen = ({ navigation }) => {
   }, [navigation])
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView
-        style={{ flex: 1 }}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={[Colors.brand, Colors.secondary, Colors.caption]}
-            tintColor={Colors.brand}
-          />
-        }
-      >
-        {
-          loading &&
-          <View style={styles.loadingView}>
-              <ActivityIndicator color={Colors.secondary} size='large' />
-          </View>
-        }
-        {
-          !loading && hasError ?
-          <View style={styles.errorView}>
-              <Text>{hasError.includes('Request failed with status code 500') ? 'Issues currently from our server, Our Engineers would fix this sooon. Thanks' : hasError}</Text>
-              <TouchableOpacity style={{width: '100%'}} onPress={() => getTrend()}>
-                  <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
-                      <Text
-                      style={{...styles.buttonText, color: '#fff'}}
-                      >
-                      Try Again
-                      </Text>
-                  </View>
-              </TouchableOpacity>
-          </View>
-          :
-          null
-        }
-        <View style={styles.container}>          
+      {
+        loading &&
+        <View style={styles.loadingView}>
+            <ActivityIndicator color={Colors.secondary} size='large' />
+        </View>
+      }
+      {
+        !loading && hasError ?
+        <View style={styles.errorView}>
+            <Text>{hasError.includes('Request failed with status code 500') ? 'Issues currently from our server, Our Engineers would fix this sooon. Thanks' : hasError}</Text>
+            <TouchableOpacity style={{width: '100%'}} onPress={() => getTrend()}>
+                <View style={{...styles.onboardButton, borderColor: Colors.secondary, backgroundColor: Colors.secondary}}>
+                    <Text
+                    style={{...styles.buttonText, color: '#fff'}}
+                    >
+                    Try Again
+                    </Text>
+                </View>
+            </TouchableOpacity>
+        </View>
+        :
+        null
+      }
+      {
+        !loading && !hasError ? 
+        <ScrollView
+          style={{ flex: 1 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={[Colors.brand, Colors.secondary, Colors.caption]}
+              tintColor={Colors.brand}
+            />
+          }
+        >
+          <View style={styles.container}>          
             {
               !loading && trend.length ?    
                 <View style={styles.heading}>    
@@ -94,60 +96,60 @@ const ReaderScreen = ({ navigation }) => {
               null
             }  
             {
-        !loading && topNews.length ?
-          <View style={styles.body}>
-          <View style={styles.category}>
-            <View style={styles.categoryHeadView}>
-              <View style={{ width: '50%' }}>
-                <Text style={styles.categoryHead}>Top News</Text>                
+              !loading && topNews.length ?
+              <View style={styles.body}>
+                <View style={styles.category}>
+                  <View style={styles.categoryHeadView}>
+                    <View style={{ width: '50%' }}>
+                      <Text style={styles.categoryHead}>Top News</Text>                
+                    </View>
+                    <Text style={styles.categoryCaption}>
+                        All Curated Top News From The Past Week till Now
+                    </Text>
+                    {/*
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('TopNews')}
+                      style={{ flexDirection: 'row' }}
+                    >                
+                      <Text style={{ fontSize: 14, color: Colors.secondary }}>
+                        View all{' '}
+                      </Text>
+                      <Feather
+                        size={18}
+                        name='chevron-right'
+                        color={Colors.secondary}
+                      />
+                    </TouchableOpacity>
+                    */}
+                  </View>
+                  <View style={{ flex: 1 }}>
+                  {
+                    topNews.map((t,i) => {
+                      if (t.media.videos.length) {
+                        return <ReaderDocumentaryItem news={t} key={i} navigation={navigation} />  
+                      }
+                        return <ReaderItem news={t} key={i} navigation={navigation} />
+                        
+                    })
+                  }
+                  </View>
+                </View>
               </View>
-              <Text style={styles.categoryCaption}>
-                  All Curated Top News From The Past Week till Now
-              </Text>
-              {/*
-              <TouchableOpacity
-                onPress={() => navigation.navigate('TopNews')}
-                style={{ flexDirection: 'row' }}
-              >                
-                <Text style={{ fontSize: 14, color: Colors.secondary }}>
-                  View all{' '}
-                </Text>
-                <Feather
-                  size={18}
-                  name='chevron-right'
-                  color={Colors.secondary}
-                />
-              </TouchableOpacity>
-              */}
-            </View>
-            <View style={{ flex: 1 }}>
-            {
-              topNews.map((t,i) => {
-                if (t.media.videos.length) {
-                  return <ReaderDocumentaryItem news={t} key={i} navigation={navigation} />  
-                }
-                  return <ReaderItem news={t} key={i} navigation={navigation} />
-                  
-              })
-            }
-            </View>
+            : null
+            }                     
           </View>
-        </View>
-          :
-          null
-      }                     
-        </View>
-        {
-        !hasError && !trend.length && !topNews.length && !loading ?
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <View style={styles.emptyView}>
-                <Text style={styles.emptyText}>Here’s a little empty</Text>
+          {
+            !hasError && !trend.length && !topNews.length && !loading ?
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <View style={styles.emptyView}>
+                  <Text style={styles.emptyText}>Here’s a little empty</Text>
+                </View>
             </View>
-        </View>
-        :
-        null 
-    }  
-      </ScrollView>
+          : null 
+          }  
+        </ScrollView> 
+        : null
+      }
     </SafeAreaView>
   )
 }
