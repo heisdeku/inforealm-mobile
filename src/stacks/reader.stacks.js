@@ -17,6 +17,7 @@ const MainNewsStack = () => {
     <MainNews.Navigator
     tabBarOptions={{
       scrollEnabled: true,
+      lazy: true,
       inactiveTintColor: Colors.text2,
       activeTintColor: Colors.text1,
       indicatorStyle: {

@@ -43,7 +43,7 @@ const ReaderTopContainer = ({ interests }) => {
         </View>
         <View>
           <TouchableOpacity style={{ 
-            paddingRight: 12
+            paddingRight: 18
           }} onPress={() => refRBSheet.current.open()}>
             <View style={styles.organize}>
               <Text style={styles.organizeText}>Organize Your Feeds</Text>
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     fontFamily: 'DMBold', 
-    paddingLeft: 15,   
+    paddingLeft: 25,   
   },
   organize: {
     flexDirection: 'row',    
