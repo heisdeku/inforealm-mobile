@@ -58,9 +58,31 @@ const DummyScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, position: 'relative' }}>
       {
         loading &&
-        <View style={styles.loadingView}>
+        <ScrollView 
+          contentContainerStyle={{
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+          style={{
+            flex: 1,
+            height: '100%'
+          }}
+          refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[Colors.brand, Colors.secondary, Colors.caption]}
+            tintColor={Colors.brand}
+          />
+        }>
+          <View style={styles.loadingView}>
             <ActivityIndicator color={Colors.secondary} size='large' />
         </View>
+        </ScrollView>
+        
       }
       {
         !loading && hasError ?
@@ -118,7 +140,7 @@ const DummyScreen = ({ navigation }) => {
           null
       }   
       {
-        !loading && !hasError && !feed.length ?
+        !loading && !hasError && feed.length < 1 ?
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <View style={styles.emptyView}>
                 <Text style={styles.emptyText}>Here’s a little empty</Text>
