@@ -27,7 +27,7 @@ export const ReaderNavigation = ({ visitProfile, visitSearch }) => {
                 </TouchableOpacity>                 
                     <Image
                         source={require('../../../assets/images/inforealm-blue.png')}
-                        style={{ height: 44, marginLeft: 'auto', marginRight: 'auto' }}
+                        style={{ height: 70, resizeMode: 'contain', width: '100%', marginLeft: 'auto', marginRight: 'auto' }}
                     /> 
                 <TouchableOpacity onPress={visitSearch}>
                     <Feather name='search' size={24} />
@@ -44,7 +44,7 @@ export const ReaderNavigation = ({ visitProfile, visitSearch }) => {
 const styles = StyleSheet.create({
     container: {
         width: Dimensions.get('window').width,
-        height: 150,
+        minHeight: 150,
         paddingHorizontal: 17,        
         backgroundColor: '#FFFFFF',        
     },
